@@ -234,7 +234,7 @@ var warehouseFields=['afx','par','katast','thesi','notes'];
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 
-function fmtDT(v){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
+function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
@@ -318,8 +318,13 @@ function makeUserCell(ri,val,ed){
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val))+'"></td>';
-  var iso=(val&&val.length>=10)?val.substring(0,16):'';
-  return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+  var isProvl=(field==='pAfx'||field==='pPar');
+  if(isProvl){
+    var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
+    return '<td class="'+cls+'"><input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+  }
+var isProvl=(field==='pAfx'||field==='pPar');
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'"></td>';
 }
 
 /* ---- TEXT ---- */
