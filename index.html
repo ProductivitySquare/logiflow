@@ -112,7 +112,10 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
 
 <div class="topbar">
   <span class="logo">LogiFlow</span>
-  <span class="week" id="weekLabel">Αφίξεις — ΚΩ 2026</span>
+<button onclick="changeWeek(-1)" style="padding:3px 8px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:13px">&#8592;</button>
+<span id="weekLabel" style="font-size:12px;color:#444;font-weight:600;min-width:220px;text-align:center"></span>
+<button onclick="changeWeek(1)" style="padding:3px 8px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:13px">&#8594;</button>
+  
   <div class="role-tabs">
     <button class="role-btn active" onclick="setRole('office',this)">Γραφείο</button>
     <button class="role-btn" onclick="setRole('warehouse',this)">Αποθήκη</button>
@@ -213,6 +216,32 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
 
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
+var currentMonday=getThisMonday();
+
+function getThisMonday(){
+  var d=new Date();
+  var day=d.getDay()||7;
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate()-(day-1));
+  return d;
+}
+function getWeekNum(d){
+  var tmp=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  tmp.setUTCDate(tmp.getUTCDate()+4-(tmp.getUTCDay()||7));
+  var y=new Date(Date.UTC(tmp.getUTCFullYear(),0,1));
+  return Math.ceil((((tmp-y)/86400000)+1)/7);
+}
+function fmt(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');}
+function updateWeekLabel(){
+  var end=new Date(currentMonday);end.setDate(end.getDate()+6);
+  var wn=getWeekNum(currentMonday);
+  document.getElementById('weekLabel').textContent='Αφίξεις — ΚΩ '+wn+' · '+fmt(currentMonday)+' – '+fmt(end)+' '+end.getFullYear();
+}
+function changeWeek(dir){
+  currentMonday=new Date(currentMonday);
+  currentMonday.setDate(currentMonday.getDate()+dir*7);
+  updateWeekLabel();
+}
 var activeAC=null; // {inputEl, ri, field, list}
 
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
@@ -230,7 +259,8 @@ rows.push(newRow(),newRow(),newRow());
 var filtered=rows.slice();
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes'];
 var warehouseFields=['afx','par','katast','thesi','notes'];
-
+var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
+  
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 
@@ -429,7 +459,7 @@ function saveAll(){var t=document.getElementById('toast');t.style.display='inlin
 window.addEventListener('scroll',hideACPortal,true);
 window.addEventListener('resize',hideACPortal);
 
-render();
+updateWeekLabel();
 </script>
 </body>
 </html>
