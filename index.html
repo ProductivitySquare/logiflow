@@ -112,6 +112,7 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
 
 <div class="topbar">
   <span class="logo">LogiFlow</span>
+  <button onclick="exportExcel()" style="padding:3px 10px;border:1px solid #16a34a;border-radius:5px;background:#dcfce7;color:#166534;cursor:pointer;font-size:12px;font-weight:600">↓ Excel</button>
 <button onclick="changeWeek(-1)" style="padding:3px 8px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:13px">&#8592;</button>
 <span id="weekLabel" style="font-size:12px;color:#444;font-weight:600;min-width:220px;text-align:center"></span>
 <button onclick="changeWeek(1)" style="padding:3px 8px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:13px">&#8594;</button>
@@ -208,16 +209,45 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">Ακύρωση</button>
-      <button class="btn-save" onclick="saveModal()">Αποθήκευση</button>
-    </div>
+  <button class="btn-cancel" onclick="printNote()">Εκτύπωση</button>
+  <button class="btn-cancel" onclick="closeModal()">Ακύρωση</button>
+  <button class="btn-save" onclick="saveModal()">Αποθήκευση</button>
+</div>
   </div>
 </div>
 
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
 var currentMonday=getThisMonday();
-
+function printNote(){
+  var r=rows[modalRowIdx];
+  var n=r.notes||eN();
+  var w=window.open('','_blank','width=600,height=500');
+  w.document.write('<html><head><title>Παρατηρήσεις</title><style>body{font-family:system-ui;padding:24px;font-size:14px}h2{margin-bottom:4px}p{margin:6px 0;color:#444}.sec{margin-top:16px;border-top:1px solid #eee;padding-top:10px}.label{font-size:11px;color:#999;text-transform:uppercase;font-weight:700}</style></head><body>');
+  w.document.write('<h2>'+(r.pelatis||r.id||'—')+'</h2>');
+  w.document.write('<p style="color:#888;font-size:12px">'+document.getElementById('weekLabel').textContent+'</p>');
+  if(n.address)w.document.write('<div class="sec"><div class="label">Διεύθυνση παράδοσης</div><p>'+n.address+'</p></div>');
+  if(n.hours||n.phone||n.contact)w.document.write('<div class="sec"><div class="label">Επικοινωνία</div><p>'+[n.hours,n.phone,n.contact].filter(Boolean).join(' · ')+'</p></div>');
+  if(n.dims||n.euro||n.volumeNote)w.document.write('<div class="sec"><div class="label">Όγκος</div><p>'+[n.dims,n.euro,n.volumeNote].filter(Boolean).join(' — ')+'</p></div>');
+  w.document.write('<br><br><small style="color:#ccc">LogiFlow — εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
+  w.document.write('</body></html>');
+  w.document.close();
+  w.print();
+}
+  function exportExcel(){
+  var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια','Θέση Αποθ.'];
+  var csv=heads.join('\t')+'\n';
+  rows.forEach(function(r){
+    var n=r.notes||eN();
+    csv+=[r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote,r.thesi].map(function(v){return(v||'').replace(/\t/g,' ');}).join('\t')+'\n';
+  });
+  var wn=getWeekNum(currentMonday);
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/tab-separated-values;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='LogiFlow_KW'+wn+'_'+currentMonday.getFullYear()+'.xls';
+  a.click();
+}
 function getThisMonday(){
   var d=new Date();
   var day=d.getDay()||7;
@@ -442,7 +472,16 @@ function render(){
 function addRow(){rows.push(newRow());applyFilters();}
 function delRow(ri){if(confirm('Διαγραφή γραμμής;')){rows.splice(ri,1);applyFilters();}}
 
-function setRole(r,btn){role=r;document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');render();}
+function setRole(r,btn){
+  if(r==='admin'){
+    var pw=prompt('Κωδικός Admin:');
+    if(pw!=='1209'){alert('Λάθος κωδικός!');return;}
+  }
+  role=r;
+  document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  render();
+}
 function filterRows(q){searchQ=q.toLowerCase();applyFilters();}
 function filterStatus(s){statusF=s;applyFilters();}
 function applyFilters(){
