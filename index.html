@@ -3,89 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LogiFlow — Αφίξεις 14η ΚΩ 2026</title>
+<title>LogiFlow — Αφίξεις</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;font-size:13px;background:#f5f5f3;color:#1a1a18;min-height:100vh}
-.topbar{background:#fff;border-bottom:1px solid #e0dfd8;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
-.logo{font-size:15px;font-weight:600;color:#1a1a18;margin-right:8px}
-.week{font-size:12px;color:#888;margin-right:auto}
+body{font-family:system-ui,sans-serif;font-size:13px;background:#f0efe8;color:#1a1a18;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #ddd;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+.logo{font-size:15px;font-weight:700;color:#1a1a18;margin-right:6px}
+.week{font-size:12px;color:#999;margin-right:auto}
 .role-tabs{display:flex;gap:4px}
-.role-btn{padding:5px 12px;border-radius:6px;border:1px solid #ddd;background:transparent;cursor:pointer;font-size:12px;color:#666;transition:all .15s}
-.role-btn.active{background:#1a56db;border-color:#1a56db;color:#fff;font-weight:500}
-.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:#fff;border-bottom:1px solid #e0dfd8}
+.role-btn{padding:5px 13px;border-radius:6px;border:1px solid #ddd;background:transparent;cursor:pointer;font-size:12px;color:#666}
+.role-btn.active{background:#1a56db;border-color:#1a56db;color:#fff;font-weight:600}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 16px;background:#fff;border-bottom:1px solid #ddd}
 .toolbar input,.toolbar select{padding:5px 9px;border:1px solid #ddd;border-radius:6px;background:#f9f9f7;color:#1a1a18;font-size:12px}
 .toolbar input{width:180px}
-.legend{display:flex;gap:10px;flex-wrap:wrap;padding:6px 16px;font-size:11px;color:#888;background:#f5f5f3;border-bottom:1px solid #e0dfd8}
+.add-btn{padding:5px 14px;border-radius:6px;border:none;background:#16a34a;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.add-btn:hover{background:#15803d}
+.save-btn{padding:5px 14px;border-radius:6px;border:none;background:#1a56db;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.save-btn:hover{background:#1648c0}
+.toast{display:none;padding:5px 13px;background:#dcfce7;border:1px solid #86efac;border-radius:6px;color:#166534;font-size:12px;font-weight:600}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:6px 16px;font-size:11px;color:#777;background:#f0efe8;border-bottom:1px solid #ddd}
 .legend span{display:flex;align-items:center;gap:4px}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
 .wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:1050px}
-thead th{background:#fff;padding:7px 8px;text-align:left;font-size:11px;font-weight:600;color:#666;border-bottom:2px solid #e0dfd8;white-space:nowrap;position:sticky;top:0;z-index:3}
-tbody tr{border-bottom:1px solid #e8e8e4;transition:filter .1s}
-tbody tr:hover{filter:brightness(.96)}
-tbody tr.row-apoth{background:#f0fdf4}
-tbody tr.row-amesi{background:#fff5f5}
-tbody tr.row-transit{background:#eff6ff}
-tbody tr.row-deliv{background:#f7faf7}
+thead th{background:#fff;padding:7px 8px;text-align:left;font-size:11px;font-weight:700;color:#555;border-bottom:2px solid #ccc;white-space:nowrap;position:sticky;top:0;z-index:5}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.07)}
+tbody tr:hover{filter:brightness(.95)}
+
+/* Stronger pastel row colors */
+tbody tr.row-apoth{background:#bbf7d0}
+tbody tr.row-amesi{background:#fecaca}
+tbody tr.row-transit{background:#bfdbfe}
+tbody tr.row-deliv{background:#e0f2fe}
 tbody tr.row-wait{background:#fff}
-tbody td{padding:3px 5px;vertical-align:middle;position:relative}
-tbody td input,tbody td select{width:100%;padding:3px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:#1a1a18;font-size:12px;font-family:inherit}
-tbody td input:focus,tbody td select:focus{border-color:#93b4f5;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.1)}
-tbody td input:disabled,tbody td select:disabled{opacity:.45;cursor:not-allowed}
-.ec input,.ec select{background:rgba(26,86,219,.05);border-color:#c7d9fb}
-.rc{opacity:.6}
-.save-btn{padding:6px 14px;border-radius:6px;border:none;background:#1a56db;color:#fff;font-size:12px;cursor:pointer;font-weight:500}
-.save-btn:hover{background:#1648c0}
-.toast{display:none;padding:6px 14px;background:#d1fae5;border:1px solid #6ee7b7;border-radius:6px;color:#065f46;font-size:12px;font-weight:500}
-.notif{display:none;position:fixed;top:70px;right:20px;background:#1a56db;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:200;max-width:300px;box-shadow:0 4px 16px rgba(0,0,0,.15);animation:slidein .3s ease;align-items:center;gap:8px}
-@keyframes slidein{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
-.notif-close{cursor:pointer;opacity:.7;font-size:16px;line-height:1;margin-left:4px}
-.ac-wrap{position:relative;width:100%}
-.ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #93b4f5;border-radius:6px;z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12)}
-.ac-item{padding:5px 8px;cursor:pointer;font-size:12px;color:#1a1a18}
-.ac-item:hover{background:#e8f0fe;color:#1a56db}
+
+tbody td{padding:3px 5px;vertical-align:middle}
+
+/* Key fix: table cells are NOT position:relative — autocomplete uses a portal approach */
+tbody td input,tbody td select{
+  width:100%;padding:3px 6px;
+  border:1px solid transparent;border-radius:4px;
+  background:transparent;color:#1a1a18;
+  font-size:12px;font-family:inherit
+}
+tbody td input:focus,tbody td select:focus{
+  border-color:#93b4f5;background:#fff;outline:none;
+  box-shadow:0 0 0 2px rgba(26,86,219,.12)
+}
+tbody td input:disabled,tbody td select:disabled{opacity:.4;cursor:not-allowed}
+.ec input,.ec select{background:rgba(26,86,219,.08);border-color:#bfdbfe}
+.rc input,.rc select{opacity:.45}
+
+/* Autocomplete dropdown — rendered in a fixed overlay, NOT inside td */
+#ac-portal{
+  position:fixed;
+  background:#fff;
+  border:1.5px solid #93b4f5;
+  border-radius:8px;
+  z-index:9999;
+  max-height:200px;
+  overflow-y:auto;
+  box-shadow:0 6px 20px rgba(0,0,0,.15);
+  display:none;
+  min-width:140px;
+}
+#ac-portal .ac-item{padding:6px 10px;cursor:pointer;font-size:12px;color:#1a1a18;white-space:nowrap}
+#ac-portal .ac-item:hover,#ac-portal .ac-item.sel{background:#dbeafe;color:#1e40af}
+
 input.merida-input{letter-spacing:1px;font-family:monospace;font-size:12px}
 input[type="datetime-local"]{cursor:pointer;font-size:11px}
-.notes-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;border:1px solid #c7d9fb;background:rgba(26,86,219,.07);color:#1a56db;font-size:11px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
-.notes-btn:hover{background:rgba(26,86,219,.15)}
-.notes-empty{color:#bbb;font-size:11px;cursor:pointer;padding:2px 6px;font-family:inherit;background:none;border:1px dashed #ddd;border-radius:4px}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;align-items:center;justify-content:center}
+
+.notes-btn{display:inline-block;padding:2px 8px;border-radius:4px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:11px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
+.notes-btn:hover{background:#bfdbfe}
+.notes-empty{color:#bbb;font-size:11px;cursor:pointer;padding:2px 8px;background:none;border:1px dashed #ddd;border-radius:4px;font-family:inherit}
+
+.del-btn{padding:1px 6px;border-radius:4px;border:1px solid #fca5a5;background:#fee2e2;color:#b91c1c;font-size:11px;cursor:pointer;font-family:inherit}
+.del-btn:hover{background:#fca5a5}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:14px;width:min(560px,96vw);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.2)}
-.modal-header{padding:16px 20px 12px;border-bottom:1px solid #e8e8e4;display:flex;align-items:flex-start;justify-content:space-between}
-.modal-header h2{font-size:14px;font-weight:600}
+.modal{background:#fff;border-radius:14px;width:min(560px,96vw);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.22)}
+.modal-header{padding:16px 20px 12px;border-bottom:1px solid #eee;display:flex;align-items:flex-start;justify-content:space-between}
+.modal-header h2{font-size:14px;font-weight:700}
 .modal-header .sub{font-size:12px;color:#888;margin-top:2px}
-.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#bbb;line-height:1;padding:0 2px;margin-left:12px}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#bbb;padding:0 4px;line-height:1}
 .modal-close:hover{color:#333}
 .modal-body{padding:16px 20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px}
 .msec{background:#f9f9f7;border-radius:8px;padding:12px 14px}
 .msec-title{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.msec textarea,.msec input[type=text],.msec input[type=tel]{width:100%;border:1px solid #e0dfd8;border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:#1a1a18;background:#fff;resize:vertical}
-.msec textarea{min-height:52px}
+.msec textarea,.msec input{width:100%;border:1px solid #e0dfd8;border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:#1a1a18;background:#fff;resize:vertical}
+.msec textarea{min-height:50px}
 .msec textarea:focus,.msec input:focus{border-color:#93b4f5;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.1)}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .mlabel{font-size:11px;color:#666;margin-bottom:3px}
-.modal-footer{padding:12px 20px;border-top:1px solid #e8e8e4;display:flex;justify-content:flex-end;gap:8px}
-.modal-footer button{padding:7px 18px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500;font-family:inherit}
+.modal-footer{padding:12px 20px;border-top:1px solid #eee;display:flex;justify-content:flex-end;gap:8px}
+.modal-footer button{padding:7px 18px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;font-family:inherit}
 .btn-cancel{border:1px solid #ddd;background:#fff;color:#555}
-.btn-cancel:hover{background:#f5f5f3}
 .btn-save{border:none;background:#1a56db;color:#fff}
 .btn-save:hover{background:#1648c0}
+
+.notif{display:none;position:fixed;top:68px;right:18px;background:#1a56db;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:500;max-width:300px;box-shadow:0 4px 16px rgba(0,0,0,.18);animation:slin .3s ease;align-items:center;gap:8px}
+@keyframes slin{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+.notif-x{cursor:pointer;opacity:.7;font-size:16px;margin-left:6px}
 </style>
 </head>
 <body>
+
 <div class="topbar">
   <span class="logo">LogiFlow</span>
-  <span class="week">Αφίξεις 14η ΚΩ · 30/03–03/04/2026</span>
+  <span class="week" id="weekLabel">Αφίξεις — ΚΩ 2026</span>
   <div class="role-tabs">
     <button class="role-btn active" onclick="setRole('office',this)">Γραφείο</button>
     <button class="role-btn" onclick="setRole('warehouse',this)">Αποθήκη</button>
     <button class="role-btn" onclick="setRole('admin',this)">Admin</button>
   </div>
 </div>
+
 <div class="toolbar">
-  <input type="text" placeholder="Αναζήτηση πελάτη / μερίδα..." oninput="filterRows(this.value)">
+  <input type="text" placeholder="Αναζήτηση..." oninput="filterRows(this.value)">
   <select onchange="filterStatus(this.value)">
     <option value="">Όλες καταστάσεις</option>
     <option value="ΑΠΟΘΗΚΕΥΣΗ">Αποθήκευση</option>
@@ -94,42 +130,52 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
     <option value="ΣΕ ΜΕΤΑΦΟΡΑ">Σε μεταφορά</option>
     <option value="ΑΝΑΜΟΝΗ">Αναμονή</option>
   </select>
+  <button class="add-btn" onclick="addRow()">+ Νέα γραμμή</button>
   <button class="save-btn" onclick="saveAll()">Αποθήκευση</button>
   <span class="toast" id="toast">✓ Αποθηκεύτηκε!</span>
 </div>
+
 <div class="legend">
-  <span><span class="dot" style="background:#86efac"></span>Αποθήκευση</span>
-  <span><span class="dot" style="background:#fca5a5"></span>Άμεση</span>
-  <span><span class="dot" style="background:#93c5fd"></span>Σε μεταφορά</span>
-  <span><span class="dot" style="background:#bbf7d0"></span>Παραδόθηκε</span>
+  <span><span class="dot" style="background:#4ade80"></span>Αποθήκευση</span>
+  <span><span class="dot" style="background:#f87171"></span>Άμεση</span>
+  <span><span class="dot" style="background:#60a5fa"></span>Σε μεταφορά</span>
+  <span><span class="dot" style="background:#38bdf8"></span>Παραδόθηκε</span>
   <span><span class="dot" style="background:#e5e7eb"></span>Αναμονή</span>
-  <span style="margin-left:8px;color:#1a56db">— μπλε φόντο = επεξεργάσιμο</span>
+  <span style="margin-left:6px;color:#1a56db">μπλε = επεξεργάσιμο από τον ρόλο σου</span>
 </div>
+
 <div class="wrap">
   <table>
     <thead><tr>
-      <th style="width:110px">Μερίδα</th>
-      <th style="width:115px">Χώρα</th>
-      <th style="width:88px">Χρήστης</th>
-      <th style="width:130px">Πρβλ. Άφιξη</th>
-      <th style="width:130px">Άφιξη</th>
-      <th style="width:130px">Πρβλ. Παράδ.</th>
-      <th style="width:130px">Παράδοση</th>
+      <th style="width:108px">Μερίδα</th>
+      <th style="width:112px">Χώρα</th>
+      <th style="width:86px">Χρήστης</th>
+      <th style="width:128px">Πρβλ. Άφιξη</th>
+      <th style="width:128px">Άφιξη</th>
+      <th style="width:128px">Πρβλ. Παράδ.</th>
+      <th style="width:128px">Παράδοση</th>
       <th style="width:38px">Κολά</th>
-      <th style="width:100px">Συσκ.</th>
-      <th style="width:55px">Κιλά</th>
-      <th style="width:150px">Πελάτης</th>
-      <th style="width:88px">Κατάσταση</th>
-      <th style="width:130px">Παρατηρήσεις</th>
-      <th style="width:105px">Θέση Αποθ.</th>
+      <th style="width:98px">Συσκ.</th>
+      <th style="width:54px">Κιλά</th>
+      <th style="width:148px">Πελάτης</th>
+      <th style="width:86px">Κατάσταση</th>
+      <th style="width:120px">Παρατηρήσεις</th>
+      <th style="width:100px">Θέση Αποθ.</th>
+      <th style="width:34px"></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
+
+<!-- Autocomplete portal (single, moved by JS) -->
+<div id="ac-portal"></div>
+
 <div class="notif" id="notif">
   <span id="notif-text"></span>
-  <span class="notif-close" onclick="this.parentElement.style.display='none'">✕</span>
+  <span class="notif-x" onclick="this.parentElement.style.display='none'">✕</span>
 </div>
+
+<!-- Notes Modal -->
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-header">
@@ -153,7 +199,7 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
         <div class="msec-title">3. Όγκος εμπορεύματος</div>
         <div class="mgrid">
           <div><div class="mlabel">Διαστάσεις (εκ.)</div><input type="text" id="mnDims" placeholder="80×120×160"></div>
-          <div><div class="mlabel">Ευροπαλέτες</div><input type="text" id="mnEuro" placeholder="π.χ. 2 ευροπαλ"></div>
+          <div><div class="mlabel">Ευροπαλέτες</div><input type="text" id="mnEuro" placeholder="2 ευροπαλ"></div>
         </div>
         <div style="margin-top:8px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="π.χ. Μη στοιβάσιμες, εύθραυστο" rows="2"></textarea></div>
       </div>
@@ -164,85 +210,220 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
     </div>
   </div>
 </div>
+
 <script>
-var role='office',searchQ='',statusF='',modalRowIdx=-1;
+var role='office', searchQ='', statusF='', modalRowIdx=-1;
+var activeAC=null; // {inputEl, ri, field, list}
+
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
-var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Χαλύβδινο τύμπανο'];
+var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
 var USERS=['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Άλλος'];
-function eN(){return {address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
-function nTxt(n){if(!n)return '';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
-var rows=[
-  {id:'ΑΠΟΘΗΚΕΥΣΗ',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'11',sysk:'Παλέτα',kila:'1043',pelatis:'JOHNSON / ELKEM',katast:'ΑΠΟΘΗΚΕΥΣΗ',notes:{address:'ραφ 37,38',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'DIMETHICON αξία 46.640€'},thesi:'ραφ 37,38'},
-  {id:'23.01.2045/6',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'Παλέτα',kila:'700',pelatis:'EPICURUS / FRANCE MEDICAL',katast:'ΑΠΟΘΗΚΕΥΣΗ',notes:{address:'μπροστα 33-2',hours:'',phone:'',contact:'',dims:'2×1,2×2m',euro:'',volumeNote:'ΘΑ ΠΑΡΑΛΑΒΕΙ ΑΠΟ 2/1'},thesi:'μπροστα 33-2'},
-  {id:'24.01.129',xora:'Γαλλία',a:'Ελένη',pAfx:'2024-01-30T07:45',afx:'2024-01-23T07:45',pPar:'',par:'',kola:'3',sysk:'Ξύλινη βάση',kila:'1683',pelatis:'ΦΛΑΡΑΚΟΣ / FRANCE MEDICAL',katast:'ΑΠΟΘΗΚΕΥΣΗ',notes:{address:'μπροστα 33-1,3',hours:'',phone:'',contact:'',dims:'1,14×2,14×1,35',euro:'',volumeNote:''},thesi:'μπροστα 33-1,3'},
-  {id:'24.01.1419/3',xora:'Β&Γ',a:'Μαρία',pAfx:'2024-09-25T10:00',afx:'2024-09-25T10:00',pPar:'2024-10-04T00:00',par:'2024-10-04T00:00',kola:'1',sysk:'Δεξαμενή',kila:'1000',pelatis:'JOHNSON / BRB',katast:'ΑΠΟΘΗΚΕΥΣΗ',notes:{address:'ΚΟΡΝΗΛΑΚΗ',hours:'',phone:'',contact:'',dims:'100×120',euro:'',volumeNote:'ΖΗΜΙΑ 4/10 κωδ 4066'},thesi:''},
-  {id:'26.01.403',xora:'Γαλλία',a:'Κώστας',pAfx:'2026-03-30T11:00',afx:'2026-03-30T11:00',pPar:'',par:'',kola:'12',sysk:'Παλέτα',kila:'5368',pelatis:'ΠΡΟΤΕΚΤΑ / QUATRIS',katast:'ΑΠΟΘΗΚΕΥΣΗ',notes:eN(),thesi:''},
-  {id:'26.01.451/1',xora:'Γαλλία',a:'Ελένη',pAfx:'2026-03-30T08:40',afx:'2026-03-30T08:40',pPar:'2026-03-31T10:50',par:'2026-03-31T10:50',kola:'1',sysk:'Παλέτα',kila:'313',pelatis:'DICHEM / CRODAROM',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΛΟΥΤΡΟΥ 93, ΑΧΑΡΝΕΣ',hours:'08:30-14:00',phone:'',contact:'',dims:'80×120×110',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.451/2',xora:'',a:'Νίκος',pAfx:'',afx:'',pPar:'2026-04-01T09:30',par:'2026-04-01T09:30',kola:'1',sysk:'Παλέτα',kila:'757',pelatis:'CARGO GROUP / SEAVIEW',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΠΕΙΡΑΙΩΣ 49, ΜΟΣΧΑΤΟ',hours:'07:00-15:00',phone:'2104833000',contact:'',dims:'80×120×160',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.451/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'6',sysk:'Παλέτα',kila:'4300',pelatis:'ΕΝΟΧΗΜΙΚΗ / CHEMVIRON',katast:'ΑΜΕΣΗ',notes:{address:'ΡΕΝΤΗΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.451/4',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'3',sysk:'Παλέτα',kila:'1914',pelatis:'ΕΝΟΧΗΜΙΚΗ / LAFFORT',katast:'ΑΜΕΣΗ',notes:{address:'ΡΕΝΤΗΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.451/5',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'4',sysk:'Παλέτα',kila:'2429',pelatis:'COSMOCHEM / NATURATEC',katast:'ΑΜΕΣΗ',notes:{address:'ΑΥΛΩΝΑ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.385',xora:'Γερμανία',a:'Κώστας',pAfx:'2026-03-30T08:50',afx:'2026-03-30T08:50',pPar:'2026-04-01T09:30',par:'2026-04-01T09:30',kola:'1',sysk:'Παλέτα',kila:'70',pelatis:'ΤΖΩΡΤΖΟΠΟΥΛΟΣ / SHOEI',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΚΑΛΛΙΡΟΗΣ 71, Ν.ΚΟΣΜΟΣ',hours:'09:30-15:00',phone:'',contact:'',dims:'80×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.457/1',xora:'Γαλλία',a:'Μαρία',pAfx:'2026-03-30T08:50',afx:'2026-03-30T08:50',pPar:'2026-04-01T10:15',par:'2026-04-01T10:15',kola:'2',sysk:'Παλέτα',kila:'1839',pelatis:'KENVUE / INNOSPEC FRANCE',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΜΑΝΔΡΑ',hours:'',phone:'',contact:'',dims:'120×120×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.457/2',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31T10:50',par:'2026-03-31T10:50',kola:'2',sysk:'Παλέτα',kila:'1500',pelatis:'ΑΡΙΤΡΑΝΣ / GRANDS MOULINS',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'TSD LOGISTICS ΒΙΠΕ ΜΑΝΔΡΑΣ',hours:'08:30-14:30',phone:'2121217077',contact:'κα Βούλα Μελεμένη',dims:'80×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.457/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'4',sysk:'Παλέτα',kila:'2900',pelatis:'ΚΑΝΚΟ / REDSEA',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΠΑΝ.ΤΣΑΛΔΑΡΗ 67, ΤΑΥΡΟΣ',hours:'09:30-15:00',phone:'2109332860',contact:'',dims:'2×115×115×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.457/4',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'Παλέτα',kila:'150',pelatis:'ΑΚΤΙΝΑ / ISIGNY STE MERE',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΠΑΠΠΟΥ 21, ΑΘΗΝΑ',hours:'',phone:'2105122410',contact:'',dims:'80×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.457/5',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'Παλέτα',kila:'40',pelatis:'ΔΡΟΣΟΣ / ANDRITZ',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΕΛ ΒΕΝΙΖΕΛΟΥ 25, ΓΑΛΑΤΣΙ',hours:'',phone:'2102137150',contact:'',dims:'80×60×53',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.457/6',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'Παλέτα',kila:'487',pelatis:'DICHEM / SEDERMA',katast:'ΑΜΕΣΗ',notes:{address:'ΑΧΑΡΝΕΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.457/7',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'2',sysk:'Χαρτοκούτι',kila:'30',pelatis:'DICHEM / ALBAN MULLER',katast:'ΑΜΕΣΗ',notes:{address:'ΑΧΑΡΝΕΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.457/8',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'9',sysk:'Παλέτα',kila:'3085',pelatis:'DICHEM / SENSIENT',katast:'ΑΜΕΣΗ',notes:{address:'ΑΧΑΡΝΕΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.455',xora:'Ιταλία',a:'Νίκος',pAfx:'2026-03-30T11:20',afx:'2026-03-30T11:20',pPar:'2026-04-01T10:15',par:'2026-04-01T10:15',kola:'1',sysk:'Παλέτα',kila:'250',pelatis:'KENVUE / ACTIVE CONCEPT',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΜΑΝΔΡΑ',hours:'',phone:'',contact:'',dims:'80×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.449',xora:'Ιταλία',a:'Κώστας',pAfx:'2026-03-31T09:20',afx:'2026-03-31T09:20',pPar:'2026-04-01T00:00',par:'',kola:'12',sysk:'Κιβώτιο',kila:'120',pelatis:'ΜΑΡΑΤΣΙΝΟΣ / MANICARDI',katast:'ΣΕ ΜΕΤΑΦΟΡΑ',notes:{address:'ΣΟΥΛΙΟΥ 79, ΑΓ.ΔΗΜΗΤΡΙΟΣ',hours:'08:00-14:00',phone:'',contact:'',dims:'80×120',euro:'2',volumeNote:''},thesi:''},
-  {id:'26.01.456/1',xora:'Ολλανδία',a:'Ελένη',pAfx:'2026-03-30T13:40',afx:'2026-03-30T13:40',pPar:'2026-03-31T13:30',par:'2026-03-31T13:30',kola:'13',sysk:'Παλέτα',kila:'4614',pelatis:'KENVUE / COSMOS CHEMICALS',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΚΟΡΝΗΛΑΚΗ',hours:'',phone:'',contact:'',dims:'80×120',euro:'',volumeNote:'ΜΗ ΣΤΟΙΒΑΣΙΜΕΣ'},thesi:''},
-  {id:'26.01.456/2',xora:'',a:'',pAfx:'',afx:'2026-03-31T12:45',pPar:'',par:'',kola:'3',sysk:'Παλέτα',kila:'3165',pelatis:'G&C DE BOT / EKO',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΕΚΟ, ΠΑΛΑΣΚΑ 1, ΣΚΑΡΑΜΑΓΚΑΣ',hours:'07:30-14:00',phone:'2105509519',contact:'',dims:'120×120×220',euro:'',volumeNote:'REF 47378'},thesi:''},
-  {id:'26.01.456/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'18',sysk:'Παλέτα',kila:'8112',pelatis:'KENVUE / INTERHARZ NEUSS',katast:'ΑΜΕΣΗ',notes:{address:'ΚΟΡΝΗΛΑΚΗ',hours:'',phone:'',contact:'',dims:'80×120',euro:'',volumeNote:'ΜΗ ΣΤΟΙΒΑΣΙΜΕΣ'},thesi:''},
-  {id:'26.01.456/4',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31T10:50',par:'2026-03-31T10:50',kola:'2',sysk:'Παλέτα',kila:'419',pelatis:'SIELINE / HOEKSTRA',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΑΔΑΝΩΝ 4, Ν.ΦΙΛΑΔΕΛΦΕΙΑ',hours:'08:30-12:30',phone:'',contact:'',dims:'105×140 / 100×210',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.456/5',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31T10:50',par:'2026-03-31T10:50',kola:'1',sysk:'Παλέτα',kila:'1750',pelatis:'ΠΕΤΡΟΠΟΥΛΟΣ / BRP',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'SARMED 23ο ΧΛΜ ΑΘ-ΘΗΒΩΝ ΜΑΝΔΡΑ',hours:'09:00-14:00',phone:'2116003000',contact:'',dims:'100×120×105',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.456/6',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31T10:50',par:'2026-03-31T10:50',kola:'1',sysk:'Παλέτα',kila:'759',pelatis:'CG / FRIESLAND',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'OLYMPIC TRANS ΑΣΠΡΟΠΥΡΓΟΣ',hours:'',phone:'',contact:'',dims:'100×120',euro:'',volumeNote:'ΓΙΑ FRIESLAND ΒΙΠΕ ΠΑΤΡΑΣ'},thesi:''},
-  {id:'26.01.456/7',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-04-01T10:15',par:'',kola:'3',sysk:'Παλέτα',kila:'264',pelatis:'KENVUE / ASHLAND',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΜΑΝΔΡΑ',hours:'',phone:'',contact:'',dims:'80×120',euro:'',volumeNote:'ΜΗ ΣΤΟΙΒΑΣΙΜΕΣ'},thesi:''},
-  {id:'26.01.456/8',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-04-02T00:00',par:'',kola:'3',sysk:'Παλέτα',kila:'1100',pelatis:'ΜΠΡΙΣΚΟΛΑΣ / INKLOUD',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΣΤΡΥΜΩΝΟΣ 12, ΒΟΤΑΝΙΚΟΣ',hours:'08:30-14:00',phone:'',contact:'',dims:'100×120×220',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.444',xora:'Γαλλία',a:'Μαρία',pAfx:'2026-03-31T09:30',afx:'2026-03-31T09:30',pPar:'2026-04-01T09:30',par:'2026-04-01T09:30',kola:'6',sysk:'Παλέτα',kila:'850',pelatis:'COLORI POSTO / HJC',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΚΑΛΛΙΡΟΗΣ 15, ΑΘΗΝΑ',hours:'10:00-12:00',phone:'',contact:'',dims:'86×125×220',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.420',xora:'Γερμανία',a:'Νίκος',pAfx:'2026-04-01T09:30',afx:'2026-03-31T09:30',pPar:'2026-04-01T09:30',par:'2026-04-01T09:30',kola:'3',sysk:'Παλέτα',kila:'436',pelatis:'ΤΖΩΡΤΖΟΠΟΥΛΟΣ / HOSTETTLER',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΚΑΛΛΙΡΟΗΣ 41, Ν.ΚΟΣΜΟΣ',hours:'09:30-15:00',phone:'',contact:'',dims:'80×120',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.397',xora:'Ισπανία',a:'Κώστας',pAfx:'2026-03-31T13:00',afx:'2026-03-31T13:00',pPar:'2026-04-01T09:30',par:'2026-04-01T09:30',kola:'1',sysk:'Παλέτα',kila:'130',pelatis:'ΧΑΤΖΗΜΙΧΑΗΛ / PERFECT BEAUTY',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΣΩΚΡΑΤΟΥΣ 79-81, ΑΘΗΝΑ',hours:'08:00-14:00',phone:'2105233823',contact:'',dims:'120×80×170',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.442',xora:'Ισπανία',a:'Ελένη',pAfx:'2026-03-31T14:20',afx:'2026-03-31T14:20',pPar:'2026-04-01T10:15',par:'2026-04-01T10:15',kola:'1',sysk:'Παλέτα',kila:'202',pelatis:'KENVUE / VANTAGE',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΜΑΝΔΡΑ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.352',xora:'Ισπανία',a:'',pAfx:'2026-04-02T00:00',afx:'',pPar:'',par:'',kola:'4',sysk:'Παλέτα',kila:'400',pelatis:'MANTZOYKΗΣ / SARRIEGUI',katast:'ΑΝΑΜΟΝΗ',notes:{address:'ΒΕΝΕΖΟΥΕΛΑΣ 23, ΓΛΥΦΑΔΑ',hours:'09:00-14:00',phone:'',contact:'',dims:'80×120×207',euro:'',volumeNote:''},thesi:''},
-  {id:'26.01.445',xora:'Γαλλία',a:'',pAfx:'2026-03-31T00:00',afx:'',pPar:'',par:'',kola:'24',sysk:'Παλέτα',kila:'6600',pelatis:'STANTE / ΦΑΜΑΡ ΘΗΒΑ',katast:'ΑΜΕΣΗ',notes:{address:'ΦΑΜΑΡ ΘΗΒΑ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.390',xora:'Γαλλία',a:'Νίκος',pAfx:'2026-03-30T08:00',afx:'2026-03-30T08:00',pPar:'2026-03-30T08:00',par:'2026-03-30T08:00',kola:'1',sysk:'Μηχάνημα',kila:'9000',pelatis:'ΦΟΡΜΟΥΛΑ / ΘΕΜΕΛΙΩΣΙΣ',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΒΟΤΑΝΙΚΟΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.446',xora:'Γαλλία',a:'Μαρία',pAfx:'2026-03-30T08:00',afx:'2026-03-30T08:00',pPar:'2026-03-30T08:00',par:'2026-03-30T08:00',kola:'5',sysk:'Παλέτα',kila:'4180',pelatis:'ΤΡΑΝΣΝΕΤ-ΕΚΟ / CHEVRON',katast:'ΠΑΡΑΔΟΘΗΚΕ',notes:{address:'ΕΚΟ ΣΚΑΡΑΜΑΓΚΑΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.399',xora:'Ιταλία',a:'',pAfx:'2026-04-01T00:00',afx:'',pPar:'',par:'',kola:'66',sysk:'Παλέτα',kila:'2922',pelatis:'PROMENS / ΦΑΜΑΡ ΑΥΛΩΝΑ',katast:'ΑΜΕΣΗ',notes:{address:'ΑΥΛΩΝΑ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.400',xora:'Ιταλία',a:'',pAfx:'2026-04-01T00:00',afx:'',pPar:'',par:'',kola:'66',sysk:'Παλέτα',kila:'2656',pelatis:'PROMENS / ΦΑΜΑΡ ΑΥΛΩΝΑ',katast:'ΑΜΕΣΗ',notes:{address:'ΑΥΛΩΝΑ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''},
-  {id:'26.01.431',xora:'Πολωνία',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'Παλέτα',kila:'385',pelatis:'ΓΕΓΟΣ / STOKSON',katast:'ΑΜΕΣΗ',notes:{address:'SARMED ΑΣΠΡΟΠΥΡΓΟΣ',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:'ΑΜΕΣΗ'},thesi:''}
-];
+
+function eN(){return{address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
+function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
+
+// Start with a few empty rows
+var rows=[];
+function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),thesi:''};}
+rows.push(newRow(),newRow(),newRow());
+
 var filtered=rows.slice();
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes'];
 var warehouseFields=['afx','par','katast','thesi','notes'];
+
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
-function fmtDT(v){if(!v)return '';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
-function updateField(idx,field,val){var old=rows[idx][field];rows[idx][field]=val;if(old!==val)showNotif(rows[idx].pelatis||rows[idx].id,field);if(field==='katast')render();}
-function showNotif(pelatis,field){var labels={katast:'Κατάσταση',afx:'Άφιξη',par:'Παράδοση',thesi:'Θέση',notes:'Παρατηρήσεις',pAfx:'Πρβλ. Άφιξη',xora:'Χώρα',a:'Χρήστης',sysk:'Συσκευασία'};var n=document.getElementById('notif');document.getElementById('notif-text').textContent=(role==='office'?'Γραφείο':role==='warehouse'?'Αποθήκη':'Admin')+' → '+pelatis+': '+(labels[field]||field)+' ενημερώθηκε';n.style.display='flex';clearTimeout(window._nt);window._nt=setTimeout(function(){n.style.display='none';},4000);}
-function esc(v){return (v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function makeMeridaCell(ri,val,ed){var cls=ed?'ec':'rc';if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="10" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onchange="updateField('+ri+',\'id\',this.value)"></td>';}
+
+function fmtDT(v){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
+
+function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+function updateField(idx,field,val){
+  var old=rows[idx][field];rows[idx][field]=val;
+  if(old!==val)showNotif(rows[idx].pelatis||rows[idx].id||'Γραμμή '+(idx+1),field);
+  if(field==='katast')render();
+}
+
+function showNotif(nm,field){
+  var labels={katast:'Κατάσταση',afx:'Άφιξη',par:'Παράδοση',thesi:'Θέση',notes:'Παρατηρήσεις',pAfx:'Πρβλ. Άφιξη',pPar:'Πρβλ. Παράδοση',xora:'Χώρα',a:'Χρήστης',sysk:'Συσκ.'};
+  var n=document.getElementById('notif');
+  document.getElementById('notif-text').textContent=(role==='office'?'Γραφείο':role==='warehouse'?'Αποθήκη':'Admin')+' → '+(nm||'—')+': '+(labels[field]||field)+' ενημερώθηκε';
+  n.style.display='flex';clearTimeout(window._nt);window._nt=setTimeout(function(){n.style.display='none';},3500);
+}
+
+/* ---- MERIDA ---- */
+function makeMeridaCell(ri,val,ed){
+  var cls=ed?'ec':'rc';
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="10" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="updateField('+ri+',\'id\',this.value)"></td>';
+}
 function onMI(el,ri){var r=el.value.replace(/[^0-9]/g,''),o='';for(var i=0;i<r.length&&i<7;i++){if(i===2||i===4)o+='.';o+=r[i];}el.value=o;rows[ri].id=o;}
-function makeAC(ri,field,val,list,uid_prefix,ed){var cls=ed?'ec':'rc';if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';var uid=uid_prefix+ri;return '<td class="'+cls+'" style="position:relative"><div class="ac-wrap"><input id="'+uid+'" value="'+esc(val)+'" autocomplete="off" placeholder="..." oninput="showACg(this,'+ri+',\''+field+'\',\''+uid_prefix+'\')" onblur="hideACg(\''+uid+'\',\''+uid_prefix+'\')" onchange="updateField('+ri+',\''+field+'\',this.value)"><div class="ac-list" id="acl_'+uid+'" style="display:none"></div></div></td>';}
-var AC_LISTS={ac_:COUNTRIES,pk_:PACKAGING};
-function showACg(inp,ri,field,pfx){var uid=inp.id,q=inp.value.toLowerCase(),list=document.getElementById('acl_'+uid),arr=AC_LISTS[pfx]||[];if(!q){list.style.display='none';return;}var m=arr.filter(function(c){return c.toLowerCase().indexOf(q)===0;});if(!m.length){list.style.display='none';return;}list.innerHTML=m.map(function(c){return '<div class="ac-item" onmousedown="pickACg(\''+uid+'\',\''+c+'\','+ri+',\''+field+'\',\''+pfx+'\')">'+c+'</div>';}).join('');list.style.display='block';}
-function pickACg(uid,val,ri,field,pfx){document.getElementById(uid).value=val;document.getElementById('acl_'+uid).style.display='none';rows[ri][field]=val;showNotif(rows[ri].pelatis||rows[ri].id,field);}
-function hideACg(uid,pfx){setTimeout(function(){var l=document.getElementById('acl_'+uid);if(l)l.style.display='none';},200);}
-function makeUserCell(ri,val,ed){var cls=ed?'ec':'rc';if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';var opts=USERS.map(function(u){return '<option'+(val===u?' selected':'')+'>'+u+'</option>';}).join('');return '<td class="'+cls+'"><select onchange="updateField('+ri+',\'a\',this.value)"><option value=""></option>'+opts+'</select></td>';}
-function makeDTCell(ri,field,val,ed){var cls=ed?'ec':'rc';if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val))+'"></td>';var iso=(val&&val.length>=10)?val.substring(0,16):'';return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';}
-function makeTxtCell(ri,field,val,ed){var cls=ed?'ec':'rc';return '<td class="'+cls+'"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';}
-function makeKatastCell(ri,val,ed){var cls=ed?'ec':'rc';var opts=['ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΑΝΑΜΟΝΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];var s='<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px">';opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});return '<td class="'+cls+'">'+s+'</select></td>';}
-function makeNotesCell(ri,notes,ed){var cls=ed?'ec':'rc';var txt=nTxt(notes);var prev=txt?txt.substring(0,28)+(txt.length>28?'…':''):'';var inner=prev?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(prev)+'</button>':'<button class="notes-empty" onclick="openModal('+ri+')">'+(ed?'+ Προσθήκη':'—')+'</button>';return '<td class="'+cls+'">'+inner+'</td>';}
-function openModal(ri){modalRowIdx=ri;var n=rows[ri].notes||eN();document.getElementById('modalSub').textContent=rows[ri].pelatis||rows[ri].id;document.getElementById('mnAddress').value=n.address||'';document.getElementById('mnHours').value=n.hours||'';document.getElementById('mnPhone').value=n.phone||'';document.getElementById('mnContact').value=n.contact||'';document.getElementById('mnDims').value=n.dims||'';document.getElementById('mnEuro').value=n.euro||'';document.getElementById('mnVolumeNote').value=n.volumeNote||'';document.getElementById('modalBg').classList.add('open');}
+
+/* ---- AUTOCOMPLETE (portal-based, no flicker) ---- */
+var portal=null;
+function getPortal(){if(!portal)portal=document.getElementById('ac-portal');return portal;}
+
+function showACPortal(inp,list,ri,field){
+  var p=getPortal();
+  if(!list.length){p.style.display='none';return;}
+  activeAC={inp:inp,ri:ri,field:field};
+  p.innerHTML=list.map(function(c,i){
+    return '<div class="ac-item" data-val="'+esc(c)+'" onmousedown="pickAC(\''+esc(c)+'\','+ri+',\''+field+'\')">'+c+'</div>';
+  }).join('');
+  // Position under input
+  var rect=inp.getBoundingClientRect();
+  p.style.left=rect.left+'px';
+  p.style.top=(rect.bottom+2)+'px';
+  p.style.minWidth=Math.max(rect.width,140)+'px';
+  p.style.display='block';
+}
+function hideACPortal(){var p=getPortal();p.style.display='none';activeAC=null;}
+function pickAC(val,ri,field){
+  rows[ri][field]=val;
+  // Update the input in the table
+  var el=document.getElementById('ac_'+ri+'_'+field);
+  if(el)el.value=val;
+  hideACPortal();
+  showNotif(rows[ri].pelatis||rows[ri].id||'Γραμμή '+(ri+1),field);
+}
+
+function makeACCell(ri,field,val,list,ed){
+  var cls=ed?'ec':'rc';
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+  return '<td class="'+cls+'"><input id="ac_'+ri+'_'+field+'" value="'+esc(val)+'" autocomplete="off" placeholder="..." '+
+    'oninput="onACInput(this,'+ri+',\''+field+'\')" onblur="onACBlur()" '+
+    'onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+}
+
+function onACInput(inp,ri,field){
+  var q=inp.value.toLowerCase();
+  var list=(field==='xora')?COUNTRIES:PACKAGING;
+  var m=q?list.filter(function(c){return c.toLowerCase().indexOf(q)===0;}):[];
+  showACPortal(inp,m,ri,field);
+}
+function onACBlur(){
+  // Delay so mousedown on portal item fires first
+  setTimeout(hideACPortal,180);
+}
+
+/* ---- USER ---- */
+function makeUserCell(ri,val,ed){
+  var cls=ed?'ec':'rc';
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+  var opts=USERS.map(function(u){return'<option'+(val===u?' selected':'')+'>'+u+'</option>';}).join('');
+  return '<td class="'+cls+'"><select onchange="updateField('+ri+',\'a\',this.value)"><option value=""></option>'+opts+'</select></td>';
+}
+
+/* ---- DATETIME ---- */
+function makeDTCell(ri,field,val,ed){
+  var cls=ed?'ec':'rc';
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val))+'"></td>';
+  var iso=(val&&val.length>=10)?val.substring(0,16):'';
+  return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+}
+
+/* ---- TEXT ---- */
+function makeTxtCell(ri,field,val,ed){
+  var cls=ed?'ec':'rc';
+  return '<td class="'+cls+'"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+}
+
+/* ---- KATAST ---- */
+function makeKatastCell(ri,val,ed){
+  var cls=ed?'ec':'rc';
+  var opts=['ΑΝΑΜΟΝΗ','ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+  var s='<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px">';
+  opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
+  return '<td class="'+cls+'">'+s+'</select></td>';
+}
+
+/* ---- NOTES ---- */
+function makeNotesCell(ri,notes,ed){
+  var cls=ed?'ec':'rc';
+  var txt=nTxt(notes);
+  var prev=txt?txt.substring(0,26)+(txt.length>26?'…':''):'';
+  var inner=prev
+    ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(prev)+'</button>'
+    :'<button class="notes-empty" onclick="openModal('+ri+')">'+(ed?'+ Προσθήκη':'—')+'</button>';
+  return '<td class="'+cls+'">'+inner+'</td>';
+}
+
+/* ---- MODAL ---- */
+function openModal(ri){
+  modalRowIdx=ri;
+  var n=rows[ri].notes||eN();
+  document.getElementById('modalSub').textContent=rows[ri].pelatis||rows[ri].id||'Νέα γραμμή';
+  document.getElementById('mnAddress').value=n.address||'';
+  document.getElementById('mnHours').value=n.hours||'';
+  document.getElementById('mnPhone').value=n.phone||'';
+  document.getElementById('mnContact').value=n.contact||'';
+  document.getElementById('mnDims').value=n.dims||'';
+  document.getElementById('mnEuro').value=n.euro||'';
+  document.getElementById('mnVolumeNote').value=n.volumeNote||'';
+  document.getElementById('modalBg').classList.add('open');
+}
 function closeModal(){document.getElementById('modalBg').classList.remove('open');modalRowIdx=-1;}
-function saveModal(){if(modalRowIdx<0)return;rows[modalRowIdx].notes={address:document.getElementById('mnAddress').value,hours:document.getElementById('mnHours').value,phone:document.getElementById('mnPhone').value,contact:document.getElementById('mnContact').value,dims:document.getElementById('mnDims').value,euro:document.getElementById('mnEuro').value,volumeNote:document.getElementById('mnVolumeNote').value};showNotif(rows[modalRowIdx].pelatis||rows[modalRowIdx].id,'notes');closeModal();render();}
-function render(){var tb=document.getElementById('tbody'),html='';filtered.forEach(function(row){var ri=rows.indexOf(row);html+='<tr class="'+rowClass(row.katast)+'">';html+=makeMeridaCell(ri,row.id,canEdit('id'));html+=makeAC(ri,'xora',row.xora,COUNTRIES,'ac_',canEdit('xora'));html+=makeUserCell(ri,row.a,canEdit('a'));html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));html+=makeDTCell(ri,'pPar',row.pPar,canEdit('pPar'));html+=makeDTCell(ri,'par',row.par,canEdit('par'));html+=makeTxtCell(ri,'kola',row.kola,canEdit('kola'));html+=makeAC(ri,'sysk',row.sysk,PACKAGING,'pk_',canEdit('sysk'));html+=makeTxtCell(ri,'kila',row.kila,canEdit('kila'));html+=makeTxtCell(ri,'pelatis',row.pelatis,canEdit('pelatis'));html+=makeKatastCell(ri,row.katast,canEdit('katast'));html+=makeNotesCell(ri,row.notes,canEdit('notes'));html+=makeTxtCell(ri,'thesi',row.thesi,canEdit('thesi'));html+='</tr>';});tb.innerHTML=html;}
+function saveModal(){
+  if(modalRowIdx<0)return;
+  rows[modalRowIdx].notes={
+    address:document.getElementById('mnAddress').value,
+    hours:document.getElementById('mnHours').value,
+    phone:document.getElementById('mnPhone').value,
+    contact:document.getElementById('mnContact').value,
+    dims:document.getElementById('mnDims').value,
+    euro:document.getElementById('mnEuro').value,
+    volumeNote:document.getElementById('mnVolumeNote').value
+  };
+  showNotif(rows[modalRowIdx].pelatis||rows[modalRowIdx].id||'Γραμμή '+(modalRowIdx+1),'notes');
+  closeModal();render();
+}
+
+/* ---- RENDER ---- */
+function render(){
+  var tb=document.getElementById('tbody'),html='';
+  filtered.forEach(function(row){
+    var ri=rows.indexOf(row);
+    if(ri<0)return;
+    html+='<tr class="'+rowClass(row.katast)+'">';
+    html+=makeMeridaCell(ri,row.id,canEdit('id'));
+    html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
+    html+=makeUserCell(ri,row.a,canEdit('a'));
+    html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
+    html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
+    html+=makeDTCell(ri,'pPar',row.pPar,canEdit('pPar'));
+    html+=makeDTCell(ri,'par',row.par,canEdit('par'));
+    html+=makeTxtCell(ri,'kola',row.kola,canEdit('kola'));
+    html+=makeACCell(ri,'sysk',row.sysk,PACKAGING,canEdit('sysk'));
+    html+=makeTxtCell(ri,'kila',row.kila,canEdit('kila'));
+    html+=makeTxtCell(ri,'pelatis',row.pelatis,canEdit('pelatis'));
+    html+=makeKatastCell(ri,row.katast,canEdit('katast'));
+    html+=makeNotesCell(ri,row.notes,canEdit('notes'));
+    html+=makeTxtCell(ri,'thesi',row.thesi,canEdit('thesi'));
+    html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
+    html+='</tr>';
+  });
+  tb.innerHTML=html;
+}
+
+function addRow(){rows.push(newRow());applyFilters();}
+function delRow(ri){if(confirm('Διαγραφή γραμμής;')){rows.splice(ri,1);applyFilters();}}
+
 function setRole(r,btn){role=r;document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');render();}
 function filterRows(q){searchQ=q.toLowerCase();applyFilters();}
 function filterStatus(s){statusF=s;applyFilters();}
-function applyFilters(){filtered=rows.filter(function(r){var mQ=!searchQ||(r.id+r.pelatis+(r.xora||'')).toLowerCase().indexOf(searchQ)>=0;var mS=!statusF||r.katast===statusF;return mQ&&mS;});render();}
+function applyFilters(){
+  filtered=rows.filter(function(r){
+    var mQ=!searchQ||(r.id+r.pelatis+(r.xora||'')).toLowerCase().indexOf(searchQ)>=0;
+    var mS=!statusF||r.katast===statusF;
+    return mQ&&mS;
+  });render();
+}
 function saveAll(){var t=document.getElementById('toast');t.style.display='inline-block';setTimeout(function(){t.style.display='none';},2500);}
+
+// Close portal on scroll/resize
+window.addEventListener('scroll',hideACPortal,true);
+window.addEventListener('resize',hideACPortal);
+
 render();
 </script>
 </body>
