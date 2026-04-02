@@ -16,17 +16,17 @@
   .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:#fff;border-bottom:1px solid #e0dfd8}
   .toolbar input,.toolbar select{padding:5px 9px;border:1px solid #ddd;border-radius:6px;background:#f9f9f7;color:#1a1a18;font-size:12px}
   .toolbar input{width:180px}
-  .legend{display:flex;gap:10px;flex-wrap:wrap;padding:6px 16px 6px;font-size:11px;color:#888;background:#f5f5f3;border-bottom:1px solid #e0dfd8}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;padding:6px 16px;font-size:11px;color:#888;background:#f5f5f3;border-bottom:1px solid #e0dfd8}
   .legend span{display:flex;align-items:center;gap:4px}
   .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-  .wrap{overflow-x:auto;padding:0}
-  table{width:100%;border-collapse:collapse;min-width:900px}
+  .wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:1000px}
   thead th{background:#fff;padding:7px 8px;text-align:left;font-size:11px;font-weight:600;color:#666;border-bottom:2px solid #e0dfd8;white-space:nowrap;position:sticky;top:0;z-index:2}
   tbody tr{border-bottom:1px solid #ececea;background:#fff}
   tbody tr:hover{background:#f0f4ff}
-  tbody td{padding:5px 8px;vertical-align:middle}
-  tbody td input,tbody td select,tbody td textarea{width:100%;padding:3px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:#1a1a18;font-size:12px;font-family:inherit}
-  tbody td input:focus,tbody td select:focus,tbody td textarea:focus{border-color:#93b4f5;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.1)}
+  tbody td{padding:4px 6px;vertical-align:middle;position:relative}
+  tbody td input,tbody td select{width:100%;padding:3px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:#1a1a18;font-size:12px;font-family:inherit}
+  tbody td input:focus,tbody td select:focus{border-color:#93b4f5;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.1)}
   tbody td input:disabled,tbody td select:disabled{opacity:.4;cursor:not-allowed}
   .ec input,.ec select{background:rgba(26,86,219,.05);border-color:#c7d9fb}
   .rc{opacity:.55}
@@ -39,10 +39,21 @@
   .save-btn{padding:6px 14px;border-radius:6px;border:none;background:#1a56db;color:#fff;font-size:12px;cursor:pointer;font-weight:500}
   .save-btn:hover{background:#1648c0}
   .toast{display:none;padding:6px 14px;background:#d1fae5;border:1px solid #6ee7b7;border-radius:6px;color:#065f46;font-size:12px;font-weight:500}
-  .notif{display:none;position:fixed;top:70px;right:20px;background:#1a56db;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:100;max-width:280px;box-shadow:0 4px 16px rgba(0,0,0,.15);animation:slidein .3s ease}
+  .notif{display:none;position:fixed;top:70px;right:20px;background:#1a56db;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:100;max-width:300px;box-shadow:0 4px 16px rgba(0,0,0,.15);animation:slidein .3s ease;display:flex;align-items:center;gap:8px}
   @keyframes slidein{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
-  .notif .notif-close{margin-left:12px;cursor:pointer;opacity:.7;font-size:16px;line-height:1}
-  @media(max-width:600px){.topbar{gap:6px}.role-btn{padding:4px 8px;font-size:11px}}
+  .notif-close{cursor:pointer;opacity:.7;font-size:16px;line-height:1;margin-left:4px}
+
+  /* Autocomplete dropdown */
+  .ac-wrap{position:relative;width:100%}
+  .ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #93b4f5;border-radius:6px;z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+  .ac-item{padding:5px 8px;cursor:pointer;font-size:12px;color:#1a1a18}
+  .ac-item:hover,.ac-item.active{background:#e8f0fe;color:#1a56db}
+
+  /* Merida mask */
+  input.merida-input{letter-spacing:1px;font-family:monospace;font-size:12px}
+
+  /* Date picker styling */
+  input[type="date"]{cursor:pointer}
 </style>
 </head>
 <body>
@@ -84,18 +95,18 @@
   <table id="mainTable">
     <thead>
       <tr>
-        <th style="width:110px">Μερίδα</th>
-        <th style="width:75px">Χώρα</th>
-        <th style="width:28px">Α</th>
-        <th style="width:88px">Πρβλ. Άφιξη</th>
+        <th style="width:115px">Μερίδα</th>
+        <th style="width:130px">Χώρα</th>
+        <th style="width:100px">Χρήστης</th>
+        <th style="width:110px">Πρβλ. Άφιξη</th>
         <th style="width:100px">Άφιξη</th>
-        <th style="width:88px">Πρβλ. Παράδ.</th>
+        <th style="width:110px">Πρβλ. Παράδ.</th>
         <th style="width:100px">Παράδοση</th>
         <th style="width:42px">Κολά</th>
         <th style="width:48px">Συσκ.</th>
         <th style="width:62px">Κιλά</th>
         <th style="width:160px">Πελάτης</th>
-        <th style="width:90px">Κατάσταση</th>
+        <th style="width:95px">Κατάσταση</th>
         <th style="width:240px">Παρατηρήσεις</th>
         <th style="width:120px">Θέση Αποθ.</th>
       </tr>
@@ -104,8 +115,7 @@
   </table>
 </div>
 
-<!-- Notification popup -->
-<div class="notif" id="notif">
+<div class="notif" id="notif" style="display:none">
   <span id="notif-text"></span>
   <span class="notif-close" onclick="document.getElementById('notif').style.display='none'">✕</span>
 </div>
@@ -115,67 +125,61 @@ var role = 'office';
 var searchQ = '';
 var statusF = '';
 
+var COUNTRIES = [
+  'Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία',
+  'Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία',
+  'Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία',
+  'Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία',
+  'Τσεχία','Φινλανδία','Β&Γ'
+];
+
+var USERS = ['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Άλλος'];
+
 var rows = [
-  {id:'ΑΠΟΘΗΚΕΥΣΗ',xora:'',a:'',pAfx:'ΑΠΟΘ 29/3/23',afx:'29/3 11:00',pPar:'',par:'',kola:'11',sysk:'ΠΑΛ',kila:'1043',pelatis:'JOHNSON / ELKEM',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'DIMETHICON αξία 46.640€',thesi:'ραφ 37,38'},
-  {id:'ΑΠΟΘ 23.01.2045/6',xora:'',a:'',pAfx:'ΑΠΟΘ 4/1/24',afx:'27/12 7:50',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'700',pelatis:'EPICURUS / FRANCE MEDICAL',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'2x1,2x2m — από 2/1',thesi:'μπροστα 33-2'},
-  {id:'ΑΠΟΘ 24.01.129',xora:'ΓΑΛΛΙΑ',a:'Ε',pAfx:'ΑΠΟΘ 30/1/24',afx:'23/1 7:45',pPar:'',par:'',kola:'3',sysk:'Ξ/Β',kila:'1683',pelatis:'ΦΛΑΡΑΚΟΣ / FRANCE MEDICAL',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'1,14x2,14x1,35 κ.α.',thesi:'μπροστα 33-1,3'},
-  {id:'ΑΠΟΘ-ΠΕΤΡΟΠΟΥΛΟΣ',xora:'',a:'',pAfx:'ΑΠΟΘ 7/3/24',afx:'7/3 13:30',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'1500',pelatis:'ΕΠΙΚΟΥΡΟΣ / PETROGEN P110E',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'310x110x190',thesi:'μπροστα 02'},
-  {id:'24.01.1419/3',xora:'Β&Γ',a:'Ν',pAfx:'ΑΠΟΘ 25/9/24',afx:'25/9 10:00',pPar:'4/10',par:'ΖΗΜΙΑ 4/10',kola:'1',sysk:'ΔΕΞ',kila:'1000',pelatis:'JOHNSON / BRB',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'ΚΟΡΝΗΛΑΚΗ 100x120 κωδ 4066',thesi:''},
-  {id:'ΑΠΟΘ PANOLYMPIC',xora:'',a:'',pAfx:'ΑΠΟΘ 2/10/25',afx:'2/10 13:00',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'224',pelatis:'ΑΜΠΡΑΖΗΣ - ΕΝΤΟΣ',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'ΔΑΠΕΔΑ 80x80x205',thesi:''},
-  {id:'ΛΟΓΟΘΕΤΗΣ HOT TUB',xora:'',a:'',pAfx:'6/12/24',afx:'6/12 12:00',pPar:'',par:'',kola:'2',sysk:'ΤΕΜ',kila:'500',pelatis:'ΛΟΓΟΘΕΤΗΣ - HOT TUB',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'ΕΠΙΣΤΡΟΦΗ 210x177x130 / 91x75x100',thesi:'ραφι 14'},
-  {id:'ΛΟΓΟΘ. FLUIDRA TOUCH',xora:'',a:'',pAfx:'',afx:'25/09',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'',pelatis:'ΛΟΓΟΘΕΤΗΣ FLUIDRA TOUCH',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'80x170x45 — ΠΑΠΑΓΕΩΡΓΙΟΥ',thesi:''},
-  {id:'ΛΟΓΟΘ. FLUIDRA ΛΑΙΝΕΡ',xora:'',a:'',pAfx:'',afx:'16/10 12:00',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'125',pelatis:'ΛΟΓΟΘΕΤΗΣ FLUIDRA ΛΑΙΝΕΡ',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'103x170x44 — ΣΤΑΘΟΠΟΥΛΟ',thesi:''},
-  {id:'25.01.1669/1',xora:'ΟΛΛΑΝΔΙΑ',a:'Ν',pAfx:'10/12',afx:'10/12 10:20',pPar:'ΤΕΛΟΣ ΙΑΝ',par:'',kola:'1',sysk:'ΚΟΛ',kila:'1200',pelatis:'ΛΟΓΟΘΕΤΗΣ / PASSION SPAS',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'225x395x176 — ΠΑΡΑΣΚΕΥΟΠΟΥΛΟ',thesi:''},
-  {id:'26.01.59',xora:'ΙΤΑΛΙΑ',a:'Ν',pAfx:'19/1',afx:'19/01 10:50',pPar:'',par:'21/1 7:30',kola:'21',sysk:'ΚΟΛ',kila:'1220',pelatis:'ΛΟΓΟΘΕΤΗΣ / NILO',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'3Μ ΠΑΤΩΜΑ — 21/1 πηρε 6 σκαμπω',thesi:''},
-  {id:'ΛΟΓΟΘ. ICY COLD',xora:'ΛΕΤΟΝΙΑ',a:'',pAfx:'',afx:'23/03 11:45',pPar:'',par:'',kola:'1',sysk:'ΚΟΛ',kila:'150',pelatis:'ΛΟΓΟΘΕΤΗΣ / ICY COLD PLUNGE',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'97x206x100 — ΜΠΑΚΟΛΙΤΣΑ',thesi:''},
-  {id:'ΛΟΓΟΘ. SAUNA',xora:'ΣΛΟΒΕΝΙΑ',a:'',pAfx:'',afx:'26/03 13:30',pPar:'',par:'',kola:'1',sysk:'ΚΟΛ',kila:'1000',pelatis:'ΛΟΓΟΘΕΤΗΣ / SAUNA',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'230x240x255 — ΜΠΑΚΟΛΙΤΣΑ',thesi:''},
-  {id:'26.01.403',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'30/3',afx:'30/3 11:00',pPar:'',par:'',kola:'12',sysk:'ΠΑΛ',kila:'5368',pelatis:'ΠΡΟΤΕΚΤΑ / QUATRIS',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'ΘΑ ΠΑΡΕΙ ΜΕΡΙΚΕΣ',thesi:''},
-  {id:'26.01.451/1',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'30/3',afx:'30/3 8:40',pPar:'31/3',par:'31/3 10:50',kola:'1',sysk:'ΠΑΛ',kila:'313',pelatis:'DICHEM / CRODAROM',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΛΟΥΤΡΟΥ 93 ΑΧΑΡΝΕΣ 08:30-14:00',thesi:''},
-  {id:'26.01.451/2',xora:'',a:'',pAfx:'',afx:'',pPar:'1/4',par:'1/4 9:30',kola:'1',sysk:'ΠΑΛ',kila:'757',pelatis:'CARGO GROUP / SEAVIEW',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΠΕΙΡΑΙΩΣ 49 ΜΟΣΧΑΤΟ',thesi:''},
-  {id:'26.01.451/3',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'6',sysk:'ΠΑΛ',kila:'4300',pelatis:'ΕΝΟΧΗΜΙΚΗ / CHEMVIRON',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΡΕΝΤΗΣ',thesi:''},
-  {id:'26.01.451/4',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'3',sysk:'ΠΑΛ',kila:'1914',pelatis:'ΕΝΟΧΗΜΙΚΗ / LAFFORT',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΡΕΝΤΗΣ',thesi:''},
-  {id:'26.01.451/5',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'4',sysk:'ΠΑΛ',kila:'2429',pelatis:'COSMOCHEM / NATURATEC',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΥΛΩΝΑ',thesi:''},
-  {id:'26.01.385',xora:'ΓΕΡΜΑΝΙΑ',a:'Ν',pAfx:'30/3',afx:'30/3 8:50',pPar:'1/4',par:'1/4 9:30',kola:'1',sysk:'ΠΑΛ',kila:'70',pelatis:'ΤΖΩΡΤΖΟΠΟΥΛΟΣ / SHOEI',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΑΛΛΙΡΟΗΣ 71 Ν.ΚΟΣΜΟΣ 09:30-15:00',thesi:''},
-  {id:'26.01.457/1',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'30/3',afx:'30/3 8:50',pPar:'1/4',par:'1/4 10:15',kola:'2',sysk:'ΠΑΛ',kila:'1839',pelatis:'KENVUE / INNOSPEC FRANCE',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΜΑΝΔΡΑ 120x120x120',thesi:''},
-  {id:'26.01.457/2',xora:'',a:'',pAfx:'',afx:'',pPar:'31/3',par:'31/3 10:50',kola:'2',sysk:'ΠΑΛ',kila:'1500',pelatis:'ΑΡΙΤΡΑΝΣ / GRANDS MOULINS',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'TSD LOGISTICS ΒΙΠΕ ΜΑΝΔΡΑΣ',thesi:''},
-  {id:'26.01.457/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'4',sysk:'ΠΑΛ',kila:'2900',pelatis:'ΚΑΝΚΟ / REDSEA',katast:'ΑΝΑΜΟΝΗ',paratir:'ΠΑΝ.ΤΣΑΛΔΑΡΗ 67 ΤΑΥΡΟΣ 09:30-15:00',thesi:''},
+  {id:'ΑΠΟΘΗΚΕΥΣΗ',xora:'',a:'',pAfx:'2023-03-29',afx:'29/3 11:00',pPar:'',par:'',kola:'11',sysk:'ΠΑΛ',kila:'1043',pelatis:'JOHNSON / ELKEM',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'DIMETHICON αξία 46.640€',thesi:'ραφ 37,38'},
+  {id:'23.01.2045/6',xora:'',a:'',pAfx:'2024-01-04',afx:'27/12 7:50',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'700',pelatis:'EPICURUS / FRANCE MEDICAL',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'2x1,2x2m — από 2/1',thesi:'μπροστα 33-2'},
+  {id:'24.01.129',xora:'Γαλλία',a:'Ελένη',pAfx:'2024-01-30',afx:'23/1 7:45',pPar:'',par:'',kola:'3',sysk:'Ξ/Β',kila:'1683',pelatis:'ΦΛΑΡΑΚΟΣ / FRANCE MEDICAL',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'1,14x2,14x1,35 κ.α.',thesi:'μπροστα 33-1,3'},
+  {id:'ΑΠΟΘ-ΠΕΤΡ',xora:'',a:'Νίκος',pAfx:'2024-03-07',afx:'7/3 13:30',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'1500',pelatis:'ΕΠΙΚΟΥΡΟΣ / PETROGEN P110E',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'310x110x190',thesi:'μπροστα 02'},
+  {id:'24.01.1419/3',xora:'Β&Γ',a:'Μαρία',pAfx:'2024-09-25',afx:'25/9 10:00',pPar:'2024-10-04',par:'ΖΗΜΙΑ 4/10',kola:'1',sysk:'ΔΕΞ',kila:'1000',pelatis:'JOHNSON / BRB',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'ΚΟΡΝΗΛΑΚΗ 100x120 κωδ 4066',thesi:''},
+  {id:'26.01.403',xora:'Γαλλία',a:'Κώστας',pAfx:'2026-03-30',afx:'30/3 11:00',pPar:'',par:'',kola:'12',sysk:'ΠΑΛ',kila:'5368',pelatis:'ΠΡΟΤΕΚΤΑ / QUATRIS',katast:'ΑΠΟΘΗΚΕΥΣΗ',paratir:'ΘΑ ΠΑΡΕΙ ΜΕΡΙΚΕΣ',thesi:''},
+  {id:'26.01.451/1',xora:'Γαλλία',a:'Ελένη',pAfx:'2026-03-30',afx:'30/3 8:40',pPar:'2026-03-31',par:'31/3 10:50',kola:'1',sysk:'ΠΑΛ',kila:'313',pelatis:'DICHEM / CRODAROM',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΛΟΥΤΡΟΥ 93 ΑΧΑΡΝΕΣ 08:30-14:00',thesi:''},
+  {id:'26.01.451/2',xora:'',a:'Νίκος',pAfx:'',afx:'',pPar:'2026-04-01',par:'1/4 9:30',kola:'1',sysk:'ΠΑΛ',kila:'757',pelatis:'CARGO GROUP / SEAVIEW',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΠΕΙΡΑΙΩΣ 49 ΜΟΣΧΑΤΟ',thesi:''},
+  {id:'26.01.451/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'6',sysk:'ΠΑΛ',kila:'4300',pelatis:'ΕΝΟΧΗΜΙΚΗ / CHEMVIRON',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΡΕΝΤΗΣ',thesi:''},
+  {id:'26.01.451/4',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'3',sysk:'ΠΑΛ',kila:'1914',pelatis:'ΕΝΟΧΗΜΙΚΗ / LAFFORT',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΡΕΝΤΗΣ',thesi:''},
+  {id:'26.01.451/5',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'4',sysk:'ΠΑΛ',kila:'2429',pelatis:'COSMOCHEM / NATURATEC',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΥΛΩΝΑ',thesi:''},
+  {id:'26.01.385',xora:'Γερμανία',a:'Κώστας',pAfx:'2026-03-30',afx:'30/3 8:50',pPar:'2026-04-01',par:'1/4 9:30',kola:'1',sysk:'ΠΑΛ',kila:'70',pelatis:'ΤΖΩΡΤΖΟΠΟΥΛΟΣ / SHOEI',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΑΛΛΙΡΟΗΣ 71 Ν.ΚΟΣΜΟΣ 09:30-15:00',thesi:''},
+  {id:'26.01.457/1',xora:'Γαλλία',a:'Μαρία',pAfx:'2026-03-30',afx:'30/3 8:50',pPar:'2026-04-01',par:'1/4 10:15',kola:'2',sysk:'ΠΑΛ',kila:'1839',pelatis:'KENVUE / INNOSPEC FRANCE',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΜΑΝΔΡΑ 120x120x120',thesi:''},
+  {id:'26.01.457/2',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31',par:'31/3 10:50',kola:'2',sysk:'ΠΑΛ',kila:'1500',pelatis:'ΑΡΙΤΡΑΝΣ / GRANDS MOULINS',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'TSD LOGISTICS ΒΙΠΕ ΜΑΝΔΡΑΣ',thesi:''},
+  {id:'26.01.457/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'4',sysk:'ΠΑΛ',kila:'2900',pelatis:'ΚΑΝΚΟ / REDSEA',katast:'ΑΝΑΜΟΝΗ',paratir:'ΠΑΝ.ΤΣΑΛΔΑΡΗ 67 ΤΑΥΡΟΣ',thesi:''},
   {id:'26.01.457/4',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'150',pelatis:'ΑΚΤΙΝΑ / ISIGNY STE MERE',katast:'ΑΝΑΜΟΝΗ',paratir:'ΠΑΠΠΟΥ 21 ΑΘΗΝΑ',thesi:''},
   {id:'26.01.457/5',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'40',pelatis:'ΔΡΟΣΟΣ / ANDRITZ',katast:'ΑΝΑΜΟΝΗ',paratir:'ΕΛ ΒΕΝΙΖΕΛΟΥ 25 ΓΑΛΑΤΣΙ',thesi:''},
-  {id:'26.01.457/6',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'1',sysk:'ΠΑΛ',kila:'487',pelatis:'DICHEM / SEDERMA',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΧΑΡΝΕΣ',thesi:''},
-  {id:'26.01.457/7',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'2',sysk:'Χ.Τ',kila:'30',pelatis:'DICHEM / ALBAN MULLER',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΧΑΡΝΕΣ',thesi:''},
-  {id:'26.01.457/8',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'9',sysk:'ΠΑΛ',kila:'3085',pelatis:'DICHEM / SENSIENT',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΧΑΡΝΕΣ',thesi:''},
-  {id:'26.01.455',xora:'ΙΤΑΛΙΑ',a:'Ν',pAfx:'30/3',afx:'30/3 11:20',pPar:'1/4',par:'1/4 10:15',kola:'1',sysk:'ΠΑΛ',kila:'250',pelatis:'KENVUE / ACTIVE CONCEPT',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΜΑΝΔΡΑ 80x120',thesi:''},
-  {id:'26.01.449',xora:'ΙΤΑΛΙΑ',a:'Ν',pAfx:'31/3',afx:'31/3 9:20',pPar:'1/4',par:'',kola:'12',sysk:'ΚΙΒ',kila:'120',pelatis:'ΜΑΡΑΤΣΙΝΟΣ / MANICARDI',katast:'ΣΕ ΜΕΤΑΦΟΡΑ',paratir:'ΣΟΥΛΙΟΥ 79 ΑΓ.ΔΗΜΗΤΡΙΟΣ 08:00-14:00',thesi:''},
-  {id:'26.01.456/1',xora:'ΟΛΛΑΝΔΙΑ',a:'Ν',pAfx:'30/3',afx:'30/3 13:40',pPar:'31/3',par:'31/3 13:30',kola:'13',sysk:'ΠΑΛ',kila:'4614',pelatis:'KENVUE / COSMOS CHEMICALS',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΟΡΝΗΛΑΚΗ 80x120 ΜΗ ΣΤΟΙΒ.',thesi:''},
+  {id:'26.01.457/6',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'487',pelatis:'DICHEM / SEDERMA',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΧΑΡΝΕΣ',thesi:''},
+  {id:'26.01.457/7',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'2',sysk:'Χ.Τ',kila:'30',pelatis:'DICHEM / ALBAN MULLER',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΧΑΡΝΕΣ',thesi:''},
+  {id:'26.01.457/8',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'9',sysk:'ΠΑΛ',kila:'3085',pelatis:'DICHEM / SENSIENT',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΧΑΡΝΕΣ',thesi:''},
+  {id:'26.01.455',xora:'Ιταλία',a:'Νίκος',pAfx:'2026-03-30',afx:'30/3 11:20',pPar:'2026-04-01',par:'1/4 10:15',kola:'1',sysk:'ΠΑΛ',kila:'250',pelatis:'KENVUE / ACTIVE CONCEPT',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΜΑΝΔΡΑ 80x120',thesi:''},
+  {id:'26.01.449',xora:'Ιταλία',a:'Κώστας',pAfx:'2026-03-31',afx:'31/3 9:20',pPar:'2026-04-01',par:'',kola:'12',sysk:'ΚΙΒ',kila:'120',pelatis:'ΜΑΡΑΤΣΙΝΟΣ / MANICARDI',katast:'ΣΕ ΜΕΤΑΦΟΡΑ',paratir:'ΣΟΥΛΙΟΥ 79 ΑΓ.ΔΗΜΗΤΡΙΟΣ',thesi:''},
+  {id:'26.01.456/1',xora:'Ολλανδία',a:'Ελένη',pAfx:'2026-03-30',afx:'30/3 13:40',pPar:'2026-03-31',par:'31/3 13:30',kola:'13',sysk:'ΠΑΛ',kila:'4614',pelatis:'KENVUE / COSMOS CHEMICALS',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΟΡΝΗΛΑΚΗ 80x120 ΜΗ ΣΤΟΙΒ.',thesi:''},
   {id:'26.01.456/2',xora:'',a:'',pAfx:'',afx:'31/3 12:45',pPar:'',par:'',kola:'3',sysk:'ΠΑΛ',kila:'3165',pelatis:'G&C DE BOT / EKO',katast:'ΑΝΑΜΟΝΗ',paratir:'ΕΚΟ ΣΚΑΡΑΜΑΓΚΑΣ 07:30-14:00',thesi:''},
-  {id:'26.01.456/3',xora:'',a:'',pAfx:'',afx:'',pPar:'ΑΜΕΣΗ',par:'',kola:'18',sysk:'ΠΑΛ',kila:'8112',pelatis:'KENVUE / INTERHARZ NEUSS',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΚΟΡΝΗΛΑΚΗ',thesi:''},
-  {id:'26.01.456/4',xora:'',a:'',pAfx:'',afx:'',pPar:'31/3',par:'31/3 10:50',kola:'2',sysk:'ΠΑΛ',kila:'419',pelatis:'SIELINE / HOEKSTRA',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΑΔΑΝΩΝ 4 Ν.ΦΙΛΑΔΕΛΦΕΙΑ',thesi:''},
-  {id:'26.01.456/5',xora:'',a:'',pAfx:'',afx:'',pPar:'31/3',par:'31/3 10:50',kola:'1',sysk:'ΠΑΛ',kila:'1750',pelatis:'ΠΕΤΡΟΠΟΥΛΟΣ / BRP',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'SARMED ΜΑΝΔΡΑ',thesi:''},
-  {id:'26.01.456/6',xora:'',a:'',pAfx:'',afx:'',pPar:'31/3',par:'31/3 10:50',kola:'1',sysk:'ΠΑΛ',kila:'759',pelatis:'CG / FRIESLAND',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'OLYMPIC TRANS ΑΣΠΡΟΠΥΡΓΟΣ',thesi:''},
-  {id:'26.01.456/7',xora:'',a:'',pAfx:'',afx:'',pPar:'1/4',par:'1/4 10:15',kola:'3',sysk:'ΠΑΛ',kila:'264',pelatis:'KENVUE / ASHLAND',katast:'ΑΝΑΜΟΝΗ',paratir:'ΜΑΝΔΡΑ 80x120 ΜΗ ΣΤΟΙΒ.',thesi:''},
-  {id:'26.01.456/8',xora:'',a:'',pAfx:'',afx:'',pPar:'2/4',par:'',kola:'3',sysk:'ΠΑΛ',kila:'1100',pelatis:'ΜΠΡΙΣΚΟΛΑΣ / INKLOUD',katast:'ΑΝΑΜΟΝΗ',paratir:'ΣΤΡΥΜΩΝΟΣ 12 ΒΟΤΑΝΙΚΟΣ',thesi:''},
-  {id:'26.01.444',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'31/3',afx:'31/3 9:30',pPar:'1/4',par:'1/4 9:30',kola:'6',sysk:'ΠΑΛ',kila:'850',pelatis:'COLORI POSTO / HJC',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΑΛΛΙΡΟΗΣ 15 ΑΘΗΝΑ 10:00-12:00',thesi:''},
-  {id:'26.01.420',xora:'ΓΕΡΜΑΝΙΑ',a:'Ν',pAfx:'1-2/4',afx:'31/3 9:30',pPar:'1/4',par:'1/4 9:30',kola:'3',sysk:'ΠΑΛ',kila:'436',pelatis:'ΤΖΩΡΤΖΟΠΟΥΛΟΣ / HOSTETTLER',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΑΛΛΙΡΟΗΣ 41 Ν.ΚΟΣΜΟΣ',thesi:''},
-  {id:'26.01.397',xora:'ΙΣΠΑΝΙΑ',a:'Λ',pAfx:'31/3',afx:'31/3 13:00',pPar:'1/4',par:'1/4 9:30',kola:'1',sysk:'ΠΑΛ',kila:'130',pelatis:'ΧΑΤΖΗΜΙΧΑΗΛ / PERFECT BEAUTY',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΣΩΚΡΑΤΟΥΣ 79-81 ΑΘΗΝΑ',thesi:''},
-  {id:'26.01.442',xora:'ΙΣΠΑΝΙΑ',a:'Λ',pAfx:'31/3',afx:'31/3 14:20',pPar:'1/4',par:'1/4 10:15',kola:'1',sysk:'ΠΑΛ',kila:'202',pelatis:'KENVUE / VANTAGE',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΜΑΝΔΡΑ',thesi:''},
-  {id:'26.01.352',xora:'ΙΣΠΑΝΙΑ',a:'Λ',pAfx:'2/4',afx:'',pPar:'',par:'',kola:'4',sysk:'ΠΑΛ',kila:'400',pelatis:'MANTZOYKΗΣ / SARRIEGUI',katast:'ΑΝΑΜΟΝΗ',paratir:'ΒΕΝΕΖΟΥΕΛΑΣ 23 ΓΛΥΦΑΔΑ',thesi:''},
-  {id:'26.01.445',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'31/3',afx:'',pPar:'',par:'',kola:'24',sysk:'ΠΑΛ',kila:'6600',pelatis:'STANTE / ΦΑΜΑΡ ΘΗΒΑ',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΦΑΜΑΡ ΘΗΒΑ',thesi:''},
-  {id:'26.01.390',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'30/3',afx:'30/3',pPar:'30/3',par:'30/3',kola:'1',sysk:'ΜΗΧ',kila:'9000',pelatis:'ΦΟΡΜΟΥΛΑ / ΘΕΜΕΛΙΩΣΙΣ',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΑΜΕΣΗ ΒΟΤΑΝΙΚΟΣ',thesi:''},
-  {id:'26.01.446',xora:'ΓΑΛΛΙΑ',a:'Λ',pAfx:'30/3',afx:'30/3',pPar:'30/3',par:'30/3',kola:'5',sysk:'ΠΑΛ',kila:'4180',pelatis:'ΤΡΑΝΣΝΕΤ-ΕΚΟ / CHEVRON',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΑΜΕΣΗ ΕΚΟ ΣΚΑΡΑΜΑΓΚΑΣ',thesi:''},
-  {id:'26.01.399',xora:'ΙΤΑΛΙΑ',a:'Ν',pAfx:'1/4',afx:'',pPar:'',par:'',kola:'66',sysk:'ΠΑΛ',kila:'2922',pelatis:'PROMENS / ΦΑΜΑΡ ΑΥΛΩΝΑ',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΥΛΩΝΑ',thesi:''},
-  {id:'26.01.400',xora:'ΙΤΑΛΙΑ',a:'Ν',pAfx:'1/4',afx:'',pPar:'',par:'',kola:'66',sysk:'ΠΑΛ',kila:'2656',pelatis:'PROMENS / ΦΑΜΑΡ ΑΥΛΩΝΑ',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΥΛΩΝΑ',thesi:''},
-  {id:'26.01.431',xora:'ΠΟΛΩΝΙΑ',a:'Ν',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'385',pelatis:'ΓΕΓΟΣ / STOKSON',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ SARMED ΑΣΠΡΟΠΥΡΓΟΣ',thesi:''}
+  {id:'26.01.456/3',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'18',sysk:'ΠΑΛ',kila:'8112',pelatis:'KENVUE / INTERHARZ NEUSS',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΚΟΡΝΗΛΑΚΗ',thesi:''},
+  {id:'26.01.456/4',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31',par:'31/3 10:50',kola:'2',sysk:'ΠΑΛ',kila:'419',pelatis:'SIELINE / HOEKSTRA',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΑΔΑΝΩΝ 4 Ν.ΦΙΛΑΔΕΛΦΕΙΑ',thesi:''},
+  {id:'26.01.456/5',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31',par:'31/3 10:50',kola:'1',sysk:'ΠΑΛ',kila:'1750',pelatis:'ΠΕΤΡΟΠΟΥΛΟΣ / BRP',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'SARMED ΜΑΝΔΡΑ',thesi:''},
+  {id:'26.01.456/6',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-03-31',par:'31/3 10:50',kola:'1',sysk:'ΠΑΛ',kila:'759',pelatis:'CG / FRIESLAND',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'OLYMPIC TRANS ΑΣΠΡΟΠΥΡΓΟΣ',thesi:''},
+  {id:'26.01.456/7',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-04-01',par:'1/4 10:15',kola:'3',sysk:'ΠΑΛ',kila:'264',pelatis:'KENVUE / ASHLAND',katast:'ΑΝΑΜΟΝΗ',paratir:'ΜΑΝΔΡΑ 80x120 ΜΗ ΣΤΟΙΒ.',thesi:''},
+  {id:'26.01.456/8',xora:'',a:'',pAfx:'',afx:'',pPar:'2026-04-02',par:'',kola:'3',sysk:'ΠΑΛ',kila:'1100',pelatis:'ΜΠΡΙΣΚΟΛΑΣ / INKLOUD',katast:'ΑΝΑΜΟΝΗ',paratir:'ΣΤΡΥΜΩΝΟΣ 12 ΒΟΤΑΝΙΚΟΣ',thesi:''},
+  {id:'26.01.444',xora:'Γαλλία',a:'Μαρία',pAfx:'2026-03-31',afx:'31/3 9:30',pPar:'2026-04-01',par:'1/4 9:30',kola:'6',sysk:'ΠΑΛ',kila:'850',pelatis:'COLORI POSTO / HJC',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΑΛΛΙΡΟΗΣ 15 ΑΘΗΝΑ 10:00-12:00',thesi:''},
+  {id:'26.01.420',xora:'Γερμανία',a:'Νίκος',pAfx:'2026-04-01',afx:'31/3 9:30',pPar:'2026-04-01',par:'1/4 9:30',kola:'3',sysk:'ΠΑΛ',kila:'436',pelatis:'ΤΖΩΡΤΖΟΠΟΥΛΟΣ / HOSTETTLER',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΚΑΛΛΙΡΟΗΣ 41 Ν.ΚΟΣΜΟΣ',thesi:''},
+  {id:'26.01.397',xora:'Ισπανία',a:'Κώστας',pAfx:'2026-03-31',afx:'31/3 13:00',pPar:'2026-04-01',par:'1/4 9:30',kola:'1',sysk:'ΠΑΛ',kila:'130',pelatis:'ΧΑΤΖΗΜΙΧΑΗΛ / PERFECT BEAUTY',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΣΩΚΡΑΤΟΥΣ 79-81 ΑΘΗΝΑ',thesi:''},
+  {id:'26.01.442',xora:'Ισπανία',a:'Ελένη',pAfx:'2026-03-31',afx:'31/3 14:20',pPar:'2026-04-01',par:'1/4 10:15',kola:'1',sysk:'ΠΑΛ',kila:'202',pelatis:'KENVUE / VANTAGE',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΜΑΝΔΡΑ',thesi:''},
+  {id:'26.01.352',xora:'Ισπανία',a:'',pAfx:'2026-04-02',afx:'',pPar:'',par:'',kola:'4',sysk:'ΠΑΛ',kila:'400',pelatis:'MANTZOYKΗΣ / SARRIEGUI',katast:'ΑΝΑΜΟΝΗ',paratir:'ΒΕΝΕΖΟΥΕΛΑΣ 23 ΓΛΥΦΑΔΑ',thesi:''},
+  {id:'26.01.445',xora:'Γαλλία',a:'',pAfx:'2026-03-31',afx:'',pPar:'',par:'',kola:'24',sysk:'ΠΑΛ',kila:'6600',pelatis:'STANTE / ΦΑΜΑΡ ΘΗΒΑ',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΦΑΜΑΡ ΘΗΒΑ',thesi:''},
+  {id:'26.01.390',xora:'Γαλλία',a:'Νίκος',pAfx:'2026-03-30',afx:'30/3',pPar:'2026-03-30',par:'30/3',kola:'1',sysk:'ΜΗΧ',kila:'9000',pelatis:'ΦΟΡΜΟΥΛΑ / ΘΕΜΕΛΙΩΣΙΣ',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΑΜΕΣΗ ΒΟΤΑΝΙΚΟΣ',thesi:''},
+  {id:'26.01.446',xora:'Γαλλία',a:'Μαρία',pAfx:'2026-03-30',afx:'30/3',pPar:'2026-03-30',par:'30/3',kola:'5',sysk:'ΠΑΛ',kila:'4180',pelatis:'ΤΡΑΝΣΝΕΤ-ΕΚΟ / CHEVRON',katast:'ΠΑΡΑΔΟΘΗΚΕ',paratir:'ΑΜΕΣΗ ΕΚΟ ΣΚΑΡΑΜΑΓΚΑΣ',thesi:''},
+  {id:'26.01.399',xora:'Ιταλία',a:'',pAfx:'2026-04-01',afx:'',pPar:'',par:'',kola:'66',sysk:'ΠΑΛ',kila:'2922',pelatis:'PROMENS / ΦΑΜΑΡ ΑΥΛΩΝΑ',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΥΛΩΝΑ',thesi:''},
+  {id:'26.01.400',xora:'Ιταλία',a:'',pAfx:'2026-04-01',afx:'',pPar:'',par:'',kola:'66',sysk:'ΠΑΛ',kila:'2656',pelatis:'PROMENS / ΦΑΜΑΡ ΑΥΛΩΝΑ',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ ΑΥΛΩΝΑ',thesi:''},
+  {id:'26.01.431',xora:'Πολωνία',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'1',sysk:'ΠΑΛ',kila:'385',pelatis:'ΓΕΓΟΣ / STOKSON',katast:'ΑΜΕΣΗ',paratir:'ΑΜΕΣΗ SARMED ΑΣΠΡΟΠΥΡΓΟΣ',thesi:''}
 ];
 
 var filtered = rows.slice();
-
-function badgeClass(k){
-  if(k==='ΑΠΟΘΗΚΕΥΣΗ') return 'b-apoth';
-  if(k==='ΑΜΕΣΗ') return 'b-amesi';
-  if(k==='ΠΑΡΑΔΟΘΗΚΕ') return 'b-deliv';
-  if(k==='ΣΕ ΜΕΤΑΦΟΡΑ') return 'b-transit';
-  return 'b-wait';
-}
 
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','paratir'];
 var warehouseFields=['afx','par','katast','thesi','paratir'];
@@ -187,18 +191,13 @@ function canEdit(f){
   return false;
 }
 
-function esc(v){return (v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-
-function cellInput(rowIdx, f, val){
-  var ed = canEdit(f);
-  var cls = ed ? 'ec' : 'rc';
-  if(f==='katast'){
-    var opts=['ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΑΝΑΜΟΝΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
-    var s='<select '+(ed?'':'disabled')+' onchange="updateField('+rowIdx+',\'katast\',this.value)" style="width:100%;font-size:11px">';
-    opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
-    return '<td class="'+cls+'">'+s+'</select></td>';
+function formatDateDisplay(val){
+  if(!val) return '';
+  if(val.indexOf('-')>-1){
+    var p=val.split('-');
+    if(p.length===3) return p[2]+'/'+p[1];
   }
-  return '<td class="'+cls+'"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" onchange="updateField('+rowIdx+',\''+f+'\',this.value)"></td>';
+  return val;
 }
 
 function updateField(idx, field, val){
@@ -208,17 +207,121 @@ function updateField(idx, field, val){
 }
 
 function showNotif(pelatis, field, val){
-  var labels={katast:'Κατάσταση',afx:'Άφιξη',par:'Παράδοση',thesi:'Θέση αποθ.',paratir:'Παρατηρήσεις'};
+  var labels={katast:'Κατάσταση',afx:'Άφιξη',par:'Παράδοση',thesi:'Θέση αποθ.',paratir:'Παρατηρήσεις',pAfx:'Πρβλ. Άφιξη',xora:'Χώρα',a:'Χρήστης'};
   var lbl = labels[field] || field;
   var roleLabel = role==='office'?'Γραφείο':role==='warehouse'?'Αποθήκη':'Admin';
+  var dispVal = (field==='pAfx'||field==='pPar') ? formatDateDisplay(val) : val;
   var n = document.getElementById('notif');
-  document.getElementById('notif-text').textContent = roleLabel+' → '+pelatis+': '+lbl+' "'+val+'"';
+  document.getElementById('notif-text').textContent = roleLabel+' → '+pelatis+': '+lbl+' "'+dispVal+'"';
   n.style.display='flex';
-  n.style.alignItems='center';
-  n.style.gap='8px';
   clearTimeout(window._nt);
   window._nt = setTimeout(function(){n.style.display='none';},4000);
 }
+
+/* ---- MERIDA masked input ---- */
+function makeMeridaCell(rowIdx, val, editable){
+  var cls = editable ? 'ec' : 'rc';
+  if(!editable){
+    return '<td class="'+cls+'"><input type="text" disabled value="'+esc(val)+'"></td>';
+  }
+  return '<td class="'+cls+'"><input class="merida-input" type="text" placeholder="00.00.000" maxlength="10" value="'+esc(val)+'" oninput="onMeridaInput(this,'+rowIdx+')" onchange="updateField('+rowIdx+',\'id\',this.value)"></td>';
+}
+
+function onMeridaInput(el, rowIdx){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var out = '';
+  for(var i=0;i<raw.length && i<7;i++){
+    if(i===2||i===4) out+='.';
+    out+=raw[i];
+  }
+  el.value = out;
+  rows[rowIdx].id = out;
+}
+
+/* ---- COUNTRY autocomplete ---- */
+function makeCountryCell(rowIdx, val, editable){
+  var cls = editable ? 'ec' : 'rc';
+  if(!editable){
+    return '<td class="'+cls+'"><input type="text" disabled value="'+esc(val)+'"></td>';
+  }
+  var uid = 'ac_'+rowIdx;
+  return '<td class="'+cls+'" style="position:relative"><div class="ac-wrap">'+
+    '<input type="text" id="'+uid+'" value="'+esc(val)+'" autocomplete="off" '+
+    'oninput="showAC(this,'+rowIdx+')" onblur="hideAC(\''+uid+'\')" '+
+    'onchange="updateField('+rowIdx+',\'xora\',this.value)" placeholder="Χώρα...">'+
+    '<div class="ac-list" id="list_'+uid+'" style="display:none"></div>'+
+    '</div></td>';
+}
+
+function showAC(inp, rowIdx){
+  var uid = inp.id;
+  var q = inp.value.toLowerCase();
+  var list = document.getElementById('list_'+uid);
+  if(!q){list.style.display='none';return;}
+  var matches = COUNTRIES.filter(function(c){return c.toLowerCase().indexOf(q)===0;});
+  if(!matches.length){list.style.display='none';return;}
+  list.innerHTML = matches.map(function(c,i){
+    return '<div class="ac-item" onmousedown="pickCountry(\''+uid+'\',\''+c+'\','+rowIdx+')">'+c+'</div>';
+  }).join('');
+  list.style.display='block';
+}
+
+function pickCountry(uid, val, rowIdx){
+  document.getElementById(uid).value = val;
+  document.getElementById('list_'+uid).style.display='none';
+  rows[rowIdx].xora = val;
+  showNotif(rows[rowIdx].pelatis||rows[rowIdx].id,'xora',val);
+}
+
+function hideAC(uid){
+  setTimeout(function(){
+    var l=document.getElementById('list_'+uid);
+    if(l) l.style.display='none';
+  },200);
+}
+
+/* ---- USER select ---- */
+function makeUserCell(rowIdx, val, editable){
+  var cls = editable ? 'ec' : 'rc';
+  if(!editable){
+    return '<td class="'+cls+'"><input type="text" disabled value="'+esc(val)+'"></td>';
+  }
+  var opts = USERS.map(function(u){
+    return '<option'+(val===u?' selected':'')+'>'+u+'</option>';
+  }).join('');
+  return '<td class="'+cls+'"><select onchange="updateField('+rowIdx+',\'a\',this.value)">'+
+    '<option value=""></option>'+opts+'</select></td>';
+}
+
+/* ---- DATE picker ---- */
+function makeDateCell(rowIdx, field, val, editable){
+  var cls = editable ? 'ec' : 'rc';
+  var display = formatDateDisplay(val);
+  if(!editable){
+    return '<td class="'+cls+'"><input type="text" disabled value="'+esc(display)+'"></td>';
+  }
+  var isoVal = (val && val.indexOf('-')>-1) ? val : '';
+  return '<td class="'+cls+'"><input type="date" value="'+esc(isoVal)+'" '+
+    'onchange="updateField('+rowIdx+',\''+field+'\',this.value)"></td>';
+}
+
+/* ---- generic text cell ---- */
+function makeTextCell(rowIdx, field, val, editable){
+  var cls = editable ? 'ec' : 'rc';
+  return '<td class="'+cls+'"><input type="text" '+(editable?'':'disabled')+' value="'+esc(val)+'" '+
+    'onchange="updateField('+rowIdx+',\''+field+'\',this.value)"></td>';
+}
+
+/* ---- katast select ---- */
+function makeKatastCell(rowIdx, val, editable){
+  var cls = editable ? 'ec' : 'rc';
+  var opts=['ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΑΝΑΜΟΝΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+  var s='<select '+(editable?'':'disabled')+' onchange="updateField('+rowIdx+',\'katast\',this.value)" style="font-size:11px">';
+  opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
+  return '<td class="'+cls+'">'+s+'</select></td>';
+}
+
+function esc(v){return (v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
 function render(){
   var tb = document.getElementById('tbody');
@@ -226,20 +329,20 @@ function render(){
   filtered.forEach(function(row){
     var ri = rows.indexOf(row);
     html += '<tr>';
-    html += cellInput(ri,'id',row.id);
-    html += cellInput(ri,'xora',row.xora);
-    html += cellInput(ri,'a',row.a);
-    html += cellInput(ri,'pAfx',row.pAfx);
-    html += cellInput(ri,'afx',row.afx);
-    html += cellInput(ri,'pPar',row.pPar);
-    html += cellInput(ri,'par',row.par);
-    html += cellInput(ri,'kola',row.kola);
-    html += cellInput(ri,'sysk',row.sysk);
-    html += cellInput(ri,'kila',row.kila);
-    html += cellInput(ri,'pelatis',row.pelatis);
-    html += cellInput(ri,'katast',row.katast);
-    html += cellInput(ri,'paratir',row.paratir);
-    html += cellInput(ri,'thesi',row.thesi);
+    html += makeMeridaCell(ri, row.id, canEdit('id'));
+    html += makeCountryCell(ri, row.xora, canEdit('xora'));
+    html += makeUserCell(ri, row.a, canEdit('a'));
+    html += makeDateCell(ri, 'pAfx', row.pAfx, canEdit('pAfx'));
+    html += makeTextCell(ri, 'afx', row.afx, canEdit('afx'));
+    html += makeDateCell(ri, 'pPar', row.pPar, canEdit('pPar'));
+    html += makeTextCell(ri, 'par', row.par, canEdit('par'));
+    html += makeTextCell(ri, 'kola', row.kola, canEdit('kola'));
+    html += makeTextCell(ri, 'sysk', row.sysk, canEdit('sysk'));
+    html += makeTextCell(ri, 'kila', row.kila, canEdit('kila'));
+    html += makeTextCell(ri, 'pelatis', row.pelatis, canEdit('pelatis'));
+    html += makeKatastCell(ri, row.katast, canEdit('katast'));
+    html += makeTextCell(ri, 'paratir', row.paratir, canEdit('paratir'));
+    html += makeTextCell(ri, 'thesi', row.thesi, canEdit('thesi'));
     html += '</tr>';
   });
   tb.innerHTML = html;
