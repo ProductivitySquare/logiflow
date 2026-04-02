@@ -257,7 +257,6 @@ function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'
 rows.push(newRow(),newRow(),newRow());
 
 var filtered=rows.slice();
-var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes'];
 var warehouseFields=['afx','par','katast','thesi','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
   
@@ -347,14 +346,14 @@ function makeUserCell(ri,val,ed){
 /* ---- DATETIME ---- */
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
-  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val))+'"></td>';
   var isProvl=(field==='pAfx'||field==='pPar');
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'"></td>';
   if(isProvl){
     var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
     return '<td class="'+cls+'"><input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
   }
-var isProvl=(field==='pAfx'||field==='pPar');
-  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'"></td>';
+  var iso=(val&&val.length>=10)?val.substring(0,16):'';
+  return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
 }
 
 /* ---- TEXT ---- */
@@ -460,6 +459,7 @@ window.addEventListener('scroll',hideACPortal,true);
 window.addEventListener('resize',hideACPortal);
 
 updateWeekLabel();
+  render(); 
 </script>
 </body>
 </html>
