@@ -21,7 +21,16 @@ body{font-family:system-ui,sans-serif;font-size:13px;background:#f0efe8;color:#1
 .sync-indicator.saving{color:#f59e0b;display:flex}
 .sync-indicator.saved{color:#16a34a;display:flex}
 .sync-indicator.error{color:#dc2626;display:flex}
-.legend{display:flex;gap:12px;flex-wrap:wrap;padding:6px 16px;font-size:11px;color:#777;background:#f0efe8;border-bottom:1px solid #ddd}
+.legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px 16px;
+  font-size: 11px;
+  color: #777;
+  background: rgba(0,0,0,0.04);      /* ← από #f0efe8 */
+  border-bottom: 1px solid rgba(0,0,0,0.2);  /* ← από #ddd */
+}
 .legend span{display:flex;align-items:center;gap:4px}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
 .wrap{overflow-x:auto}
@@ -48,7 +57,14 @@ tbody td input:disabled,tbody td select:disabled{opacity:.4;cursor:not-allowed}
 #ac-portal .ac-item{padding:6px 10px;cursor:pointer;font-size:12px;color:#1a1a18;white-space:nowrap}
 #ac-portal .ac-item:hover,#ac-portal .ac-item.sel{background:#dbeafe;color:#1e40af}
 input.merida-input{letter-spacing:1px;font-family:monospace;font-size:12px}
-input[type="datetime-local"]{cursor:pointer;font-size:11px}
+input[type="datetime-local"], input[type="date"] {
+  cursor: pointer;
+  font-size: 11px;
+  border-radius: 6px;        /* ← νέο */
+  border: none;              /* ← αφαίρεση του αηδιαστικού border */
+  appearance: none;          /* ← καθαρίζει και το native styling */
+  -webkit-appearance: none;
+}
 .notes-btn{display:inline-block;padding:2px 8px;border-radius:4px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:11px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
 .notes-btn:hover{background:#bfdbfe}
 .notes-empty{color:#bbb;font-size:11px;cursor:pointer;padding:2px 8px;background:none;border:1px dashed #ddd;border-radius:4px;font-family:inherit}
