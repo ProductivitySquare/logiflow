@@ -6,36 +6,22 @@
 <title>LogiFlow — Αφίξεις</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;font-size:13px;background:
-#f0efe8;color:
-#1a1a18;min-height:100vh}
+body{font-family:system-ui,sans-serif;font-size:13px;background:#f0efe8;color:#1a1a18;min-height:100vh}
 .topbar{background:#fff;border-bottom:1px solid #ddd;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
-.logo{font-size:15px;font-weight:700;color:
-#1a1a18;margin-right:6px}
+.logo{font-size:15px;font-weight:700;color:#1a1a18;margin-right:6px}
 .role-tabs{display:flex;gap:4px}
 .role-btn{padding:5px 13px;border-radius:6px;border:1px solid #ddd;background:transparent;cursor:pointer;font-size:12px;color:#666}
-.role-btn.active{background:
-#1a56db;border-color:
-#1a56db;color:#fff;font-weight:600}
+.role-btn.active{background:#1a56db;border-color:#1a56db;color:#fff;font-weight:600}
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 16px;background:#fff;border-bottom:1px solid #ddd}
-.toolbar input,.toolbar select{padding:5px 9px;border:1px solid #ddd;border-radius:6px;background:
-#f9f9f7;color:
-#1a1a18;font-size:12px}
+.toolbar input,.toolbar select{padding:5px 9px;border:1px solid #ddd;border-radius:6px;background:#f9f9f7;color:#1a1a18;font-size:12px}
 .toolbar input{width:180px}
-.add-btn{padding:5px 14px;border-radius:6px;border:none;background:
-#16a34a;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
-.add-btn:hover{background:
-#15803d}
-.sync-indicator{font-size:11px;color:
-#16a34a;font-weight:600;display:none;align-items:center;gap:4px}
-.sync-indicator.saving{color:
-#f59e0b;display:flex}
-.sync-indicator.saved{color:
-#16a34a;display:flex}
-.sync-indicator.error{color:
-#dc2626;display:flex}
-.legend{display:flex;gap:12px;flex-wrap:wrap;padding:6px 16px;font-size:11px;color:#777;background:
-#f0efe8;border-bottom:1px solid #ddd}
+.add-btn{padding:5px 14px;border-radius:6px;border:none;background:#16a34a;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.add-btn:hover{background:#15803d}
+.sync-indicator{font-size:11px;color:#16a34a;font-weight:600;display:none;align-items:center;gap:4px}
+.sync-indicator.saving{color:#f59e0b;display:flex}
+.sync-indicator.saved{color:#16a34a;display:flex}
+.sync-indicator.error{color:#dc2626;display:flex}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:6px 16px;font-size:11px;color:#777;background:#f0efe8;border-bottom:1px solid #ddd}
 .legend span{display:flex;align-items:center;gap:4px}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
 .wrap{overflow-x:auto}
@@ -43,46 +29,27 @@ table{width:100%;border-collapse:collapse;min-width:1050px}
 thead th{background:#fff;padding:7px 8px;text-align:left;font-size:11px;font-weight:700;color:#555;border-bottom:2px solid #ccc;white-space:nowrap;position:sticky;top:0;z-index:5}
 tbody tr{border-bottom:1px solid rgba(0,0,0,.07)}
 tbody tr:hover{filter:brightness(.95)}
-tbody tr.row-apoth{background:
-#bbf7d0}
-tbody tr.row-amesi{background:
-#fecaca}
-tbody tr.row-transit{background:
-#bfdbfe}
-tbody tr.row-deliv{background:
-#e0f2fe}
+tbody tr.row-apoth{background:#bbf7d0}
+tbody tr.row-amesi{background:#fecaca}
+tbody tr.row-transit{background:#bfdbfe}
+tbody tr.row-deliv{background:#e0f2fe}
 tbody tr.row-wait{background:#fff}
 tbody td{padding:3px 5px;vertical-align:middle}
-tbody td input,tbody td select{width:100%;padding:3px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:
-#1a1a18;font-size:12px;font-family:inherit}
-tbody td input:focus,tbody td select:focus{border-color:
-#93b4f5;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.12)}
+tbody td input,tbody td select{width:100%;padding:3px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:#1a1a18;font-size:12px;font-family:inherit}
+tbody td input:focus,tbody td select:focus{border-color:#93b4f5;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.12)}
 tbody td input:disabled,tbody td select:disabled{opacity:.4;cursor:not-allowed}
-.ec input,.ec select{background:rgba(26,86,219,.08);border-color:
-#bfdbfe}
+.ec input,.ec select{background:rgba(26,86,219,.08);border-color:#bfdbfe}
 .rc input,.rc select{opacity:.45}
-#ac-portal{position:fixed;background:#fff;border:1.5px solid 
-#93b4f5;border-radius:8px;z-index:9999;max-height:200px;overflow-y:auto;box-shadow:0 6px 20px rgba(0,0,0,.15);display:none;min-width:140px;}
-#ac-portal .ac-item{padding:6px 10px;cursor:pointer;font-size:12px;color:
-#1a1a18;white-space:nowrap}
-#ac-portal .ac-item:hover,#ac-portal .ac-item.sel{background:
-#dbeafe;color:
-#1e40af}
+#ac-portal{position:fixed;background:#fff;border:1.5px solid #93b4f5;border-radius:8px;z-index:9999;max-height:200px;overflow-y:auto;box-shadow:0 6px 20px rgba(0,0,0,.15);display:none;min-width:140px;}
+#ac-portal .ac-item{padding:6px 10px;cursor:pointer;font-size:12px;color:#1a1a18;white-space:nowrap}
+#ac-portal .ac-item:hover,#ac-portal .ac-item.sel{background:#dbeafe;color:#1e40af}
 input.merida-input{letter-spacing:1px;font-family:monospace;font-size:12px}
 input[type="datetime-local"]{cursor:pointer;font-size:11px}
-.notes-btn{display:inline-block;padding:2px 8px;border-radius:4px;border:1px solid 
-#93c5fd;background:
-#dbeafe;color:
-#1e40af;font-size:11px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
-.notes-btn:hover{background:
-#bfdbfe}
+.notes-btn{display:inline-block;padding:2px 8px;border-radius:4px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:11px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
+.notes-btn:hover{background:#bfdbfe}
 .notes-empty{color:#bbb;font-size:11px;cursor:pointer;padding:2px 8px;background:none;border:1px dashed #ddd;border-radius:4px;font-family:inherit}
-.del-btn{padding:1px 6px;border-radius:4px;border:1px solid 
-#fca5a5;background:
-#fee2e2;color:
-#b91c1c;font-size:11px;cursor:pointer;font-family:inherit}
-.del-btn:hover{background:
-#fca5a5}
+.del-btn{padding:1px 6px;border-radius:4px;border:1px solid #fca5a5;background:#fee2e2;color:#b91c1c;font-size:11px;cursor:pointer;font-family:inherit}
+.del-btn:hover{background:#fca5a5}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:#fff;border-radius:14px;width:min(560px,96vw);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.22)}
@@ -92,46 +59,37 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
 .modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#bbb;padding:0 4px;line-height:1}
 .modal-close:hover{color:#333}
 .modal-body{padding:16px 20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px}
-.msec{background:
-#f9f9f7;border-radius:8px;padding:12px 14px}
+.msec{background:#f9f9f7;border-radius:8px;padding:12px 14px}
 .msec-title{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.msec textarea,.msec input{width:100%;border:1px solid 
-#e0dfd8;border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:
-#1a1a18;background:#fff;resize:vertical}
+.msec textarea,.msec input{width:100%;border:1px solid #e0dfd8;border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;color:#1a1a18;background:#fff;resize:vertical}
 .msec textarea{min-height:50px}
-.msec textarea:focus,.msec input:focus{border-color:
-#93b4f5;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.1)}
+.msec textarea:focus,.msec input:focus{border-color:#93b4f5;outline:none;box-shadow:0 0 0 2px rgba(26,86,219,.1)}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .mlabel{font-size:11px;color:#666;margin-bottom:3px}
 .modal-footer{padding:12px 20px;border-top:1px solid #eee;display:flex;justify-content:flex-end;gap:8px}
 .modal-footer button{padding:7px 18px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;font-family:inherit}
 .btn-cancel{border:1px solid #ddd;background:#fff;color:#555}
-.btn-save{border:none;background:
-#1a56db;color:#fff}
-.btn-save:hover{background:
-#1648c0}
-.notif{display:none;position:fixed;top:68px;right:18px;background:
-#1a56db;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:500;max-width:300px;box-shadow:0 4px 16px rgba(0,0,0,.18);animation:slin .3s ease;align-items:center;gap:8px}
+.btn-save{border:none;background:#1a56db;color:#fff}
+.btn-save:hover{background:#1648c0}
+.notif{display:none;position:fixed;top:68px;right:18px;background:#1a56db;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:500;max-width:300px;box-shadow:0 4px 16px rgba(0,0,0,.18);animation:slin .3s ease;align-items:center;gap:8px}
 @keyframes slin{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
 .notif-x{cursor:pointer;opacity:.7;font-size:16px;margin-left:6px}
 .loading-overlay{position:fixed;inset:0;background:rgba(240,239,232,.85);z-index:2000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
-.loading-overlay .spinner{width:36px;height:36px;border:3px solid #ddd;border-top-color:
-#1a56db;border-radius:50%;animation:spin .7s linear infinite}
+.loading-overlay .spinner{width:36px;height:36px;border:3px solid #ddd;border-top-color:#1a56db;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay p{font-size:14px;color:#555;font-weight:500}
 </style>
 </head>
 <body>
+
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <p>Σύνδεση με Firebase...</p>
 </div>
+
 <div class="topbar">
   <span class="logo">LogiFlow</span>
-  <button onclick="exportExcel()" style="padding:3px 10px;border:1px solid 
-#16a34a;border-radius:5px;background:
-#dcfce7;color:
-#166534;cursor:pointer;font-size:12px;font-weight:600">↓ Excel</button>
+  <button onclick="exportExcel()" style="padding:3px 10px;border:1px solid #16a34a;border-radius:5px;background:#dcfce7;color:#166534;cursor:pointer;font-size:12px;font-weight:600">↓ Excel</button>
   <button onclick="changeWeek(-1)" style="padding:3px 8px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:13px">&#8592;</button>
   <span id="weekLabel" style="font-size:12px;color:#444;font-weight:600;min-width:220px;text-align:center"></span>
   <button onclick="changeWeek(1)" style="padding:3px 8px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:13px">&#8594;</button>
@@ -143,6 +101,7 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
     <button class="role-btn" onclick="setRole('admin',this)">Admin</button>
   </div>
 </div>
+
 <div class="toolbar">
   <input type="text" placeholder="Αναζήτηση..." oninput="filterRows(this.value)">
   <select onchange="filterStatus(this.value)">
@@ -155,20 +114,16 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
   </select>
   <button class="add-btn" onclick="addRow()">+ Νέα γραμμή</button>
 </div>
+
 <div class="legend">
-  <span><span class="dot" style="background:
-#4ade80"></span>Αποθήκευση</span>
-  <span><span class="dot" style="background:
-#f87171"></span>Άμεση</span>
-  <span><span class="dot" style="background:
-#60a5fa"></span>Σε μεταφορά</span>
-  <span><span class="dot" style="background:
-#38bdf8"></span>Παραδόθηκε</span>
-  <span><span class="dot" style="background:
-#e5e7eb"></span>Αναμονή</span>
-  <span style="margin-left:6px;color:
-#1a56db">μπλε = επεξεργάσιμο από τον ρόλο σου</span>
+  <span><span class="dot" style="background:#4ade80"></span>Αποθήκευση</span>
+  <span><span class="dot" style="background:#f87171"></span>Άμεση</span>
+  <span><span class="dot" style="background:#60a5fa"></span>Σε μεταφορά</span>
+  <span><span class="dot" style="background:#38bdf8"></span>Παραδόθηκε</span>
+  <span><span class="dot" style="background:#e5e7eb"></span>Αναμονή</span>
+  <span style="margin-left:6px;color:#1a56db">μπλε = επεξεργάσιμο από τον ρόλο σου</span>
 </div>
+
 <div class="wrap">
   <table>
     <thead><tr>
@@ -191,11 +146,14 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
     <tbody id="tbody"></tbody>
   </table>
 </div>
+
 <div id="ac-portal"></div>
+
 <div class="notif" id="notif">
   <span id="notif-text"></span>
   <span class="notif-x" onclick="this.parentElement.style.display='none'">✕</span>
 </div>
+
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-header">
@@ -231,10 +189,12 @@ input[type="datetime-local"]{cursor:pointer;font-size:11px}
     </div>
   </div>
 </div>
+
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, onValue, set, remove, push } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
 const firebaseConfig = {
   apiKey: "AIzaSyC37TJcd32ZXSbEdK1HJ9FXy8kLlIQVtgY",
   authDomain: "logiflow-8c931.firebaseapp.com",
@@ -244,13 +204,16 @@ const firebaseConfig = {
   appId: "1:17405543116:web:90783fb3e9be24cf753869",
   databaseURL: "https://logiflow-8c931-default-rtdb.europe-west1.firebasedatabase.app"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
 // Expose Firebase functions to global scope
 window._fb = { db, ref, set, remove, push, onValue };
 window._fbReady = true;
 window.dispatchEvent(new Event('fbready'));
 </script>
+
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
 var currentMonday=getThisMonday();
@@ -259,13 +222,17 @@ var filtered=[];
 var weekKey='';
 var isSyncing=false;
 var saveTimer=null;
+
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
 var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
 var USERS=['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Άλλος'];
+
 var warehouseFields=['afx','par','katast','thesi','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
+
 function eN(){return{address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
 function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),thesi:''};}
+
 function getThisMonday(){
   var d=new Date();var day=d.getDay()||7;
   d.setHours(0,0,0,0);d.setDate(d.getDate()-(day-1));return d;
@@ -281,20 +248,24 @@ function getWeekKey(d){
   var wn=getWeekNum(d);
   return 'week_'+d.getFullYear()+'_'+String(wn).padStart(2,'0');
 }
+
 function updateWeekLabel(){
   var end=new Date(currentMonday);end.setDate(end.getDate()+6);
   var wn=getWeekNum(currentMonday);
   document.getElementById('weekLabel').textContent='Αφίξεις — Εβδομάδα '+wn+' · '+fmt(currentMonday)+' – '+fmt(end)+' '+end.getFullYear();
   weekKey=getWeekKey(currentMonday);
 }
+
 function changeWeek(dir){
   currentMonday=new Date(currentMonday);
   currentMonday.setDate(currentMonday.getDate()+dir*7);
   updateWeekLabel();
   loadWeek();
 }
+
 // ---- FIREBASE ----
 var unsubscribe=null;
+
 function loadWeek(){
   document.getElementById('loadingOverlay').style.display='flex';
   if(unsubscribe)unsubscribe();
@@ -318,6 +289,7 @@ function loadWeek(){
     applyFilters();
   });
 }
+
 function pushRow(r){
   var {db,ref,push,set}=window._fb;
   var weekRef=ref(db,'weeks/'+weekKey+'/rows');
@@ -325,6 +297,7 @@ function pushRow(r){
   r._fbKey=newRef.key;
   set(newRef,sanitize(r));
 }
+
 function saveRow(r){
   if(!r._fbKey)return;
   setSyncStatus('saving');
@@ -333,17 +306,20 @@ function saveRow(r){
     .then(function(){setSyncStatus('saved');})
     .catch(function(){setSyncStatus('error');});
 }
+
 function deleteRowFB(r){
   if(!r._fbKey)return;
   var {db,ref,remove}=window._fb;
   remove(ref(db,'weeks/'+weekKey+'/rows/'+r._fbKey));
 }
+
 function sanitize(r){
   var c=Object.assign({},r);
   delete c._fbKey;
   if(!c.notes)c.notes=eN();
   return c;
 }
+
 function setSyncStatus(st){
   var el=document.getElementById('syncIndicator');
   el.className='sync-indicator '+st;
@@ -352,12 +328,14 @@ function setSyncStatus(st){
   if(st==='error')el.textContent='✕ Σφάλμα!';
   if(st==='saved')setTimeout(function(){el.className='sync-indicator';},2500);
 }
+
 // ---- FIELD LOGIC ----
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
+
 function updateField(idx,field,val){
   var old=rows[idx][field];
   rows[idx][field]=val;
@@ -367,12 +345,14 @@ function updateField(idx,field,val){
   }
   if(field==='katast')render();
 }
+
 function showNotif(nm,field){
   var labels={katast:'Κατάσταση',afx:'Άφιξη',par:'Παράδοση',thesi:'Θέση',notes:'Παρατηρήσεις',pAfx:'Πρβλ. Άφιξη',pPar:'Πρβλ. Παράδοση',xora:'Χώρα',a:'Χρήστης',sysk:'Συσκ.'};
   var n=document.getElementById('notif');
   document.getElementById('notif-text').textContent=(role==='office'?'Γραφείο':role==='warehouse'?'Αποθήκη':'Admin')+' → '+(nm||'—')+': '+(labels[field]||field)+' ενημερώθηκε';
   n.style.display='flex';clearTimeout(window._nt);window._nt=setTimeout(function(){n.style.display='none';},3500);
 }
+
 // ---- MERIDA ----
 function makeMeridaCell(ri,val,ed){
   var cls=ed?'ec':'rc';
@@ -380,6 +360,7 @@ function makeMeridaCell(ri,val,ed){
   return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="10" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="updateField('+ri+',\'id\',this.value)"></td>';
 }
 function onMI(el,ri){var r=el.value.replace(/[^0-9]/g,''),o='';for(var i=0;i<r.length&&i<7;i++){if(i===2||i===4)o+='.';o+=r[i];}el.value=o;rows[ri].id=o;}
+
 // ---- AUTOCOMPLETE ----
 var portal=null;
 var activeAC=null;
@@ -414,6 +395,7 @@ function onACInput(inp,ri,field){
   showACPortal(inp,m,ri,field);
 }
 function onACBlur(){setTimeout(hideACPortal,180);}
+
 // ---- USER ----
 function makeUserCell(ri,val,ed){
   var cls=ed?'ec':'rc';
@@ -421,6 +403,7 @@ function makeUserCell(ri,val,ed){
   var opts=USERS.map(function(u){return'<option'+(val===u?' selected':'')+'>'+u+'</option>';}).join('');
   return '<td class="'+cls+'"><select onchange="updateField('+ri+',\'a\',this.value)"><option value=""></option>'+opts+'</select></td>';
 }
+
 // ---- DATETIME ----
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
@@ -433,11 +416,13 @@ function makeDTCell(ri,field,val,ed){
   var iso=(val&&val.length>=10)?val.substring(0,16):'';
   return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
 }
+
 // ---- TEXT ----
 function makeTxtCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   return '<td class="'+cls+'"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
 }
+
 // ---- KATAST ----
 function makeKatastCell(ri,val,ed){
   var cls=ed?'ec':'rc';
@@ -446,6 +431,7 @@ function makeKatastCell(ri,val,ed){
   opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
   return '<td class="'+cls+'">'+s+'</select></td>';
 }
+
 // ---- NOTES ----
 function makeNotesCell(ri,notes,ed){
   var cls=ed?'ec':'rc';
@@ -456,6 +442,7 @@ function makeNotesCell(ri,notes,ed){
     :'<button class="notes-empty" onclick="openModal('+ri+')">'+(ed?'+ Προσθήκη':'—')+'</button>';
   return '<td class="'+cls+'">'+inner+'</td>';
 }
+
 // ---- MODAL ----
 function openModal(ri){
   modalRowIdx=ri;
@@ -486,14 +473,14 @@ function saveModal(){
   showNotif(rows[modalRowIdx].pelatis||rows[modalRowIdx].id||'Γραμμή '+(modalRowIdx+1),'notes');
   closeModal();render();
 }
+
 function printNote(){
   var r=rows[modalRowIdx];
   var n=r.notes||eN();
   var w=window.open('','_blank','width=600,height=500');
   w.document.write('<html><head><title>Παρατηρήσεις</title><style>body{font-family:system-ui;padding:24px;font-size:14px}p{margin:6px 0;color:#444}.sec{margin-top:16px;border-top:1px solid #eee;padding-top:10px}.label{font-size:11px;color:#999;text-transform:uppercase;font-weight:700}</style></head><body>');
   w.document.write('<h1 style="text-align:center;font-size:20px;font-weight:700;margin-bottom:4px">'+(r.id||'—')+'</h1>');
-  w.document.write('<p style="text-align:center;font-size:15px;font-weight:600;margin:2px 0;color:
-#1a1a18">'+(r.pelatis||'—')+'</p>');
+  w.document.write('<p style="text-align:center;font-size:15px;font-weight:600;margin:2px 0;color:#1a1a18">'+(r.pelatis||'—')+'</p>');
   w.document.write('<p style="text-align:center;font-size:12px;color:#888;margin:2px 0">'+r.katast+'</p>');
   w.document.write('<p style="text-align:center;font-size:11px;color:#bbb;margin-top:4px">'+document.getElementById('weekLabel').textContent+'</p>');
   w.document.write('<hr style="margin:14px 0;border:none;border-top:1px solid #eee">');
@@ -503,6 +490,7 @@ function printNote(){
   w.document.write('<br><br><small style="color:#ccc">LogiFlow — εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
   w.document.write('</body></html>');w.document.close();w.print();
 }
+
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
@@ -529,18 +517,21 @@ function render(){
   });
   tb.innerHTML=html;
 }
+
 function addRow(){
   var r=newRow();
   rows.push(r);
   pushRow(r);
   applyFilters();
 }
+
 function delRow(ri){
   if(!confirm('Διαγραφή γραμμής;'))return;
   deleteRowFB(rows[ri]);
   rows.splice(ri,1);
   applyFilters();
 }
+
 function setRole(r,btn){
   if(r==='admin'){var pw=prompt('Κωδικός Admin:');if(pw!=='1209'){alert('Λάθος κωδικός!');return;}}
   role=r;
@@ -548,6 +539,7 @@ function setRole(r,btn){
   btn.classList.add('active');
   render();
 }
+
 function filterRows(q){searchQ=q.toLowerCase();applyFilters();}
 function filterStatus(s){statusF=s;applyFilters();}
 function applyFilters(){
@@ -557,6 +549,7 @@ function applyFilters(){
     return mQ&&mS;
   });render();
 }
+
 function exportExcel(){
   var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια','Θέση Αποθ.'];
   var csv=heads.join('\t')+'\n';
@@ -569,13 +562,16 @@ function exportExcel(){
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='LogiFlow_KW'+wn+'_'+currentMonday.getFullYear()+'.xls';a.click();
 }
+
 window.addEventListener('scroll',hideACPortal,true);
 window.addEventListener('resize',hideACPortal);
+
 // Init after Firebase ready
 function init(){
   updateWeekLabel();
   loadWeek();
 }
+
 if(window._fbReady){init();}
 else{window.addEventListener('fbready',init);}
 </script>
