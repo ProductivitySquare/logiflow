@@ -132,6 +132,38 @@ input[type="datetime-local"],input[type="date"]{cursor:pointer;font-size:11px;fo
 .notif-x{cursor:pointer;opacity:.7;font-size:16px;margin-left:6px}
 .notif-x:hover{opacity:1}
 
+/* ── PULSE / AWARENESS ── */
+@keyframes pulseRow {
+  0%,100% { box-shadow: inset 4px 0 0 var(--brand), 0 0 0 0 rgba(26,58,42,0); }
+  50%     { box-shadow: inset 4px 0 0 var(--brand), 0 0 14px 0 rgba(26,58,42,.35); }
+}
+tbody tr.pulse {
+  animation: pulseRow 1.6s ease-in-out infinite;
+  position: relative;
+}
+.ack-btn {
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:5px;border:none;
+  background:var(--brand);color:white;
+  font-size:10px;font-weight:700;font-family:inherit;
+  cursor:pointer;text-transform:uppercase;letter-spacing:.04em;
+  box-shadow:0 2px 6px rgba(26,58,42,.25);
+  animation: pulseBtn 1.6s ease-in-out infinite;
+}
+@keyframes pulseBtn {
+  0%,100% { transform: scale(1); }
+  50%     { transform: scale(1.08); }
+}
+.ack-btn:hover { background:var(--brand-hover); }
+.seen-tag {
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:4px;
+  background:var(--brand-light);color:var(--brand);
+  font-size:9px;font-weight:600;font-family:inherit;
+  text-transform:uppercase;letter-spacing:.03em;
+  white-space:nowrap;
+}
+
 /* ── LOADING OVERLAY ── */
 .loading-overlay{position:fixed;inset:0;background:rgba(245,244,240,.92);z-index:2000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .loading-overlay .spinner{width:40px;height:40px;border:3px solid var(--green-border);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
@@ -162,7 +194,7 @@ input[type="datetime-local"],input[type="date"]{cursor:pointer;font-size:11px;fo
 </div>
 
 <div class="toolbar">
-  <input type="text" placeholder="Αναζήτηση..." oninput="filterRows(this.value)">
+  <input type="text" placeholder="🔍 Αναζήτηση..." oninput="filterRows(this.value)">
   <select onchange="filterStatus(this.value)">
     <option value="">Όλες καταστάσεις</option>
     <option value="ΑΠΟΘΗΚΕΥΣΗ">Αποθήκευση</option>
@@ -200,6 +232,7 @@ input[type="datetime-local"],input[type="date"]{cursor:pointer;font-size:11px;fo
       <th style="width:86px">Κατάσταση</th>
       <th style="width:120px">Παρατηρήσεις</th>
       <th style="width:100px">Θέση Αποθ.</th>
+      <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
@@ -290,7 +323,7 @@ var warehouseFields=['afx','par','katast','thesi','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
 
 function eN(){return{address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
-function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),thesi:''};}
+function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),thesi:'',lastChangedBy:'',lastChangedAt:0,seenBy:{}};}
 
 function getThisMonday(){
   var d=new Date();var day=d.getDay()||7;
@@ -338,6 +371,9 @@ function loadWeek(){
       rows=Object.entries(data).map(function(e){
         var r=e[1];r._fbKey=e[0];
         if(!r.notes)r.notes=eN();
+        if(!r.seenBy)r.seenBy={};
+        if(!r.lastChangedBy)r.lastChangedBy='';
+        if(!r.lastChangedAt)r.lastChangedAt=0;
         return r;
       });
     } else {
@@ -376,6 +412,9 @@ function sanitize(r){
   var c=Object.assign({},r);
   delete c._fbKey;
   if(!c.notes)c.notes=eN();
+  if(!c.seenBy)c.seenBy={};
+  if(!c.lastChangedBy)c.lastChangedBy='';
+  if(!c.lastChangedAt)c.lastChangedAt=0;
   return c;
 }
 
@@ -399,6 +438,13 @@ function updateField(idx,field,val){
   var old=rows[idx][field];
   rows[idx][field]=val;
   if(old!==val){
+    // Stamp authorship — admin doesn't generate pulses
+    if(role!=='admin'){
+      rows[idx].lastChangedBy=role;
+      rows[idx].lastChangedAt=Date.now();
+      rows[idx].seenBy={};
+      rows[idx].seenBy[role]=Date.now(); // own change = self-acked
+    }
     showNotif(rows[idx].pelatis||rows[idx].id||'Γραμμή '+(idx+1),field);
     saveRow(rows[idx]);
   }
@@ -436,6 +482,12 @@ function showACPortal(inp,list,ri,field){
 function hideACPortal(){var p=getPortal();p.style.display='none';activeAC=null;}
 function pickAC(val,ri,field){
   rows[ri][field]=val;
+  if(role!=='admin'){
+    rows[ri].lastChangedBy=role;
+    rows[ri].lastChangedAt=Date.now();
+    rows[ri].seenBy={};
+    rows[ri].seenBy[role]=Date.now();
+  }
   var el=document.getElementById('ac_'+ri+'_'+field);
   if(el)el.value=val;
   hideACPortal();
@@ -528,6 +580,12 @@ function saveModal(){
     euro:document.getElementById('mnEuro').value,
     volumeNote:document.getElementById('mnVolumeNote').value
   };
+  if(role!=='admin'){
+    rows[modalRowIdx].lastChangedBy=role;
+    rows[modalRowIdx].lastChangedAt=Date.now();
+    rows[modalRowIdx].seenBy={};
+    rows[modalRowIdx].seenBy[role]=Date.now();
+  }
   saveRow(rows[modalRowIdx]);
   showNotif(rows[modalRowIdx].pelatis||rows[modalRowIdx].id||'Γραμμή '+(modalRowIdx+1),'notes');
   closeModal();render();
@@ -550,13 +608,65 @@ function printNote(){
   w.document.write('</body></html>');w.document.close();w.print();
 }
 
+// ---- AWARENESS / PULSE ----
+function needsAck(row){
+  // Only office and warehouse care about pulses; admin sees all but no pulse
+  if(role!=='office'&&role!=='warehouse')return false;
+  if(!row.lastChangedBy||!row.lastChangedAt)return false;
+  if(row.lastChangedBy===role)return false; // own change
+  var seen=(row.seenBy&&row.seenBy[role])||0;
+  return seen<row.lastChangedAt;
+}
+function ackRow(ri){
+  var r=rows[ri];
+  if(!r.seenBy)r.seenBy={};
+  r.seenBy[role]=Date.now();
+  saveRow(r);
+  render();
+}
+function fmtTime(ts){
+  if(!ts)return'';
+  var d=new Date(ts);
+  var hh=String(d.getHours()).padStart(2,'0');
+  var mi=String(d.getMinutes()).padStart(2,'0');
+  return hh+':'+mi;
+}
+function roleLabel(r){
+  if(r==='office')return'γραφείο';
+  if(r==='warehouse')return'αποθήκη';
+  if(r==='admin')return'admin';
+  return r;
+}
+function makeSignalCell(ri,row){
+  // 1) Pending ack for me?
+  if(needsAck(row)){
+    return '<td><button class="ack-btn" onclick="ackRow('+ri+')">✓ OK</button></td>';
+  }
+  // 2) Show "seen by other" tag if my change has been seen
+  if(row.lastChangedBy===role&&row.lastChangedAt){
+    var other=role==='office'?'warehouse':'office';
+    var seen=(row.seenBy&&row.seenBy[other])||0;
+    if(seen>=row.lastChangedAt){
+      return '<td><span class="seen-tag" title="Είδε '+roleLabel(other)+' '+fmtTime(seen)+'">✓ '+roleLabel(other)+' '+fmtTime(seen)+'</span></td>';
+    }
+    // My change, not yet seen
+    return '<td><span class="seen-tag" style="background:#fef7e0;color:#b8860b" title="Στάλθηκε '+fmtTime(row.lastChangedAt)+', αναμονή">⧗ αναμονή</span></td>';
+  }
+  // 3) Admin viewing — show last activity
+  if(role==='admin'&&row.lastChangedBy){
+    return '<td><span class="seen-tag">'+roleLabel(row.lastChangedBy)+' '+fmtTime(row.lastChangedAt)+'</span></td>';
+  }
+  return '<td></td>';
+}
+
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
   filtered.forEach(function(row){
     var ri=rows.indexOf(row);
     if(ri<0)return;
-    html+='<tr class="'+rowClass(row.katast)+'">';
+    var pulseCls=needsAck(row)?' pulse':'';
+    html+='<tr class="'+rowClass(row.katast)+pulseCls+'">';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
     html+=makeUserCell(ri,row.a,canEdit('a'));
@@ -571,6 +681,7 @@ function render(){
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
     html+=makeTxtCell(ri,'thesi',row.thesi,canEdit('thesi'));
+    html+=makeSignalCell(ri,row);
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
     html+='</tr>';
   });
