@@ -32,10 +32,8 @@ body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;back
 
 /* ── TOPBAR (CTL brand) ── */
 .topbar{background:var(--brand);border-bottom:1px solid var(--brand);padding:0 16px;height:54px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:100;color:white}
-.logo{font-size:18px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:10px;margin-right:10px}
-.logo::before{width:22px!important;height:22px!important}
-  
-.logo::before{content:'';display:inline-block;width:18px;height:18px;background:white;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='15' height='10' rx='1'/><path d='M17 10h3l2 3v4h-5z'/><circle cx='6' cy='19' r='2'/><circle cx='18' cy='19' r='2'/></svg>") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='15' height='10' rx='1'/><path d='M17 10h3l2 3v4h-5z'/><circle cx='6' cy='19' r='2'/><circle cx='18' cy='19' r='2'/></svg>") center/contain no-repeat}
+.logo{font-size:15px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:10px;margin-right:10px}
+.logo svg{stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .role-tabs{display:flex;gap:4px}
 .role-btn{padding:5px 13px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:transparent;cursor:pointer;font-size:11px;color:rgba(255,255,255,.7);font-family:inherit;font-weight:500;transition:all .15s}
 .role-btn:hover{background:rgba(255,255,255,.1);color:white}
@@ -189,7 +187,8 @@ select.with-ic{background-image:none}
 </div>
 
 <div class="topbar">
-<span class="logo">CTL LogiFlow</span>
+<span class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h2"/><path d="M8 17h2"/><path d="M14 13h2"/><path d="M14 17h2"/></svg>CTL LogiFlow</span>
+  
   <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
