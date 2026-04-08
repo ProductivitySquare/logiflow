@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CTL LogiFlow - Αφίξεις</title>
+<title>CTL LogiFlow — Αφίξεις</title>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -32,8 +32,8 @@ body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;back
 
 /* ── TOPBAR (CTL brand) ── */
 .topbar{background:var(--brand);border-bottom:1px solid var(--brand);padding:0 16px;height:54px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:100;color:white}
-.logo{font-size:15px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:10px;margin-right:10px}
-.logo svg{stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.logo{font-size:15px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:8px;margin-right:6px}
+.logo::before{content:'';display:inline-block;width:18px;height:18px;background:white;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='15' height='10' rx='1'/><path d='M17 10h3l2 3v4h-5z'/><circle cx='6' cy='19' r='2'/><circle cx='18' cy='19' r='2'/></svg>") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='15' height='10' rx='1'/><path d='M17 10h3l2 3v4h-5z'/><circle cx='6' cy='19' r='2'/><circle cx='18' cy='19' r='2'/></svg>") center/contain no-repeat}
 .role-tabs{display:flex;gap:4px}
 .role-btn{padding:5px 13px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:transparent;cursor:pointer;font-size:11px;color:rgba(255,255,255,.7);font-family:inherit;font-weight:500;transition:all .15s}
 .role-btn:hover{background:rgba(255,255,255,.1);color:white}
@@ -164,19 +164,47 @@ tbody tr.pulse {
   white-space:nowrap;
 }
 
+/* ── GROUP VISUAL ── */
+tbody tr.in-group td:first-child {
+  box-shadow: inset 4px 0 0 var(--brand);
+}
+tbody tr.group-sep td {
+  border-top: 2px solid #c4c2b8;
+}
+tbody tr.in-group.group-first td {
+  border-top: 2px solid var(--brand) !important;
+}
+tbody tr.in-group.group-last td {
+  border-bottom: 2px solid var(--brand);
+}
+.group-badge {
+  display:inline-flex;align-items:center;
+  background:var(--brand);color:white;
+  font-size:9px;font-weight:700;
+  padding:2px 6px;border-radius:4px;
+  margin-right:5px;
+  vertical-align:middle;
+  font-family:inherit;
+  letter-spacing:.04em;
+  flex-shrink:0;
+}
+tbody tr.in-group td:first-child {
+  position:relative;
+}
+tbody tr.in-group td:first-child > input.merida-input {
+  display:inline-block;
+  width:calc(100% - 38px);
+  vertical-align:middle;
+}
+tbody tr.in-group:not(.group-first) td:first-child > input.merida-input {
+  width:100%;
+}
+
 /* ── LOADING OVERLAY ── */
 .loading-overlay{position:fixed;inset:0;background:rgba(245,244,240,.92);z-index:2000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .loading-overlay .spinner{width:40px;height:40px;border:3px solid var(--green-border);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay p{font-size:13px;color:var(--brand);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-
-  /* ── LUCIDE ICONS ── */
-.ic{display:inline-block;vertical-align:-2px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.topbar .ic,.add-btn .ic{vertical-align:-3px;margin-right:4px}
-.ack-btn .ic{vertical-align:-2px;margin-right:2px}
-.seen-tag .ic{vertical-align:-1px;margin-right:3px;stroke-width:2.5}
-select.with-ic{background-image:none}
-  
 </style>
 </head>
 <body>
@@ -187,12 +215,11 @@ select.with-ic{background-image:none}
 </div>
 
 <div class="topbar">
-<span class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h2"/><path d="M8 17h2"/><path d="M14 13h2"/><path d="M14 17h2"/></svg>CTL LogiFlow</span>
-  
-  <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
-  <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <span class="logo">CTL LogiFlow</span>
+  <button class="excel-btn" onclick="exportExcel()">↓ Excel</button>
+  <button class="week-nav" onclick="changeWeek(-1)">&#8592;</button>
   <span id="weekLabel"></span>
-  <button class="week-nav" onclick="changeWeek(1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+  <button class="week-nav" onclick="changeWeek(1)">&#8594;</button>
   <div style="flex:1"></div>
   <div class="sync-indicator" id="syncIndicator">⟳ Αποθήκευση...</div>
   <div class="role-tabs">
@@ -203,7 +230,7 @@ select.with-ic{background-image:none}
 </div>
 
 <div class="toolbar">
-  <input type="text" placeholder="Αναζήτηση..." oninput="filterRows(this.value)">
+  <input type="text" placeholder="🔍 Αναζήτηση..." oninput="filterRows(this.value)">
   <select onchange="filterStatus(this.value)">
     <option value="">Όλες καταστάσεις</option>
     <option value="ΑΠΟΘΗΚΕΥΣΗ">Αποθήκευση</option>
@@ -212,7 +239,7 @@ select.with-ic{background-image:none}
     <option value="ΣΕ ΜΕΤΑΦΟΡΑ">Σε μεταφορά</option>
     <option value="ΑΝΑΜΟΝΗ">Αναμονή</option>
   </select>
-  <button class="add-btn" onclick="addRow()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Νέα γραμμή</button>
+  <button class="add-btn" onclick="addRow()">+ Νέα γραμμή</button>
 </div>
 
 <div class="legend">
@@ -238,8 +265,9 @@ select.with-ic{background-image:none}
       <th style="width:98px">Συσκ.</th>
       <th style="width:54px">Κιλά</th>
       <th style="width:148px">Πελάτης</th>
-      <th style="width:130px">Κατάσταση</th>
+      <th style="width:86px">Κατάσταση</th>
       <th style="width:120px">Παρατηρήσεις</th>
+      <th style="width:100px">Θέση Αποθ.</th>
       <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
     </tr></thead>
@@ -316,27 +344,6 @@ window.dispatchEvent(new Event('fbready'));
 
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
-  // Lucide SVG icons (inline paths from lucide.dev)
-var ICONS={
-  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
-  chevronLeft:'<polyline points="15 18 9 12 15 6"/>',
-  chevronRight:'<polyline points="9 18 15 12 9 6"/>',
-  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
-  search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
-  check:'<polyline points="20 6 9 17 4 12"/>',
-  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-  hourglass:'<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
-  package:'<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
-  alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
-  truck:'<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
-  checkCircle:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
-  pause:'<circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/>'
-};
-function ic(name,size){
-  size=size||14;
-  return '<svg class="ic" width="'+size+'" height="'+size+'" viewBox="0 0 24 24">'+ICONS[name]+'</svg>';
-}
-var STATUS_ICONS={'ΑΝΑΜΟΝΗ':'hourglass','ΑΠΟΘΗΚΕΥΣΗ':'package','ΑΜΕΣΗ':'alert','ΣΕ ΜΕΤΑΦΟΡΑ':'truck','ΠΑΡΑΔΟΘΗΚΕ':'checkCircle'};
 var currentMonday=getThisMonday();
 var rows=[];
 var filtered=[];
@@ -348,11 +355,11 @@ var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγι�
 var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
 var USERS=['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Άλλος'];
 
-var warehouseFields=['afx','par','katast','notes'];
+var warehouseFields=['afx','par','katast','thesi','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
 
 function eN(){return{address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
-function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),lastChangedBy:'',lastChangedAt:0,seenBy:{}};}
+function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),thesi:'',lastChangedBy:'',lastChangedAt:0,seenBy:{}};}
 
 function getThisMonday(){
   var d=new Date();var day=d.getDay()||7;
@@ -491,9 +498,25 @@ function showNotif(nm,field){
 function makeMeridaCell(ri,val,ed){
   var cls=ed?'ec':'rc';
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
-  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="10" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="updateField('+ri+',\'id\',this.value)"></td>';
+  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="12" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="updateField('+ri+',\'id\',this.value)"></td>';
 }
-function onMI(el,ri){var r=el.value.replace(/[^0-9]/g,''),o='';for(var i=0;i<r.length&&i<7;i++){if(i===2||i===4)o+='.';o+=r[i];}el.value=o;rows[ri].id=o;}
+function onMI(el,ri){
+  // Split on first "/" — before = numeric with dots, after = suffix digits
+  var raw=el.value;
+  var slashIdx=raw.indexOf('/');
+  var beforeRaw=(slashIdx>=0?raw.substring(0,slashIdx):raw).replace(/[^0-9]/g,'');
+  var afterRaw=slashIdx>=0?raw.substring(slashIdx+1).replace(/[^0-9]/g,''):'';
+  var o='';
+  for(var i=0;i<beforeRaw.length&&i<7;i++){if(i===2||i===4)o+='.';o+=beforeRaw[i];}
+  if(slashIdx>=0)o+='/'+afterRaw.substring(0,3);
+  el.value=o;
+  rows[ri].id=o;
+}
+function baseOf(id){
+  if(!id)return'';
+  var i=id.indexOf('/');
+  return i>=0?id.substring(0,i):id;
+}
 
 // ---- AUTOCOMPLETE ----
 var portal=null;
@@ -567,10 +590,9 @@ function makeTxtCell(ri,field,val,ed){
 function makeKatastCell(ri,val,ed){
   var cls=ed?'ec':'rc';
   var opts=['ΑΝΑΜΟΝΗ','ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
-  var iconName=STATUS_ICONS[val]||'hourglass';
-  var s='<div style="display:flex;align-items:center;gap:5px;width:100%">'+ic(iconName,13)+'<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px;flex:1">';
+  var s='<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px">';
   opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
-  return '<td class="'+cls+'">'+s+'</select></div></td>';
+  return '<td class="'+cls+'">'+s+'</select></td>';
 }
 
 // ---- NOTES ----
@@ -669,22 +691,22 @@ function roleLabel(r){
 }
 function makeSignalCell(ri,row){
   // 1) Pending ack for me?
-if(needsAck(row)){
-    return '<td><button class="ack-btn" onclick="ackRow('+ri+')">'+ic('check',11)+'OK</button></td>';
+  if(needsAck(row)){
+    return '<td><button class="ack-btn" onclick="ackRow('+ri+')">✓ OK</button></td>';
   }
   // 2) Show "seen by other" tag if my change has been seen
   if(row.lastChangedBy===role&&row.lastChangedAt){
     var other=role==='office'?'warehouse':'office';
     var seen=(row.seenBy&&row.seenBy[other])||0;
     if(seen>=row.lastChangedAt){
-      return '<td><span class="seen-tag" title="Είδε '+roleLabel(other)+' '+fmtTime(seen)+'">'+ic('check',10)+roleLabel(other)+' '+fmtTime(seen)+'</span></td>';
+      return '<td><span class="seen-tag" title="Είδε '+roleLabel(other)+' '+fmtTime(seen)+'">✓ '+roleLabel(other)+' '+fmtTime(seen)+'</span></td>';
     }
     // My change, not yet seen
-    return '<td><span class="seen-tag" style="background:#fef7e0;color:#b8860b" title="Στάλθηκε '+fmtTime(row.lastChangedAt)+', αναμονή">'+ic('hourglass',10)+'αναμονή</span></td>';
+    return '<td><span class="seen-tag" style="background:#fef7e0;color:#b8860b" title="Στάλθηκε '+fmtTime(row.lastChangedAt)+', αναμονή">⧗ αναμονή</span></td>';
   }
   // 3) Admin viewing — show last activity
   if(role==='admin'&&row.lastChangedBy){
-    return '<td><span class="seen-tag">'+ic('clock',10)+roleLabel(row.lastChangedBy)+' '+fmtTime(row.lastChangedAt)+'</span></td>';
+    return '<td><span class="seen-tag">'+roleLabel(row.lastChangedBy)+' '+fmtTime(row.lastChangedAt)+'</span></td>';
   }
   return '<td></td>';
 }
@@ -692,12 +714,38 @@ if(needsAck(row)){
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
-  filtered.forEach(function(row){
+  var gc=window._groupCount||{};
+  var prevBase=null;
+  filtered.forEach(function(row,fi){
     var ri=rows.indexOf(row);
     if(ri<0)return;
     var pulseCls=needsAck(row)?' pulse':'';
-    html+='<tr class="'+rowClass(row.katast)+pulseCls+'">';
+    var base=baseOf(row.id);
+    var inGroup=base&&gc[base]>1;
+    var groupCls='';
+    var isFirstOfGroup=false;
+    if(inGroup){
+      groupCls=' in-group';
+      isFirstOfGroup=(prevBase!==base);
+      var next=filtered[fi+1];
+      var isLastOfGroup=!next||baseOf(next.id)!==base;
+      if(isFirstOfGroup)groupCls+=' group-first';
+      if(isLastOfGroup)groupCls+=' group-last';
+    }
+    var sepCls=(prevBase!==null&&prevBase!==base)?' group-sep':'';
+    html+='<tr class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
+    if(isFirstOfGroup){
+      // Inject a small group badge into the merida cell via DOM later (no, do via prepend in HTML)
+      // We'll insert a span before the input by replacing the just-pushed cell
+      var badge='<span class="group-badge" title="Group με '+gc[base]+' μερίδες">▣ '+gc[base]+'</span>';
+      // Find the last <td> we added and inject the badge
+      var lastTdStart=html.lastIndexOf('<td');
+      var inputStart=html.indexOf('<input',lastTdStart);
+      if(inputStart>0){
+        html=html.substring(0,inputStart)+badge+html.substring(inputStart);
+      }
+    }
     html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
     html+=makeUserCell(ri,row.a,canEdit('a'));
     html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
@@ -710,9 +758,11 @@ function render(){
     html+=makeTxtCell(ri,'pelatis',row.pelatis,canEdit('pelatis'));
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
+    html+=makeTxtCell(ri,'thesi',row.thesi,canEdit('thesi'));
     html+=makeSignalCell(ri,row);
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
     html+='</tr>';
+    prevBase=base;
   });
   tb.innerHTML=html;
 }
@@ -742,19 +792,41 @@ function setRole(r,btn){
 function filterRows(q){searchQ=q.toLowerCase();applyFilters();}
 function filterStatus(s){statusF=s;applyFilters();}
 function applyFilters(){
-  filtered=rows.filter(function(r){
+  var matched=rows.filter(function(r){
     var mQ=!searchQ||(r.id+r.pelatis+(r.xora||'')).toLowerCase().indexOf(searchQ)>=0;
     var mS=!statusF||r.katast===statusF;
     return mQ&&mS;
-  });render();
+  });
+  // Build group info: base -> count, and first-appearance order
+  var baseCount={}, baseFirstIdx={};
+  matched.forEach(function(r,i){
+    var b=baseOf(r.id);
+    if(!b)return;
+    if(!(b in baseCount)){baseCount[b]=0;baseFirstIdx[b]=i;}
+    baseCount[b]++;
+  });
+  // Sort: keep rows without base (empty) in original position; group rows cluster
+  // around the first-appearance index of their base, preserving intra-group order.
+  var withIdx=matched.map(function(r,i){return{r:r,i:i};});
+  withIdx.sort(function(a,b){
+    var ba=baseOf(a.r.id), bb=baseOf(b.r.id);
+    var ka=ba?baseFirstIdx[ba]:a.i;
+    var kb=bb?baseFirstIdx[bb]:b.i;
+    if(ka!==kb)return ka-kb;
+    return a.i-b.i;
+  });
+  filtered=withIdx.map(function(x){return x.r;});
+  // Cache group info for render
+  window._groupCount=baseCount;
+  render();
 }
 
 function exportExcel(){
-var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια'];
+  var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια','Θέση Αποθ.'];
   var csv=heads.join('\t')+'\n';
   rows.forEach(function(r){
     var n=r.notes||eN();
-    csv+=[r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote].map(function(v){return(v||'').replace(/\t/g,' ');}).join('\t')+'\n';
+    csv+=[r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote,r.thesi].map(function(v){return(v||'').replace(/\t/g,' ');}).join('\t')+'\n';
   });
   var wn=getWeekNum(currentMonday);
   var blob=new Blob(['\uFEFF'+csv],{type:'text/tab-separated-values;charset=utf-8'});
