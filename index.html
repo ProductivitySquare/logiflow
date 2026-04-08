@@ -169,6 +169,14 @@ tbody tr.pulse {
 .loading-overlay .spinner{width:40px;height:40px;border:3px solid var(--green-border);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay p{font-size:13px;color:var(--brand);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+
+  /* ── LUCIDE ICONS ── */
+.ic{display:inline-block;vertical-align:-2px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.topbar .ic,.add-btn .ic{vertical-align:-3px;margin-right:4px}
+.ack-btn .ic{vertical-align:-2px;margin-right:2px}
+.seen-tag .ic{vertical-align:-1px;margin-right:3px;stroke-width:2.5}
+select.with-ic{background-image:none}
+  
 </style>
 </head>
 <body>
@@ -179,11 +187,11 @@ tbody tr.pulse {
 </div>
 
 <div class="topbar">
-  <span class="logo">CTL LogiFlow</span>
-  <button class="excel-btn" onclick="exportExcel()">↓ Excel</button>
-<button class="week-nav" onclick="changeWeek(-1)">‹</button>
+<span class="logo">CTL LogiFlow</span>
+  <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
+  <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
-  <button class="week-nav" onclick="changeWeek(1)">›</button>
+  <button class="week-nav" onclick="changeWeek(1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
   <div style="flex:1"></div>
   <div class="sync-indicator" id="syncIndicator">⟳ Αποθήκευση...</div>
   <div class="role-tabs">
@@ -203,7 +211,7 @@ tbody tr.pulse {
     <option value="ΣΕ ΜΕΤΑΦΟΡΑ">Σε μεταφορά</option>
     <option value="ΑΝΑΜΟΝΗ">Αναμονή</option>
   </select>
-  <button class="add-btn" onclick="addRow()">+ Νέα γραμμή</button>
+  <button class="add-btn" onclick="addRow()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Νέα γραμμή</button>
 </div>
 
 <div class="legend">
@@ -307,6 +315,27 @@ window.dispatchEvent(new Event('fbready'));
 
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
+  // Lucide SVG icons (inline paths from lucide.dev)
+var ICONS={
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  chevronLeft:'<polyline points="15 18 9 12 15 6"/>',
+  chevronRight:'<polyline points="9 18 15 12 9 6"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  check:'<polyline points="20 6 9 17 4 12"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  hourglass:'<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
+  package:'<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+  alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  truck:'<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+  checkCircle:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  pause:'<circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/>'
+};
+function ic(name,size){
+  size=size||14;
+  return '<svg class="ic" width="'+size+'" height="'+size+'" viewBox="0 0 24 24">'+ICONS[name]+'</svg>';
+}
+var STATUS_ICONS={'ΑΝΑΜΟΝΗ':'hourglass','ΑΠΟΘΗΚΕΥΣΗ':'package','ΑΜΕΣΗ':'alert','ΣΕ ΜΕΤΑΦΟΡΑ':'truck','ΠΑΡΑΔΟΘΗΚΕ':'checkCircle'};
 var currentMonday=getThisMonday();
 var rows=[];
 var filtered=[];
@@ -537,9 +566,10 @@ function makeTxtCell(ri,field,val,ed){
 function makeKatastCell(ri,val,ed){
   var cls=ed?'ec':'rc';
   var opts=['ΑΝΑΜΟΝΗ','ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
-  var s='<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px">';
+  var iconName=STATUS_ICONS[val]||'hourglass';
+  var s='<div style="display:flex;align-items:center;gap:5px;width:100%">'+ic(iconName,13)+'<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px;flex:1">';
   opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
-  return '<td class="'+cls+'">'+s+'</select></td>';
+  return '<td class="'+cls+'">'+s+'</select></div></td>';
 }
 
 // ---- NOTES ----
@@ -638,22 +668,22 @@ function roleLabel(r){
 }
 function makeSignalCell(ri,row){
   // 1) Pending ack for me?
-  if(needsAck(row)){
-    return '<td><button class="ack-btn" onclick="ackRow('+ri+')">✓ OK</button></td>';
+if(needsAck(row)){
+    return '<td><button class="ack-btn" onclick="ackRow('+ri+')">'+ic('check',11)+'OK</button></td>';
   }
   // 2) Show "seen by other" tag if my change has been seen
   if(row.lastChangedBy===role&&row.lastChangedAt){
     var other=role==='office'?'warehouse':'office';
     var seen=(row.seenBy&&row.seenBy[other])||0;
     if(seen>=row.lastChangedAt){
-      return '<td><span class="seen-tag" title="Είδε '+roleLabel(other)+' '+fmtTime(seen)+'">✓ '+roleLabel(other)+' '+fmtTime(seen)+'</span></td>';
+      return '<td><span class="seen-tag" title="Είδε '+roleLabel(other)+' '+fmtTime(seen)+'">'+ic('check',10)+roleLabel(other)+' '+fmtTime(seen)+'</span></td>';
     }
     // My change, not yet seen
-    return '<td><span class="seen-tag" style="background:#fef7e0;color:#b8860b" title="Στάλθηκε '+fmtTime(row.lastChangedAt)+', αναμονή">⧗ αναμονή</span></td>';
+    return '<td><span class="seen-tag" style="background:#fef7e0;color:#b8860b" title="Στάλθηκε '+fmtTime(row.lastChangedAt)+', αναμονή">'+ic('hourglass',10)+'αναμονή</span></td>';
   }
   // 3) Admin viewing — show last activity
   if(role==='admin'&&row.lastChangedBy){
-    return '<td><span class="seen-tag">'+roleLabel(row.lastChangedBy)+' '+fmtTime(row.lastChangedAt)+'</span></td>';
+    return '<td><span class="seen-tag">'+ic('clock',10)+roleLabel(row.lastChangedBy)+' '+fmtTime(row.lastChangedAt)+'</span></td>';
   }
   return '<td></td>';
 }
