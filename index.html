@@ -32,7 +32,9 @@ body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;back
 
 /* ── TOPBAR (CTL brand) ── */
 .topbar{background:var(--brand);border-bottom:1px solid var(--brand);padding:0 16px;height:54px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:100;color:white}
-.logo{font-size:15px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:8px;margin-right:6px}
+.logo{font-size:18px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:10px;margin-right:10px}
+.logo::before{width:22px!important;height:22px!important}
+  
 .logo::before{content:'';display:inline-block;width:18px;height:18px;background:white;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='15' height='10' rx='1'/><path d='M17 10h3l2 3v4h-5z'/><circle cx='6' cy='19' r='2'/><circle cx='18' cy='19' r='2'/></svg>") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='15' height='10' rx='1'/><path d='M17 10h3l2 3v4h-5z'/><circle cx='6' cy='19' r='2'/><circle cx='18' cy='19' r='2'/></svg>") center/contain no-repeat}
 .role-tabs{display:flex;gap:4px}
 .role-btn{padding:5px 13px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:transparent;cursor:pointer;font-size:11px;color:rgba(255,255,255,.7);font-family:inherit;font-weight:500;transition:all .15s}
