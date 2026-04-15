@@ -100,11 +100,7 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 
 
 /* ── BUTTONS IN CELLS ── */
-.notes-btn{display:block;width:100%;padding:4px 9px 4px 9px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;overflow:hidden;white-space:nowrap;font-family:inherit;font-weight:500;text-align:left;box-sizing:border-box;position:relative;padding-right:28px}
-.notes-btn::after{content:'';position:absolute;right:24px;top:0;height:100%;width:32px;background:linear-gradient(to right,transparent,var(--brand-light));pointer-events:none;transition:background .15s}
-.notes-btn:hover::after{background:linear-gradient(to right,transparent,var(--brand))}
-.notes-btn .notes-eye{position:absolute;right:5px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .2s;color:white;display:flex;align-items:center;line-height:1}
-.notes-btn:hover .notes-eye{opacity:1}
+.notes-btn{display:block;width:100%;padding:4px 9px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-family:inherit;font-weight:500;text-align:left;box-sizing:border-box}
 .notes-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
 .notes-empty{display:block;width:100%;color:#bbb;font-size:11px;cursor:pointer;padding:4px 9px;background:none;border:1px dashed var(--border);border-radius:5px;font-family:inherit;text-align:left;box-sizing:border-box}
 .notes-empty:hover{border-color:var(--brand);color:var(--brand)}
