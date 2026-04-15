@@ -543,9 +543,9 @@ select.with-ic{background-image:none}
       <th style="width:108px">Μερίδα</th>
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
-      <th style="width:90px">Πρβλ. Άφιξη</th>
+      <th style="width:112px">Πρβλ. Άφιξη</th>
       <th style="width:108px">Άφιξη</th>
-      <th style="width:90px">Πρβλ. Παράδ.</th>
+      <th style="width:112px">Πρβλ. Παράδ.</th>
       <th style="width:108px">Παράδοση</th>
       <th style="width:38px">Κολά</th>
       <th style="width:90px">Συσκ.</th>
@@ -1111,9 +1111,8 @@ function render(){
 
 function addRow(){
   var r=newRow();
-  rows.push(r);
   pushRow(r);
-  applyFilters();
+  // Don't push to local rows[] — the Firebase onValue listener will add it automatically
 }
 
 function delRow(ri){
