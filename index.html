@@ -184,9 +184,9 @@ tbody tr.in-group.group-last td {
 }
 .group-badge {
   display:inline-flex;align-items:center;justify-content:center;
-background:#EA4335;color:white;
-font-size:9px;font-weight:700;
-width:20px;height:20px;border-radius:50%;
+  background:var(--brand);color:white;
+  font-size:8px;font-weight:700;
+  width:16px;height:16px;border-radius:50%;
   position:absolute;top:3px;left:3px;
   font-family:inherit;
   letter-spacing:0;
@@ -257,7 +257,7 @@ select.with-ic{background-image:none}
   /* ── Body reset for print ── */
   body {
     background: white !important;
-    font-size: 10px !important;
+    font-size: 13px !important;
     font-family: Arial, Helvetica, sans-serif !important;
     color: #000 !important;
     -webkit-print-color-adjust: exact;
@@ -306,7 +306,7 @@ select.with-ic{background-image:none}
     width: 100% !important;
     min-width: 0 !important;
     border-collapse: collapse !important;
-    font-size: 10px !important;
+    font-size: 13px !important;
     table-layout: fixed;
   }
 
@@ -335,14 +335,19 @@ select.with-ic{background-image:none}
   tbody td:nth-child(3) select { display: none !important; }
   tbody td:nth-child(3) div { justify-content: center !important; }
   tbody td:nth-child(3) div svg { display: none !important; }
-  tbody td:nth-child(3) span { font-size: 10px !important; font-weight: 700 !important; color: #1a3a2a !important; }
+  tbody td:nth-child(3) span { font-size: 13px !important; font-weight: 700 !important; color: #1a3a2a !important; }
+
+  /* ── Sysk cell in print: show abbrev via data ── */
+  tbody td:nth-child(9) .sysk-abbr { display: inline !important; font-size: 13px !important; font-weight: 600 !important; }
+  tbody td:nth-child(9) > div > svg { display: none !important; }
+  tbody td:nth-child(9) select { display: none !important; }
 
   /* ── Sysk cell: select -> plain text ── */
   tbody td:nth-child(9) select {
     border: none !important;
     background: transparent !important;
     padding: 0 !important;
-    font-size: 10px !important;
+    font-size: 13px !important;
     font-family: Arial, Helvetica, sans-serif !important;
     color: #000 !important;
     appearance: none !important;
@@ -355,7 +360,7 @@ select.with-ic{background-image:none}
   thead th {
     background: #1a3a2a !important;
     color: white !important;
-    font-size: 8px !important;
+    font-size: 10px !important;
     font-weight: 700 !important;
     padding: 5px 4px !important;
     border: 1px solid #1a3a2a !important;
@@ -373,8 +378,8 @@ select.with-ic{background-image:none}
     padding: 3px 4px !important;
     border: 1px solid #c8c6be !important;
     vertical-align: middle !important;
-    font-size: 10px !important;
-    line-height: 1.3 !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
     word-break: break-word;
   }
 
@@ -390,7 +395,7 @@ select.with-ic{background-image:none}
     border: none !important;
     background: transparent !important;
     padding: 0 !important;
-    font-size: 10px !important;
+    font-size: 13px !important;
     font-family: Arial, Helvetica, sans-serif !important;
     color: #000 !important;
     appearance: none !important;
@@ -408,7 +413,7 @@ select.with-ic{background-image:none}
   }
   .print-notes {
     display: block !important;
-    font-size: 9.5px !important;
+    font-size: 12px !important;
     color: #1a1a1a !important;
     font-family: Arial, Helvetica, sans-serif !important;
     white-space: normal !important;
@@ -427,7 +432,7 @@ select.with-ic{background-image:none}
   input.merida-input {
     font-family: 'Courier New', monospace !important;
     font-weight: 700 !important;
-    font-size: 9px !important;
+    font-size: 12px !important;
     letter-spacing: .5px !important;
   }
 
@@ -560,7 +565,7 @@ select.with-ic{background-image:none}
       <th style="width:90px">Πρβλ. Παράδ.</th>
       <th style="width:130px">Παράδοση</th>
       <th style="width:38px">Κολά</th>
-      <th style="width:90px">Συσκ.</th>
+      <th style="width:56px">Συσκ.</th>
       <th style="width:54px">Κιλά</th>
       <th style="width:148px">Πελάτης</th>
       <th style="width:120px">Κατάσταση</th>
@@ -669,8 +674,9 @@ var saveTimer=null;
 
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
 var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
-var USERS=['Πάνος','Λούης','Ντέμη','Σταμάτης','Τάκης','Μαρίνα','Ιωάννα','Άγγελος'];
-var USER_INITIALS={'Πάνος':'Π','Λούης':'Λ','Ντέμη':'Ν','Σταμάτης':'Σ','Τάκης':'Τ','Μαρίνα':'Μ','Ιωάννα':'Ι','Άγγελος':'Α'};
+var PKG_ABBR={'Παλέτα':'ΠΑΛ','Κιβώτιο':'ΚΙΒ','Κόλο':'ΚΟΛ','Δεξαμενή':'ΔΕΞ','Ξύλινη βάση':'ΞΥΛ','Χαρτοκούτι':'ΧΑΡ','Μηχάνημα':'ΜΗΧ','Τύμπανο':'ΤΥΜ'};
+var USERS=['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Παναγιώτης','Άλλος'];
+var USER_INITIALS={'Νίκος':'Ν','Μαρία':'Μ','Γιώργης':'Γ','Κώστας':'Κ','Ελένη':'Ε','Δημήτρης':'Δ','Παναγιώτης':'Π','Άλλος':'Α'};
 
 var warehouseFields=['afx','par','katast','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
@@ -797,7 +803,7 @@ function canEdit(f){if(role==='admin')return true;if(role==='office')return offi
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' - ');}
+function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
 
 function updateField(idx,field,val){
   var old=rows[idx][field];
@@ -876,10 +882,17 @@ function pickAC(val,ri,field){
 function makeACCell(ri,field,val,list,ed){
   var cls=ed?'ec':'rc';
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
-  // For packaging (sysk): use select dropdown
+  // For packaging (sysk): show abbreviation + hidden select overlay
   if(field==='sysk'){
+    var abbr=val?(PKG_ABBR[val]||val):'';
     var opts=list.map(function(u){return'<option value="'+esc(u)+'"'+(val===u?' selected':'')+'>'+u+'</option>';}).join('');
-    return '<td class="'+cls+'"><select onchange="updateField('+ri+',\'sysk\',this.value)" style="font-size:11px;width:100%"><option value=""></option>'+opts+'</select></td>';
+    return '<td class="'+cls+'" style="position:relative;min-width:36px;max-width:52px">'
+      +'<div style="display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer">'
+      +'<span style="font-weight:600;font-size:11px;color:var(--brand);letter-spacing:.02em">'+esc(abbr)+'</span>'
+      +'<svg style="width:7px;height:7px;opacity:.4;flex-shrink:0" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+      +'</div>'
+      +'<select style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="updateField('+ri+',\'sysk\',this.value);this.previousSibling.querySelector(\'span\').textContent=PKG_ABBR[this.value]||this.value"><option value=""></option>'+opts+'</select>'
+      +'</td>';
   }
   return '<td class="'+cls+'"><input id="ac_'+ri+'_'+field+'" value="'+esc(val)+'" autocomplete="off" placeholder="..." oninput="onACInput(this,'+ri+',\''+field+'\')" onblur="onACBlur()" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
 }
