@@ -99,7 +99,11 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 
 
 /* ── BUTTONS IN CELLS ── */
-.notes-btn{display:block;width:100%;padding:4px 9px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit;font-weight:500;text-align:left;box-sizing:border-box}
+.notes-btn{display:block;width:100%;padding:4px 9px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;overflow:hidden;white-space:nowrap;font-family:inherit;font-weight:500;text-align:left;box-sizing:border-box;position:relative}
+.notes-btn::after{content:'';position:absolute;right:0;top:0;height:100%;width:40px;background:linear-gradient(to right,transparent,var(--brand-light));pointer-events:none;transition:opacity .15s}
+.notes-btn:hover::after{background:linear-gradient(to right,transparent,var(--brand))}
+.notes-btn .notes-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .2s;color:white;display:flex;align-items:center}
+.notes-btn:hover .notes-eye{opacity:1}
 .notes-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
 .notes-empty{display:block;width:100%;color:#bbb;font-size:11px;cursor:pointer;padding:4px 9px;background:none;border:1px dashed var(--border);border-radius:5px;font-family:inherit;text-align:left;box-sizing:border-box}
 .notes-empty:hover{border-color:var(--brand);color:var(--brand)}
@@ -951,10 +955,11 @@ function nTxtPrint(n){
 function makeNotesCell(ri,notes,ed){
   var cls=ed?'ec':'rc';
   var txt=nTxt(notes);
-  var prev=txt?txt.substring(0,40)+(txt.length>40?'…':''):'';
+
   var fullPrint=esc(nTxtPrint(notes));
-  var inner=prev
-    ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(prev)+'</button>'
+  var eyeIcon='<span class="notes-eye"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>';
+  var inner=txt
+    ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(txt)+eyeIcon+'</button>'
     :'<button class="notes-empty" onclick="openModal('+ri+')">'+(ed?'+ Προσθήκη':'—')+'</button>';
   inner+='<span class="print-notes" style="display:none">'+fullPrint+'</span>';
   return '<td class="'+cls+'">'+inner+'</td>';
