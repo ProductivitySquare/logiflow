@@ -92,8 +92,10 @@ tbody td input:disabled,tbody td select:disabled{opacity:.45;cursor:not-allowed}
 
 input.merida-input{letter-spacing:1px;font-family:'Courier New',monospace;font-size:12px;font-weight:600}
 input[type="datetime-local"],input[type="date"]{cursor:pointer;font-size:11px;font-family:inherit;padding:2px 3px !important}
-input[type="date"]{width:96px !important;min-width:96px;max-width:96px}
-input[type="datetime-local"]{width:116px !important;min-width:116px;max-width:116px}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator{display:none !important}
+input[type="date"]{width:72px !important;min-width:72px;max-width:72px}
+input[type="datetime-local"]{width:104px !important;min-width:104px;max-width:104px}
 
 
 /* ── BUTTONS IN CELLS ── */
