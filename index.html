@@ -373,6 +373,12 @@ select.with-ic{background-image:none}
     word-break: break-word;
   }
 
+  /* ── Hide calendar/clock icons on date inputs in print ── */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+  }
+
   /* ── Inputs/selects become plain text ── */
   tbody td input,
   tbody td select {
@@ -900,7 +906,7 @@ function makeUserCell(ri,val,ed){
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   var isProvl=(field==='pAfx'||field==='pPar');
-  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'"></td>';
+  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
     var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
     return '<td class="'+cls+'"><input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
