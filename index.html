@@ -1092,18 +1092,19 @@ function render(){
         html=html.substring(0,inputStart)+badge+html.substring(inputStart);
       }
     }
-    // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη κενά & locked
+    // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
     var isGroupFollower=inGroup&&!isFirstOfGroup;
     if(isGroupFollower){
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
     } else {
       html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
       html+=makeUserCell(ri,row.a,canEdit('a'));
       html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
+      html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
     }
-    html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
     html+=makeDTCell(ri,'pPar',row.pPar,canEdit('pPar'));
     html+=makeDTCell(ri,'par',row.par,canEdit('par'));
     html+=makeTxtCell(ri,'kola',row.kola,canEdit('kola'));
