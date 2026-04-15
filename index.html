@@ -563,7 +563,7 @@ select.with-ic{background-image:none}
       <th style="width:54px">Κιλά</th>
       <th style="width:148px">Πελάτης</th>
       <th style="width:120px">Κατάσταση</th>
-      <th style="width:200px">Παρατηρήσεις</th>
+      <th style="width:260px">Παρατηρήσεις</th>
       <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
     </tr></thead>
@@ -951,7 +951,7 @@ function nTxtPrint(n){
 function makeNotesCell(ri,notes,ed){
   var cls=ed?'ec':'rc';
   var txt=nTxt(notes);
-  var prev=txt?txt.substring(0,26)+(txt.length>26?'…':''):'';
+  var prev=txt?txt.substring(0,40)+(txt.length>40?'…':''):'';
   var fullPrint=esc(nTxtPrint(notes));
   var inner=prev
     ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(prev)+'</button>'
