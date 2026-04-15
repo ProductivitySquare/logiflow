@@ -182,15 +182,16 @@ tbody tr.in-group.group-last td {
   border-bottom: 2px solid var(--brand);
 }
 .group-badge {
-  display:inline-flex;align-items:center;
+  display:inline-flex;align-items:center;justify-content:center;
   background:var(--brand);color:white;
-  font-size:9px;font-weight:700;
-  padding:2px 6px;border-radius:4px;
-  margin-right:5px;
-  vertical-align:middle;
+  font-size:8px;font-weight:700;
+  width:16px;height:16px;border-radius:50%;
+  position:absolute;top:3px;left:3px;
   font-family:inherit;
-  letter-spacing:.04em;
+  letter-spacing:0;
   flex-shrink:0;
+  z-index:2;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
 tbody tr.in-group td:first-child {
   position:relative;
@@ -207,8 +208,9 @@ tbody td.group-shared input {
 }
 tbody tr.in-group td:first-child > input.merida-input {
   display:inline-block;
-  width:calc(100% - 38px);
+  width:100%;
   vertical-align:middle;
+  padding-left:22px !important;
 }
 tbody tr.in-group:not(.group-first) td:first-child > input.merida-input {
   width:100%;
@@ -1083,7 +1085,7 @@ function render(){
     html+='<tr class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     if(isFirstOfGroup){
-      var badge='<span class="group-badge" title="Group με '+gc[base]+' μερίδες">▣ '+gc[base]+'</span>';
+      var badge='<span class="group-badge" title="Group '+gc[base]+' μερίδων">'+gc[base]+'</span>';
       var lastTdStart=html.lastIndexOf('<td');
       var inputStart=html.indexOf('<input',lastTdStart);
       if(inputStart>0){
