@@ -42,6 +42,8 @@ body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;back
 .topbar .week-nav{padding:4px 10px;border:1px solid rgba(255,255,255,.3);border-radius:6px;background:transparent;color:rgba(255,255,255,.9);cursor:pointer;font-size:13px;font-family:inherit;transition:all .15s}
 .topbar .week-nav:hover{background:rgba(255,255,255,.15)}
 #weekLabel{font-size:11px;color:rgba(255,255,255,.85);font-weight:600;min-width:230px;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.topbar .print-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.3);border-radius:6px;background:transparent;color:rgba(255,255,255,.9);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;display:flex;align-items:center;gap:5px;transition:all .15s}
+.topbar .print-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.5)}
 
 /* ── TOOLBAR ── */
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:11px 16px;background:var(--bg-card);border-bottom:1px solid var(--border)}
@@ -68,19 +70,17 @@ thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size
 tbody tr{border-bottom:1px solid rgba(26,58,42,.08)}
 tbody tr:hover{filter:brightness(.97)}
 
-/* Status row colors — harmonized with Google palette */
-tbody tr.row-apoth{background:#d4f5dd}      /* Αποθήκευση — light green */
-tbody tr.row-amesi{background:#fde0dd}      /* Άμεση — light red */
-tbody tr.row-transit{background:#d6e6fc}    /* Σε μεταφορά — light blue */
-tbody tr.row-deliv{background:#cfe9fc}      /* Παραδόθηκε — slightly different blue */
-tbody tr.row-wait{background:#ffffff}        /* Αναμονή — white */
+tbody tr.row-apoth{background:#d4f5dd}
+tbody tr.row-amesi{background:#fde0dd}
+tbody tr.row-transit{background:#d6e6fc}
+tbody tr.row-deliv{background:#cfe9fc}
+tbody tr.row-wait{background:#ffffff}
 
 tbody td{padding:3px 5px;vertical-align:middle}
 tbody td input,tbody td select{width:100%;padding:4px 7px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--text);font-size:12px;font-family:inherit}
 tbody td input:focus,tbody td select:focus{border-color:var(--brand);background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,58,42,.12)}
 tbody td input:disabled,tbody td select:disabled{opacity:.45;cursor:not-allowed}
 
-/* Editable cells highlight */
 .ec input,.ec select{background:#fff;border-color:var(--green-border)}
 .ec input:hover,.ec select:hover{border-color:var(--brand)}
 .rc input,.rc select{opacity:.5}
@@ -204,15 +204,241 @@ tbody tr.in-group:not(.group-first) td:first-child > input.merida-input {
 .loading-overlay .spinner{width:40px;height:40px;border:3px solid var(--green-border);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay p{font-size:13px;color:var(--brand);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-  /* ── LUCIDE ICONS ── */
 .ic{display:inline-block;vertical-align:-2px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .topbar .ic,.add-btn .ic{vertical-align:-3px;margin-right:4px}
 .ack-btn .ic{vertical-align:-2px;margin-right:2px}
 .seen-tag .ic{vertical-align:-1px;margin-right:3px;stroke-width:2.5}
 select.with-ic{background-image:none}
+
+/* ═══════════════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════════════ */
+@media print {
+  /* ── Page setup: landscape, A4, tight margins ── */
+  @page {
+    size: A4 landscape;
+    margin: 10mm 8mm 12mm 8mm;
+  }
+
+  /* ── Hide everything that's not the table ── */
+  .topbar,
+  .toolbar,
+  .legend,
+  .loading-overlay,
+  .notif,
+  .modal-bg,
+  #ac-portal,
+  .del-btn,
+  .ack-btn,
+  .week-nav,
+  .role-tabs,
+  .sync-indicator,
+  .excel-btn,
+  .print-btn { display: none !important; }
+
+  /* ── Body reset for print ── */
+  body {
+    background: white !important;
+    font-size: 9px !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── Print header (shows week + title) ── */
+  .print-header {
+    display: block !important;
+    text-align: left;
+    padding: 0 0 6px 0;
+    border-bottom: 2px solid #1a3a2a;
+    margin-bottom: 6px;
+  }
+  .print-header-inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .print-header h1 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a3a2a;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .print-header .ph-week {
+    font-size: 10px;
+    color: #444;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .print-header .ph-date {
+    font-size: 9px;
+    color: #888;
+  }
+
+  /* ── Wrap: no scroll, full width ── */
+  .wrap {
+    overflow: visible !important;
+  }
+
+  /* ── Table: full width, compact ── */
+  table {
+    width: 100% !important;
+    min-width: 0 !important;
+    border-collapse: collapse !important;
+    font-size: 8.5px !important;
+    table-layout: fixed;
+  }
+
+  /* ── Column widths (scaled for A4 landscape ~277mm usable) ── */
+  thead th:nth-child(1)  { width: 9% }   /* Μερίδα */
+  thead th:nth-child(2)  { width: 7% }   /* Χώρα */
+  thead th:nth-child(3)  { width: 4% }   /* Α */
+  thead th:nth-child(4)  { width: 7% }   /* Πρβλ. Άφιξη */
+  thead th:nth-child(5)  { width: 8% }   /* Άφιξη */
+  thead th:nth-child(6)  { width: 7% }   /* Πρβλ. Παράδ. */
+  thead th:nth-child(7)  { width: 8% }   /* Παράδοση */
+  thead th:nth-child(8)  { width: 4% }   /* Κολά */
+  thead th:nth-child(9)  { width: 6% }   /* Συσκ. */
+  thead th:nth-child(10) { width: 4% }   /* Κιλά */
+  thead th:nth-child(11) { width: 11% }  /* Πελάτης */
+  thead th:nth-child(12) { width: 8% }   /* Κατάσταση */
+  thead th:nth-child(13) { width: 14% }  /* Παρατηρήσεις */
+  thead th:nth-child(14) { width: 0; display: none }  /* Σήμα — κρυφό */
+  thead th:nth-child(15) { width: 0; display: none }  /* Delete — κρυφό */
+
+  /* ── Hide Σήμα + Delete columns in rows too ── */
+  tbody td:nth-child(14),
+  tbody td:nth-child(15) { display: none !important; }
+
+  /* ── Header cells ── */
+  thead th {
+    background: #1a3a2a !important;
+    color: white !important;
+    font-size: 7.5px !important;
+    font-weight: 700 !important;
+    padding: 5px 4px !important;
+    border: 1px solid #1a3a2a !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    white-space: normal !important;
+    position: static !important;
+    line-height: 1.2;
+  }
+
+  /* ── Body rows ── */
+  tbody tr { page-break-inside: avoid; }
+
+  tbody td {
+    padding: 3px 4px !important;
+    border: 1px solid #c8c6be !important;
+    vertical-align: middle !important;
+    font-size: 8.5px !important;
+    line-height: 1.25 !important;
+    word-break: break-word;
+  }
+
+  /* ── Inputs/selects become plain text ── */
+  tbody td input,
+  tbody td select {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 8.5px !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #000 !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    pointer-events: none;
+    width: 100% !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+  }
+
+  /* Notes button: show full text, no button styling */
+  .notes-btn,
+  .notes-empty {
+    background: transparent !important;
+    border: none !important;
+    font-size: 8px !important;
+    color: #333 !important;
+    padding: 0 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  /* Merida input: monospace */
+  input.merida-input {
+    font-family: 'Courier New', monospace !important;
+    font-weight: 700 !important;
+    font-size: 8px !important;
+    letter-spacing: .5px !important;
+  }
+
+  /* ── Row colors: print-safe pastel backgrounds ── */
+  tbody tr.row-apoth { background: #e6f9ec !important; }
+  tbody tr.row-amesi  { background: #fde8e6 !important; }
+  tbody tr.row-transit{ background: #e3eeff !important; }
+  tbody tr.row-deliv  { background: #deeffe !important; }
+  tbody tr.row-wait   { background: #ffffff !important; }
+
+  /* ── Group visual ── */
+  tbody tr.in-group td:first-child {
+    box-shadow: inset 3px 0 0 #1a3a2a !important;
+  }
+  tbody tr.in-group.group-first td {
+    border-top: 1.5px solid #1a3a2a !important;
+  }
+  tbody tr.in-group.group-last td {
+    border-bottom: 1.5px solid #1a3a2a !important;
+  }
+  .group-badge {
+    background: #1a3a2a !important;
+    color: white !important;
+    font-size: 7px !important;
+    padding: 1px 4px !important;
+  }
+
+  /* ── Pulse/animations: none ── */
+  tbody tr.pulse { animation: none !important; box-shadow: none !important; }
+
+  /* ── Status column: icon hidden, text only ── */
+  .ic { display: none !important; }
+
+  /* ── Seen tag ── */
+  .seen-tag { display: none !important; }
+
+  /* ── Footer: page number + date ── */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 6mm;
+    right: 8mm;
+    font-size: 8px;
+    color: #aaa;
+  }
+}
+
+/* Hide print-only elements on screen */
+.print-header { display: none; }
+.print-footer { display: none; }
 </style>
 </head>
 <body>
+
+<!-- Print-only header (hidden on screen, shown on print) -->
+<div class="print-header">
+  <div class="print-header-inner">
+    <h1>CTL LogiFlow — Αφίξεις</h1>
+    <span class="ph-week" id="printWeekLabel"></span>
+    <span class="ph-date" id="printDate"></span>
+  </div>
+</div>
+<div class="print-footer" id="printFooter"></div>
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
@@ -229,6 +455,7 @@ select.with-ic{background-image:none}
   CTL LogiFlow
 </div>
   <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
+  <button class="print-btn" onclick="doPrint()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Εκτύπωση</button>
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
   <button class="week-nav" onclick="changeWeek(1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
@@ -347,7 +574,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Expose Firebase functions to global scope
 window._fb = { db, ref, set, remove, push, onValue };
 window._fbReady = true;
 window.dispatchEvent(new Event('fbready'));
@@ -355,7 +581,6 @@ window.dispatchEvent(new Event('fbready'));
 
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
-  // Lucide SVG icons (inline paths from lucide.dev)
 var ICONS={
   download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
   chevronLeft:'<polyline points="15 18 9 12 15 6"/>',
@@ -412,7 +637,11 @@ function getWeekKey(d){
 function updateWeekLabel(){
   var end=new Date(currentMonday);end.setDate(end.getDate()+6);
   var wn=getWeekNum(currentMonday);
-  document.getElementById('weekLabel').textContent='Εβδ. '+wn+' · '+fmt(currentMonday)+' – '+fmt(end)+' '+end.getFullYear();
+  var lbl='Εβδ. '+wn+' · '+fmt(currentMonday)+' – '+fmt(end)+' '+end.getFullYear();
+  document.getElementById('weekLabel').textContent=lbl;
+  // Update print header labels too
+  var pl=document.getElementById('printWeekLabel');
+  if(pl)pl.textContent='Εβδομάδα '+wn+' ('+fmt(currentMonday)+' – '+fmt(end)+' '+end.getFullYear()+')';
   weekKey=getWeekKey(currentMonday);
 }
 
@@ -421,6 +650,16 @@ function changeWeek(dir){
   currentMonday.setDate(currentMonday.getDate()+dir*7);
   updateWeekLabel();
   loadWeek();
+}
+
+// ── PRINT function ──
+function doPrint(){
+  // Stamp current date/time in footer
+  var footer=document.getElementById('printFooter');
+  if(footer)footer.textContent='Εκτυπώθηκε: '+new Date().toLocaleString('el-GR');
+  var pd=document.getElementById('printDate');
+  if(pd)pd.textContent=new Date().toLocaleString('el-GR');
+  window.print();
 }
 
 // ---- FIREBASE ----
@@ -435,7 +674,6 @@ function loadWeek(){
     document.getElementById('loadingOverlay').style.display='none';
     var data=snapshot.val();
     if(data){
-      // Convert object to array preserving Firebase keys
       rows=Object.entries(data).map(function(e){
         var r=e[1];r._fbKey=e[0];
         if(!r.notes)r.notes=eN();
@@ -446,7 +684,6 @@ function loadWeek(){
       });
     } else {
       rows=[newRow(),newRow(),newRow()];
-      // Push initial rows to Firebase
       rows.forEach(function(r){pushRow(r);});
     }
     applyFilters();
@@ -506,12 +743,11 @@ function updateField(idx,field,val){
   var old=rows[idx][field];
   rows[idx][field]=val;
   if(old!==val){
-    // Stamp authorship — admin doesn't generate pulses
     if(role!=='admin'){
       rows[idx].lastChangedBy=role;
       rows[idx].lastChangedAt=Date.now();
       rows[idx].seenBy={};
-      rows[idx].seenBy[role]=Date.now(); // own change = self-acked
+      rows[idx].seenBy[role]=Date.now();
     }
     showNotif(rows[idx].pelatis||rows[idx].id||'Γραμμή '+(idx+1),field);
     saveRow(rows[idx]);
@@ -533,7 +769,6 @@ function makeMeridaCell(ri,val,ed){
   return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="12" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="updateField('+ri+',\'id\',this.value)"></td>';
 }
 function onMI(el,ri){
-  // Split on first "/" — before = numeric with dots, after = suffix digits
   var raw=el.value;
   var slashIdx=raw.indexOf('/');
   var beforeRaw=(slashIdx>=0?raw.substring(0,slashIdx):raw).replace(/[^0-9]/g,'');
@@ -695,10 +930,9 @@ function printNote(){
 
 // ---- AWARENESS / PULSE ----
 function needsAck(row){
-  // Only office and warehouse care about pulses; admin sees all but no pulse
   if(role!=='office'&&role!=='warehouse')return false;
   if(!row.lastChangedBy||!row.lastChangedAt)return false;
-  if(row.lastChangedBy===role)return false; // own change
+  if(row.lastChangedBy===role)return false;
   var seen=(row.seenBy&&row.seenBy[role])||0;
   return seen<row.lastChangedAt;
 }
@@ -723,21 +957,17 @@ function roleLabel(r){
   return r;
 }
 function makeSignalCell(ri,row){
-  // 1) Pending ack for me?
-if(needsAck(row)){
+  if(needsAck(row)){
     return '<td><button class="ack-btn" onclick="ackRow('+ri+')">'+ic('check',11)+'OK</button></td>';
   }
-  // 2) Show "seen by other" tag if my change has been seen
   if(row.lastChangedBy===role&&row.lastChangedAt){
     var other=role==='office'?'warehouse':'office';
     var seen=(row.seenBy&&row.seenBy[other])||0;
     if(seen>=row.lastChangedAt){
       return '<td><span class="seen-tag" title="Είδε '+roleLabel(other)+' '+fmtTime(seen)+'">'+ic('check',10)+roleLabel(other)+' '+fmtTime(seen)+'</span></td>';
     }
-    // My change, not yet seen
     return '<td><span class="seen-tag" style="background:#fef7e0;color:#b8860b" title="Στάλθηκε '+fmtTime(row.lastChangedAt)+', αναμονή">'+ic('hourglass',10)+'αναμονή</span></td>';
   }
-  // 3) Admin viewing — show last activity
   if(role==='admin'&&row.lastChangedBy){
     return '<td><span class="seen-tag">'+ic('clock',10)+roleLabel(row.lastChangedBy)+' '+fmtTime(row.lastChangedAt)+'</span></td>';
   }
@@ -769,10 +999,7 @@ function render(){
     html+='<tr class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     if(isFirstOfGroup){
-      // Inject a small group badge into the merida cell via DOM later (no, do via prepend in HTML)
-      // We'll insert a span before the input by replacing the just-pushed cell
       var badge='<span class="group-badge" title="Group με '+gc[base]+' μερίδες">▣ '+gc[base]+'</span>';
-      // Find the last <td> we added and inject the badge
       var lastTdStart=html.lastIndexOf('<td');
       var inputStart=html.indexOf('<input',lastTdStart);
       if(inputStart>0){
@@ -829,7 +1056,6 @@ function applyFilters(){
     var mS=!statusF||r.katast===statusF;
     return mQ&&mS;
   });
-  // Build group info: base -> count, and first-appearance order
   var baseCount={}, baseFirstIdx={};
   matched.forEach(function(r,i){
     var b=baseOf(r.id);
@@ -837,8 +1063,6 @@ function applyFilters(){
     if(!(b in baseCount)){baseCount[b]=0;baseFirstIdx[b]=i;}
     baseCount[b]++;
   });
-  // Sort: keep rows without base (empty) in original position; group rows cluster
-  // around the first-appearance index of their base, preserving intra-group order.
   var withIdx=matched.map(function(r,i){return{r:r,i:i};});
   withIdx.sort(function(a,b){
     var ba=baseOf(a.r.id), bb=baseOf(b.r.id);
@@ -848,17 +1072,17 @@ function applyFilters(){
     return a.i-b.i;
   });
   filtered=withIdx.map(function(x){return x.r;});
-  // Cache group info for render
   window._groupCount=baseCount;
   render();
 }
 
 function exportExcel(){
-var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια'];
+  var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια'];
   var csv=heads.join('\t')+'\n';
   rows.forEach(function(r){
     var n=r.notes||eN();
-    csv+=[r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote].map(function(v){return(v||'').replace(/\t/g,' ');}).join('\t')+'\n';  });
+    csv+=[r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote].map(function(v){return(v||'').replace(/\t/g,' ');}).join('\t')+'\n';
+  });
   var wn=getWeekNum(currentMonday);
   var blob=new Blob(['\uFEFF'+csv],{type:'text/tab-separated-values;charset=utf-8'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);
@@ -868,7 +1092,6 @@ var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Ά�
 window.addEventListener('scroll',hideACPortal,true);
 window.addEventListener('resize',hideACPortal);
 
-// Init after Firebase ready
 function init(){
   updateWeekLabel();
   loadWeek();
