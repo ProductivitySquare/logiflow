@@ -357,18 +357,26 @@ select.with-ic{background-image:none}
     box-shadow: none !important;
   }
 
-  /* Notes button: show full text, no button styling */
+  /* Notes cell: hide the button, show the data-fullnotes span */
   .notes-btn,
   .notes-empty {
-    background: transparent !important;
-    border: none !important;
+    display: none !important;
+  }
+  .print-notes {
+    display: block !important;
     font-size: 8px !important;
-    color: #333 !important;
-    padding: 0 !important;
+    color: #1a1a1a !important;
     font-family: Arial, Helvetica, sans-serif !important;
     white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
+    word-break: break-word !important;
+    line-height: 1.4 !important;
+  }
+  /* td with notes: let height grow naturally */
+  tbody td:nth-child(13) {
+    white-space: normal !important;
+    height: auto !important;
+    vertical-align: top !important;
+    padding-top: 4px !important;
   }
 
   /* Merida input: monospace */
@@ -864,13 +872,27 @@ function makeKatastCell(ri,val,ed){
 }
 
 // ---- NOTES ----
+function nTxtPrint(n){
+  if(!n)return'';
+  var p=[];
+  if(n.address)p.push(n.address);
+  if(n.hours)p.push(n.hours);
+  if(n.phone)p.push(n.phone);
+  if(n.contact)p.push(n.contact);
+  if(n.dims)p.push(n.dims);
+  if(n.euro)p.push(n.euro);
+  if(n.volumeNote)p.push(n.volumeNote);
+  return p.join(' - ');
+}
 function makeNotesCell(ri,notes,ed){
   var cls=ed?'ec':'rc';
   var txt=nTxt(notes);
   var prev=txt?txt.substring(0,26)+(txt.length>26?'…':''):'';
+  var fullPrint=esc(nTxtPrint(notes));
   var inner=prev
     ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(prev)+'</button>'
     :'<button class="notes-empty" onclick="openModal('+ri+')">'+(ed?'+ Προσθήκη':'—')+'</button>';
+  inner+='<span class="print-notes" style="display:none">'+fullPrint+'</span>';
   return '<td class="'+cls+'">'+inner+'</td>';
 }
 
