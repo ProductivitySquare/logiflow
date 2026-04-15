@@ -958,9 +958,8 @@ function makeNotesCell(ri,notes,ed){
   var txt=nTxt(notes);
 
   var fullPrint=esc(nTxtPrint(notes));
-  var eyeIcon='<span class="notes-eye"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>';
   var inner=txt
-    ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(txt)+eyeIcon+'</button>'
+    ?'<button class="notes-btn" onclick="openModal('+ri+')">'+esc(txt)+'</button>'
     :'<button class="notes-empty" onclick="openModal('+ri+')">'+(ed?'+ Προσθήκη':'—')+'</button>';
   inner+='<span class="print-notes" style="display:none">'+fullPrint+'</span>';
   return '<td class="'+cls+'">'+inner+'</td>';
