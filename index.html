@@ -92,6 +92,8 @@ tbody td input:disabled,tbody td select:disabled{opacity:.45;cursor:not-allowed}
 
 input.merida-input{letter-spacing:1px;font-family:'Courier New',monospace;font-size:12px;font-weight:600}
 input[type="datetime-local"],input[type="date"]{cursor:pointer;font-size:11px;font-family:inherit}
+input[type="datetime-local"]{max-width:108px}
+input[type="date"]{max-width:90px}
 
 /* ── BUTTONS IN CELLS ── */
 .notes-btn{display:inline-block;padding:3px 9px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit;font-weight:500}
@@ -189,6 +191,16 @@ tbody tr.in-group.group-last td {
 }
 tbody tr.in-group td:first-child {
   position:relative;
+}
+tbody td.group-shared {
+  background: transparent !important;
+  opacity: .0 !important;
+  pointer-events: none;
+}
+tbody td.group-shared input {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: transparent !important;
 }
 tbody tr.in-group td:first-child > input.merida-input {
   display:inline-block;
@@ -297,9 +309,9 @@ select.with-ic{background-image:none}
   thead th:nth-child(2)  { width: 7% }   /* Χώρα */
   thead th:nth-child(3)  { width: 3% }   /* Α — μόνο initial */
   thead th:nth-child(4)  { width: 5% }   /* Πρβλ. Άφιξη */
-  thead th:nth-child(5)  { width: 8% }   /* Άφιξη */
+  thead th:nth-child(5)  { width: 7% }   /* Άφιξη */
   thead th:nth-child(6)  { width: 5% }   /* Πρβλ. Παράδ. */
-  thead th:nth-child(7)  { width: 8% }   /* Παράδοση */
+  thead th:nth-child(7)  { width: 7% }   /* Παράδοση */
   thead th:nth-child(8)  { width: 3% }   /* Κολά */
   thead th:nth-child(9)  { width: 5% }   /* Συσκ. */
   thead th:nth-child(10) { width: 3% }   /* Κιλά */
@@ -418,6 +430,13 @@ select.with-ic{background-image:none}
   tbody tr.in-group td:first-child {
     box-shadow: inset 3px 0 0 #1a3a2a !important;
   }
+  tbody td.group-shared {
+    opacity: 1 !important;
+    background: transparent !important;
+  }
+  tbody td.group-shared input {
+    display: none !important;
+  }
   tbody tr.in-group.group-first td {
     border-top: 1.5px solid #1a3a2a !important;
   }
@@ -525,9 +544,9 @@ select.with-ic{background-image:none}
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
       <th style="width:90px">Πρβλ. Άφιξη</th>
-      <th style="width:128px">Άφιξη</th>
+      <th style="width:108px">Άφιξη</th>
       <th style="width:90px">Πρβλ. Παράδ.</th>
-      <th style="width:128px">Παράδοση</th>
+      <th style="width:108px">Παράδοση</th>
       <th style="width:38px">Κολά</th>
       <th style="width:90px">Συσκ.</th>
       <th style="width:54px">Κιλά</th>
@@ -638,8 +657,8 @@ var saveTimer=null;
 
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
 var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
-var USERS=['Ντέμη','Άγγελος','Παναγιώτης','Μαρίνα','Λούης','Τάκης','Σταμάτης','Άλλος'];
-var USER_INITIALS={'Ντέμη':'Ν','Άγγελος':'Α','Παναγιώτης':'Π','Μαρίνα':'Μ','Λούης':'Λ','Τάκης':'Τ','Σταμάτης':'Σ','Άλλος':'Α'};
+var USERS=['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Παναγιώτης','Άλλος'];
+var USER_INITIALS={'Νίκος':'Ν','Μαρία':'Μ','Γιώργης':'Γ','Κώστας':'Κ','Ελένη':'Ε','Δημήτρης':'Δ','Παναγιώτης':'Π','Άλλος':'Α'};
 
 var warehouseFields=['afx','par','katast','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
@@ -1062,9 +1081,17 @@ function render(){
         html=html.substring(0,inputStart)+badge+html.substring(inputStart);
       }
     }
-    html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
-    html+=makeUserCell(ri,row.a,canEdit('a'));
-    html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
+    // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη κενά & locked
+    var isGroupFollower=inGroup&&!isFirstOfGroup;
+    if(isGroupFollower){
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
+    } else {
+      html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
+      html+=makeUserCell(ri,row.a,canEdit('a'));
+      html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
+    }
     html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
     html+=makeDTCell(ri,'pPar',row.pPar,canEdit('pPar'));
     html+=makeDTCell(ri,'par',row.par,canEdit('par'));
