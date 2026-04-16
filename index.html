@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CTL LogiFlow — Αφίξεις</title>
+<title>CTL LogiFlow - Αφίξεις</title>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -153,19 +153,6 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .btn-cancel:hover{background:var(--bg);border-color:var(--brand)}
 .btn-save{border:none;background:var(--brand);color:#fff}
 .btn-save:hover{background:var(--brand-hover)}
-
-/* ── SEND EMAIL (warehouse) ── */
-.send-bar{display:none;position:sticky;bottom:0;z-index:90;background:var(--brand);padding:10px 16px;align-items:center;gap:10px;flex-wrap:wrap;border-top:2px solid var(--brand-hover)}
-.send-bar.visible{display:flex}
-.send-bar-info{font-size:12px;color:rgba(255,255,255,.85);font-weight:600;flex:1}
-.send-bar-btn{padding:7px 16px;border-radius:7px;border:none;background:white;color:var(--brand);font-size:12px;cursor:pointer;font-weight:700;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .15s}
-.send-bar-btn:hover{background:var(--brand-light)}
-.send-bar-clear{padding:6px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.8);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
-.send-bar-clear:hover{background:rgba(255,255,255,.1)}
-/* checkbox in cell */
-.row-check{width:16px;height:16px;cursor:pointer;accent-color:var(--brand)}
-thead th.th-check{width:28px;padding:9px 4px}
-tbody td.td-check{padding:3px 4px;text-align:center}
 
 /* ── NOTIFICATION ── */
 .notif{display:none;position:fixed;top:68px;right:18px;background:var(--brand);color:#fff;padding:12px 18px;border-radius:10px;font-size:12px;font-weight:500;z-index:500;max-width:320px;box-shadow:0 6px 20px rgba(26,58,42,.25);animation:slin .3s ease;align-items:center;gap:10px;font-family:inherit}
@@ -368,7 +355,6 @@ select.with-ic{background-image:none}
   tbody td:nth-child(15),
   tbody td:nth-child(16) { display: none !important; }
   thead th:nth-child(16) { display: none !important; }
-  .td-check, .th-check, .send-bar { display: none !important; }
 
   /* ── User cell: hide the overlay select, show only the initial span ── */
   tbody td:nth-child(3) select { display: none !important; }
@@ -536,7 +522,7 @@ select.with-ic{background-image:none}
 <!-- Print-only header (hidden on screen, shown on print) -->
 <div class="print-header">
   <div class="print-header-inner">
-    <h1>CTL LogiFlow — Αφίξεις</h1>
+    <h1>CTL LogiFlow - Αφίξεις</h1>
     <span class="ph-week" id="printWeekLabel"></span>
     <span class="ph-date" id="printDate"></span>
   </div>
@@ -596,7 +582,6 @@ select.with-ic{background-image:none}
 <div class="wrap">
   <table>
     <thead><tr>
-      <th class="th-check" id="thCheck" style="display:none"></th>
       <th style="width:108px">Μερίδα</th>
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
@@ -612,7 +597,7 @@ select.with-ic{background-image:none}
       <th style="width:240px;max-width:240px">Παρατηρήσεις</th>
       <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
-      <th style="width:38px">📎</th>
+      <th style="width:38px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
@@ -634,23 +619,23 @@ select.with-ic{background-image:none}
     <div class="modal-body">
       <div class="msec">
         <div class="msec-title">1. Παράδοση — Διεύθυνση</div>
-        <textarea id="mnAddress" placeholder="π.χ. Καλλιρόης 71, Ν. Κόσμος" rows="2"></textarea>
+        <textarea id="mnAddress" placeholder="" rows="2"></textarea>
       </div>
       <div class="msec">
         <div class="msec-title">2. Στοιχεία επικοινωνίας</div>
         <div class="mgrid">
-          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="mnHours" placeholder="08:30 – 14:00"></div>
-          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="mnPhone" placeholder="210 1234567"></div>
+          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="mnHours" placeholder=""></div>
+          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="mnPhone" placeholder=""></div>
         </div>
-        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="mnContact" placeholder="π.χ. κα Βούλα Μελεμένη"></div>
+        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="mnContact" placeholder=""></div>
       </div>
       <div class="msec">
         <div class="msec-title">3. Όγκος εμπορεύματος</div>
         <div class="mgrid">
-          <div><div class="mlabel">Διαστάσεις (εκ.)</div><input type="text" id="mnDims" placeholder="80×120×160"></div>
-          <div><div class="mlabel">Ευροπαλέτες</div><input type="text" id="mnEuro" placeholder="2 ευροπαλ"></div>
+          <div><div class="mlabel">Διαστάσεις</div><input type="text" id="mnDims" placeholder=""></div>
+          <div><div class="mlabel">Συσκευασία</div><input type="text" id="mnEuro" placeholder=""></div>
         </div>
-        <div style="margin-top:10px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="π.χ. Μη στοιβάσιμες, εύθραυστο" rows="2"></textarea></div>
+        <div style="margin-top:10px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="" rows="2"></textarea></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -680,17 +665,6 @@ select.with-ic{background-image:none}
       </div>
     </div>
   </div>
-</div>
-
-<!-- Send bar (warehouse email) -->
-<div class="send-bar" id="sendBar">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-  <span class="send-bar-info" id="sendBarInfo">0 γραμμές επιλεγμένες</span>
-  <button class="send-bar-btn" onclick="sendDeliveryEmail()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    Αποστολή παραδόσεων
-  </button>
-  <button class="send-bar-clear" onclick="clearSelection()">Ακύρωση</button>
 </div>
 
 <!-- Firebase SDK -->
@@ -1109,7 +1083,7 @@ function printNote(){
   if(n.address)w.document.write('<div class="sec"><div class="label">Διεύθυνση παράδοσης</div><p>'+n.address+'</p></div>');
   if(n.hours||n.phone||n.contact)w.document.write('<div class="sec"><div class="label">Επικοινωνία</div><p>'+[n.hours,n.phone,n.contact].filter(Boolean).join(' · ')+'</p></div>');
   if(n.dims||n.euro||n.volumeNote)w.document.write('<div class="sec"><div class="label">Όγκος</div><p>'+[n.dims,n.euro,n.volumeNote].filter(Boolean).join(' — ')+'</p></div>');
-  w.document.write('<br><br><small style="color:#ccc">CTL LogiFlow — εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
+  w.document.write('<br><br><small style="color:#ccc">CTL LogiFlow - εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
   w.document.write('</body></html>');w.document.close();w.print();
 }
 
@@ -1165,7 +1139,8 @@ var attachRowIdx=-1;
 function makeAttachCell(ri,row){
   var count=(row.attachments&&row.attachments.length)||0;
   var cls=count>0?'attach-btn has-files':'attach-btn';
-  var label=count>0?'📎 '+count:'📎';
+  var svg='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>';
+var label=count>0?svg+' '+count:svg;
   return '<td><button class="'+cls+'" onclick="openAttachModal('+ri+')">'+label+'</button></td>';
 }
 
@@ -1248,94 +1223,11 @@ function deleteAttach(idx){
   render();
 }
 
-// ---- EMAIL SEND (warehouse) ----
-var selectedRows=new Set();
-
-function updateSendBar(){
-  var bar=document.getElementById('sendBar');
-  var info=document.getElementById('sendBarInfo');
-  var n=selectedRows.size;
-  if(role==='warehouse'&&n>0){
-    bar.classList.add('visible');
-    info.textContent=n+' γραμμ'+(n===1?'ή':'ές')+' επιλεγμέν'+(n===1?'η':'ες');
-  } else {
-    bar.classList.remove('visible');
-  }
-}
-
-function toggleRowSelect(ri,cb){
-  if(cb.checked) selectedRows.add(ri);
-  else selectedRows.delete(ri);
-  updateSendBar();
-}
-
-function clearSelection(){
-  selectedRows.clear();
-  document.querySelectorAll('.row-check').forEach(function(cb){cb.checked=false;});
-  updateSendBar();
-}
-
-function sendDeliveryEmail(){
-  if(!selectedRows.size)return;
-  var sel=Array.from(selectedRows).map(function(ri){return rows[ri];}).filter(Boolean);
-
-  // Build subject: ΠΑΡΑΔΟΣΕΙΣ [ΗΜΕΡΑ] [ΗΜ/ΝΙΑ]
-  var days=['ΚΥΡΙΑΚΗ','ΔΕΥΤΕΡΑ','ΤΡΙΤΗ','ΤΕΤΑΡΤΗ','ΠΕΜΠΤΗ','ΠΑΡΑΣΚΕΥΗ','ΣΑΒΒΑΤΟ'];
-  var now=new Date();
-  var subject='ΠΑΡΑΔΟΣΕΙΣ '+days[now.getDay()]+' '+fmt(now)+'/'+now.getFullYear();
-
-  // Build plain-text table
-  var lines=[];
-  lines.push('Καλημέρα,');
-  lines.push('');
-  lines.push('Παρακαλώ για τις παρακάτω παραδόσεις:');
-  lines.push('');
-  lines.push('─'.repeat(80));
-
-  sel.forEach(function(r,idx){
-    var n=r.notes||eN();
-    lines.push((idx+1)+'. ΜΕΡΙΔΑ: '+(r.id||'—')+'  |  ΠΕΛΑΤΗΣ: '+(r.pelatis||'—'));
-    if(r.par)lines.push('   Παράδοση: '+fmtDT(r.par));
-    lines.push('   Κολά: '+(r.kola||'—')+'  |  Συσκ.: '+(r.sysk||'—')+'  |  Κιλά: '+(r.kila||'—'));
-    if(n.address)lines.push('   Διεύθυνση: '+n.address);
-    if(n.hours||n.phone)lines.push('   Ώρες: '+(n.hours||'—')+'  |  Τηλ.: '+(n.phone||'—'));
-    if(n.contact)lines.push('   Υπεύθυνος: '+n.contact);
-    if(n.dims)lines.push('   Διαστάσεις: '+n.dims);
-    if(n.volumeNote)lines.push('   Σχόλια: '+n.volumeNote);
-    lines.push('─'.repeat(80));
-  });
-  lines.push('');
-  lines.push('Best regards,');
-
-  var body=lines.join('\n');
-  var mailto='mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-
-  if(mailto.length<1800){
-    window.location.href=mailto;
-    setTimeout(function(){
-      showNotif('Email','Άνοιξε στο Outlook');
-    },500);
-  } else {
-    // Fallback: copy to clipboard
-    navigator.clipboard.writeText('Subject: '+subject+'\n\n'+body).then(function(){
-      showNotif('Clipboard','Αντιγράφηκε — επικόλληση στο email');
-    }).catch(function(){
-      // Last resort: show in textarea
-      var w=window.open('','_blank','width=600,height=500');
-      w.document.write('<html><body><textarea style="width:100%;height:90vh;font-family:monospace;font-size:12px">'+('Subject: '+subject+'\n\n'+body).replace(/</g,'&lt;')+'</textarea></body></html>');
-    });
-  }
-}
-
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
   var gc=window._groupCount||{};
   var prevBase=null;
-  // Show/hide checkbox column
-  var thCheck=document.getElementById('thCheck');
-  if(thCheck)thCheck.style.display=(role==='warehouse')?'':'none';
-
   filtered.forEach(function(row,fi){
     var ri=rows.indexOf(row);
     if(ri<0)return;
@@ -1354,10 +1246,6 @@ function render(){
     }
     var sepCls=(prevBase!==null&&prevBase!==base)?' group-sep':'';
     html+='<tr class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
-    if(role==='warehouse'){
-      var chk=selectedRows.has(ri)?'checked':'';
-      html+='<td class="td-check"><input type="checkbox" class="row-check" '+chk+' onchange="toggleRowSelect('+ri+',this)"></td>';
-    }
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     if(isFirstOfGroup){
       var badge='<span class="group-badge" title="Group '+gc[base]+' μερίδων">'+gc[base]+'</span>';
@@ -1413,7 +1301,6 @@ function delRow(ri){
 function setRole(r,btn){
   if(r==='admin'){var pw=prompt('Κωδικός Admin:');if(pw!=='1209'){alert('Λάθος κωδικός!');return;}}
   role=r;
-  selectedRows.clear();
   document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   render();
