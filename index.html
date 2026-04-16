@@ -184,9 +184,9 @@ tbody tr.in-group.group-last td {
 }
 .group-badge {
   display:inline-flex;align-items:center;justify-content:center;
-background:#EA4335;color:white;
-font-size:9px;font-weight:700;
-width:20px;height:20px;border-radius:50%;
+  background:var(--brand);color:white;
+  font-size:8px;font-weight:700;
+  width:16px;height:16px;border-radius:50%;
   position:absolute;top:3px;left:3px;
   font-family:inherit;
   letter-spacing:0;
@@ -593,23 +593,23 @@ select.with-ic{background-image:none}
     <div class="modal-body">
       <div class="msec">
         <div class="msec-title">1. Παράδοση — Διεύθυνση</div>
-        <textarea id="mnAddress" placeholder="" rows="2"></textarea>
+        <textarea id="mnAddress" placeholder="π.χ. Καλλιρόης 71, Ν. Κόσμος" rows="2"></textarea>
       </div>
       <div class="msec">
         <div class="msec-title">2. Στοιχεία επικοινωνίας</div>
         <div class="mgrid">
-          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="mnHours" placeholder=""></div>
-          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="mnPhone" placeholder=""></div>
+          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="mnHours" placeholder="08:30 – 14:00"></div>
+          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="mnPhone" placeholder="210 1234567"></div>
         </div>
-        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="mnContact" placeholder=""></div>
+        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="mnContact" placeholder="π.χ. κα Βούλα Μελεμένη"></div>
       </div>
       <div class="msec">
         <div class="msec-title">3. Όγκος εμπορεύματος</div>
         <div class="mgrid">
-          <div><div class="mlabel">Διαστάσεις (εκ.)</div><input type="text" id="mnDims" placeholder=""></div>
-          <div><div class="mlabel">Συσκευασία</div><input type="text" id="mnEuro" placeholder=""></div>
+          <div><div class="mlabel">Διαστάσεις (εκ.)</div><input type="text" id="mnDims" placeholder="80×120×160"></div>
+          <div><div class="mlabel">Ευροπαλέτες</div><input type="text" id="mnEuro" placeholder="2 ευροπαλ"></div>
         </div>
-        <div style="margin-top:10px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="" rows="2"></textarea></div>
+        <div style="margin-top:10px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="π.χ. Μη στοιβάσιμες, εύθραυστο" rows="2"></textarea></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -675,8 +675,8 @@ var saveTimer=null;
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
 var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
 var PKG_ABBR={'Παλέτα':'ΠΑΛ','Κιβώτιο':'ΚΙΒ','Κόλο':'ΚΟΛ','Δεξαμενή':'ΔΕΞ','Ξύλινη βάση':'ΞΥΛ','Χαρτοκούτι':'ΧΑΡ','Μηχάνημα':'ΜΗΧ','Τύμπανο':'ΤΥΜ'};
-var USERS=['Πάνος','Λούης','Ντέμη','Σταμάτης','Τάκης','Μαρίνα','Ιωάννα','Άγγελος'];
-var USER_INITIALS={'Πάνος':'Π','Λούης':'Λ','Ντέμη':'Ν','Σταμάτης':'Σ','Τάκης':'Τ','Μαρίνα':'Μ','Ιωάννα':'Ι','Άγγελος':'Α'};
+var USERS=['Νίκος','Μαρία','Γιώργης','Κώστας','Ελένη','Δημήτρης','Παναγιώτης','Άλλος'];
+var USER_INITIALS={'Νίκος':'Ν','Μαρία':'Μ','Γιώργης':'Γ','Κώστας':'Κ','Ελένη':'Ε','Δημήτρης':'Δ','Παναγιώτης':'Π','Άλλος':'Α'};
 
 var warehouseFields=['afx','par','katast','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
@@ -803,7 +803,7 @@ function canEdit(f){if(role==='admin')return true;if(role==='office')return offi
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' - ');}
+function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
 
 function updateField(idx,field,val){
   var old=rows[idx][field];
@@ -881,7 +881,11 @@ function pickAC(val,ri,field){
 }
 function makeACCell(ri,field,val,list,ed){
   var cls=ed?'ec':'rc';
-  if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+  if(!ed){
+    var disAbbr=val?(PKG_ABBR[val]||val):'';
+    if(field==='sysk')return '<td class="'+cls+'"><input disabled value="'+esc(disAbbr)+'"></td>';
+    return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+  }
   // For packaging (sysk): show abbreviation + hidden select overlay
   if(field==='sysk'){
     var abbr=val?(PKG_ABBR[val]||val):'';
@@ -931,6 +935,12 @@ function makeDTCell(ri,field,val,ed){
   }
   var iso=(val&&val.length>=10)?val.substring(0,16):'';
   return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+}
+
+// ---- PELATIS (with tooltip) ----
+function makePelatisCell(ri,val,ed){
+  var cls=ed?'ec':'rc';
+  return '<td class="'+cls+'" title="'+esc(val)+'" style="cursor:default"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" title="'+esc(val)+'" onchange="updateField('+ri+','pelatis',this.value)"></td>';
 }
 
 // ---- TEXT ----
@@ -1124,7 +1134,7 @@ function render(){
     html+=makeTxtCell(ri,'kola',row.kola,canEdit('kola'));
     html+=makeACCell(ri,'sysk',row.sysk,PACKAGING,canEdit('sysk'));
     html+=makeTxtCell(ri,'kila',row.kila,canEdit('kila'));
-    html+=makeTxtCell(ri,'pelatis',row.pelatis,canEdit('pelatis'));
+    html+=makePelatisCell(ri,row.pelatis,canEdit('pelatis'));
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
     html+=makeSignalCell(ri,row);
