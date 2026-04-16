@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CTL LogiFlow — Αφίξεις</title>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
-<script>UPLOADCARE_PUBLIC_KEY = "6597a3a05520df1ebb64"; UPLOADCARE_LOCALE = "en";</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -659,10 +657,11 @@ select.with-ic{background-image:none}
       <div class="attach-file-list" id="attachFileList"></div>
       <div class="attach-empty" id="attachEmpty" style="display:none">Δεν υπάρχουν συνημμένα</div>
       <div class="attach-upload-row">
-        <label>
-          <input type="hidden" role="uploadcare-uploader" id="ucWidget" data-multiple="true" data-images-only="false"/>
-          + Προσθήκη αρχείου
+        <label id="attachUploadLabel">
+          <input type="file" id="attachFileInput" multiple style="display:none" onchange="handleAttachUpload(this)"/>
+          <span id="attachUploadText">+ Προσθήκη αρχείου</span>
         </label>
+        <div id="attachUploadProgress" style="display:none;font-size:11px;color:var(--brand);margin-top:6px">Ανέβασμα...</div>
       </div>
     </div>
   </div>
@@ -1148,26 +1147,43 @@ function openAttachModal(ri){
   attachRowIdx=ri;
   renderAttachList();
   document.getElementById('attachModalBg').classList.add('open');
-  // Init uploadcare widget
-  setTimeout(function(){
-    var w=uploadcare.Widget('#ucWidget');
-    w.value(null);
-    w.onChange(function(fileGroup){
-      if(!fileGroup)return;
-      fileGroup.promise().then(function(group){
-        group.files().forEach(function(fp){
-          fp.then(function(info){
-            if(!rows[attachRowIdx].attachments)rows[attachRowIdx].attachments=[];
-            rows[attachRowIdx].attachments.push({name:info.name,url:info.cdnUrl,size:info.size});
-            saveRow(rows[attachRowIdx]);
-            renderAttachList();
-            render();
-            w.value(null);
-          });
-        });
-      });
-    });
-  },100);
+  // Reset file input
+  var inp=document.getElementById('attachFileInput');
+  if(inp)inp.value='';
+}
+
+async function handleAttachUpload(input){
+  if(!input.files||!input.files.length)return;
+  var progress=document.getElementById('attachUploadProgress');
+  var label=document.getElementById('attachUploadText');
+  var files=Array.from(input.files);
+  progress.style.display='block';
+  label.textContent='Ανεβαίνει...';
+  for(var i=0;i<files.length;i++){
+    var file=files[i];
+    progress.textContent='Ανέβασμα '+file.name+' ('+(i+1)+'/'+files.length+')...';
+    try{
+      var fd=new FormData();
+      fd.append('UPLOADCARE_PUB_KEY','6597a3a05520df1ebb64');
+      fd.append('UPLOADCARE_STORE','1');
+      fd.append('file',file);
+      var res=await fetch('https://upload.uploadcare.com/base/',{method:'POST',body:fd});
+      var data=await res.json();
+      if(data.file){
+        var url='https://ucarecdn.com/'+data.file+'/';
+        if(!rows[attachRowIdx].attachments)rows[attachRowIdx].attachments=[];
+        rows[attachRowIdx].attachments.push({name:file.name,url:url,size:file.size});
+        saveRow(rows[attachRowIdx]);
+        renderAttachList();
+        render();
+      }
+    }catch(e){
+      alert('Σφάλμα upload: '+e.message);
+    }
+  }
+  progress.style.display='none';
+  label.textContent='+ Προσθήκη αρχείου';
+  input.value='';
 }
 
 function closeAttachModal(){
