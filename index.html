@@ -1206,7 +1206,7 @@ function renderAttachList(){
   empty.style.display='none';
   list.innerHTML=atts.map(function(a,i){
     var kb=a.size?Math.round(a.size/1024)+'KB':'';
-    var dlUrl='https://1cgtm8jfrx.ucarecd.net/'+a.url.split('/').filter(Boolean).pop()+'/'+encodeURIComponent(a.name);
+    var dlUrl=a.url;
     return '<div class="attach-file-item">'
       +'<a href="'+dlUrl+'" target="_blank" title="'+esc(a.name)+'">'+esc(a.name)+(kb?' <span style="color:#aaa;font-size:10px">('+kb+')</span>':'')+'</a>'
       +'<button class="attach-file-del" onclick="deleteAttach('+i+')" title="Διαγραφή">✕</button>'
