@@ -1201,7 +1201,7 @@ function renderAttachList(){
   list.innerHTML=atts.map(function(a,i){
     var kb=a.size?Math.round(a.size/1024)+'KB':'';
     return '<div class="attach-file-item">'
-      +'<a href="'+a.url+'" target="_blank" title="'+esc(a.name)+'">'+esc(a.name)+(kb?' <span style="color:#aaa;font-size:10px">('+kb+')</span>':'')+'</a>'
+      +'<a href="'+a.url+'" onclick="window.open(\''+a.url+'\',\'_blank\',\'noopener\');return false;" title="'+esc(a.name)+'">'+esc(a.name)+(kb?' <span style="color:#aaa;font-size:10px">('+kb+')</span>':'')+'</a>'
       +'<button class="attach-file-del" onclick="deleteAttach('+i+')" title="Διαγραφή">✕</button>'
       +'</div>';
   }).join('');
