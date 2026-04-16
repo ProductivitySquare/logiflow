@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CTL LogiFlow — Αφίξεις</title>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+<script>UPLOADCARE_PUBLIC_KEY = "6597a3a05520df1ebb64"; UPLOADCARE_LOCALE = "en";</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -106,6 +108,29 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .notes-empty:hover{border-color:var(--brand);color:var(--brand)}
 .del-btn{padding:2px 7px;border-radius:5px;border:1px solid #fca5a5;background:var(--red-light);color:var(--red);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s}
 .del-btn:hover{background:var(--red);color:white;border-color:var(--red)}
+
+/* ── ATTACH ── */
+.attach-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s;white-space:nowrap}
+.attach-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
+.attach-btn.has-files{background:var(--brand);color:white;border-color:var(--brand)}
+.attach-modal-bg{display:none;position:fixed;inset:0;background:rgba(26,58,42,.5);z-index:1100;align-items:center;justify-content:center}
+.attach-modal-bg.open{display:flex}
+.attach-modal{background:#fff;border-radius:12px;width:min(520px,96vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(26,58,42,.3);font-family:inherit}
+.attach-modal-header{padding:14px 20px;background:var(--brand);color:white;display:flex;align-items:center;justify-content:space-between}
+.attach-modal-header h3{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.attach-modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:rgba(255,255,255,.7);font-family:inherit}
+.attach-modal-close:hover{color:white}
+.attach-modal-body{padding:16px 20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:10px}
+.attach-file-list{display:flex;flex-direction:column;gap:6px}
+.attach-file-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg)}
+.attach-file-item a{flex:1;font-size:12px;color:var(--brand);font-weight:500;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attach-file-item a:hover{text-decoration:underline}
+.attach-file-del{background:none;border:none;color:#bbb;cursor:pointer;font-size:14px;padding:0 4px;font-family:inherit}
+.attach-file-del:hover{color:var(--red)}
+.attach-empty{color:var(--text-muted);font-size:12px;text-align:center;padding:20px 0}
+.attach-upload-row{margin-top:4px}
+.attach-upload-row label{display:inline-block;padding:7px 16px;border-radius:7px;border:none;background:var(--brand);color:white;font-size:12px;cursor:pointer;font-weight:600;font-family:inherit;transition:background .15s}
+.attach-upload-row label:hover{background:var(--brand-hover)}
 
 /* ── MODAL ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(26,58,42,.5);z-index:1000;align-items:center;justify-content:center}
@@ -329,7 +354,9 @@ select.with-ic{background-image:none}
 
   /* ── Hide Σήμα + Delete columns in rows too ── */
   tbody td:nth-child(14),
-  tbody td:nth-child(15) { display: none !important; }
+  tbody td:nth-child(15),
+  tbody td:nth-child(16) { display: none !important; }
+  thead th:nth-child(16) { display: none !important; }
 
   /* ── User cell: hide the overlay select, show only the initial span ── */
   tbody td:nth-child(3) select { display: none !important; }
@@ -572,6 +599,7 @@ select.with-ic{background-image:none}
       <th style="width:240px;max-width:240px">Παρατηρήσεις</th>
       <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
+      <th style="width:38px">📎</th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
@@ -593,29 +621,49 @@ select.with-ic{background-image:none}
     <div class="modal-body">
       <div class="msec">
         <div class="msec-title">1. Παράδοση — Διεύθυνση</div>
-        <textarea id="mnAddress" placeholder="" rows="2"></textarea>
+        <textarea id="mnAddress" placeholder="π.χ. Καλλιρόης 71, Ν. Κόσμος" rows="2"></textarea>
       </div>
       <div class="msec">
         <div class="msec-title">2. Στοιχεία επικοινωνίας</div>
         <div class="mgrid">
-          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="mnHours" placeholder=""></div>
-          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="mnPhone" placeholder=""></div>
+          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="mnHours" placeholder="08:30 – 14:00"></div>
+          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="mnPhone" placeholder="210 1234567"></div>
         </div>
-        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="mnContact" placeholder=""></div>
+        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="mnContact" placeholder="π.χ. κα Βούλα Μελεμένη"></div>
       </div>
       <div class="msec">
         <div class="msec-title">3. Όγκος εμπορεύματος</div>
         <div class="mgrid">
-          <div><div class="mlabel">Διαστάσεις (εκ.)</div><input type="text" id="mnDims" placeholder=""></div>
-          <div><div class="mlabel">Συσκευασία</div><input type="text" id="mnEuro" placeholder=""></div>
+          <div><div class="mlabel">Διαστάσεις (εκ.)</div><input type="text" id="mnDims" placeholder="80×120×160"></div>
+          <div><div class="mlabel">Ευροπαλέτες</div><input type="text" id="mnEuro" placeholder="2 ευροπαλ"></div>
         </div>
-        <div style="margin-top:10px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="" rows="2"></textarea></div>
+        <div style="margin-top:10px"><div class="mlabel">Σχόλια</div><textarea id="mnVolumeNote" placeholder="π.χ. Μη στοιβάσιμες, εύθραυστο" rows="2"></textarea></div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="printNote()">Εκτύπωση</button>
       <button class="btn-cancel" onclick="closeModal()">Ακύρωση</button>
       <button class="btn-save" onclick="saveModal()">Αποθήκευση</button>
+    </div>
+  </div>
+</div>
+
+<!-- Attach Modal -->
+<div class="attach-modal-bg" id="attachModalBg" onclick="if(event.target===this)closeAttachModal()">
+  <div class="attach-modal">
+    <div class="attach-modal-header">
+      <h3>Συνημμένα</h3>
+      <button class="attach-modal-close" onclick="closeAttachModal()">✕</button>
+    </div>
+    <div class="attach-modal-body">
+      <div class="attach-file-list" id="attachFileList"></div>
+      <div class="attach-empty" id="attachEmpty" style="display:none">Δεν υπάρχουν συνημμένα</div>
+      <div class="attach-upload-row">
+        <label>
+          <input type="hidden" role="uploadcare-uploader" id="ucWidget" data-multiple="true" data-images-only="false"/>
+          + Προσθήκη αρχείου
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -682,7 +730,7 @@ var warehouseFields=['afx','par','katast','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
 
 function eN(){return{address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
-function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),lastChangedBy:'',lastChangedAt:0,seenBy:{}};}
+function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),attachments:[],lastChangedBy:'',lastChangedAt:0,seenBy:{}};}
 
 function getThisMonday(){
   var d=new Date();var day=d.getDay()||7;
@@ -746,6 +794,7 @@ function loadWeek(){
         if(!r.seenBy)r.seenBy={};
         if(!r.lastChangedBy)r.lastChangedBy='';
         if(!r.lastChangedAt)r.lastChangedAt=0;
+        if(!r.attachments)r.attachments=[];
         return r;
       });
     } else {
@@ -786,6 +835,7 @@ function sanitize(r){
   if(!c.seenBy)c.seenBy={};
   if(!c.lastChangedBy)c.lastChangedBy='';
   if(!c.lastChangedAt)c.lastChangedAt=0;
+  if(!c.attachments)c.attachments=[];
   return c;
 }
 
@@ -803,7 +853,7 @@ function canEdit(f){if(role==='admin')return true;if(role==='office')return offi
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' - ');}
+function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
 
 function updateField(idx,field,val){
   var old=rows[idx][field];
@@ -1084,6 +1134,71 @@ function makeSignalCell(ri,row){
   return '<td></td>';
 }
 
+// ---- ATTACH ----
+var attachRowIdx=-1;
+
+function makeAttachCell(ri,row){
+  var count=(row.attachments&&row.attachments.length)||0;
+  var cls=count>0?'attach-btn has-files':'attach-btn';
+  var label=count>0?'📎 '+count:'📎';
+  return '<td><button class="'+cls+'" onclick="openAttachModal('+ri+')">'+label+'</button></td>';
+}
+
+function openAttachModal(ri){
+  attachRowIdx=ri;
+  renderAttachList();
+  document.getElementById('attachModalBg').classList.add('open');
+  // Init uploadcare widget
+  setTimeout(function(){
+    var w=uploadcare.Widget('#ucWidget');
+    w.value(null);
+    w.onChange(function(fileGroup){
+      if(!fileGroup)return;
+      fileGroup.promise().then(function(group){
+        group.files().forEach(function(fp){
+          fp.then(function(info){
+            if(!rows[attachRowIdx].attachments)rows[attachRowIdx].attachments=[];
+            rows[attachRowIdx].attachments.push({name:info.name,url:info.cdnUrl,size:info.size});
+            saveRow(rows[attachRowIdx]);
+            renderAttachList();
+            render();
+            w.value(null);
+          });
+        });
+      });
+    });
+  },100);
+}
+
+function closeAttachModal(){
+  document.getElementById('attachModalBg').classList.remove('open');
+  attachRowIdx=-1;
+}
+
+function renderAttachList(){
+  if(attachRowIdx<0)return;
+  var atts=(rows[attachRowIdx].attachments)||[];
+  var list=document.getElementById('attachFileList');
+  var empty=document.getElementById('attachEmpty');
+  if(!atts.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=atts.map(function(a,i){
+    var kb=a.size?Math.round(a.size/1024)+'KB':'';
+    return '<div class="attach-file-item">'
+      +'<a href="'+a.url+'" target="_blank" title="'+esc(a.name)+'">'+esc(a.name)+(kb?' <span style="color:#aaa;font-size:10px">('+kb+')</span>':'')+'</a>'
+      +'<button class="attach-file-del" onclick="deleteAttach('+i+')" title="Διαγραφή">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
+function deleteAttach(idx){
+  if(!confirm('Διαγραφή συνημμένου;'))return;
+  rows[attachRowIdx].attachments.splice(idx,1);
+  saveRow(rows[attachRowIdx]);
+  renderAttachList();
+  render();
+}
+
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
@@ -1138,6 +1253,7 @@ function render(){
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
     html+=makeSignalCell(ri,row);
+    html+=makeAttachCell(ri,row);
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
     html+='</tr>';
     prevBase=base;
