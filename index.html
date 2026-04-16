@@ -1165,12 +1165,12 @@ async function handleAttachUpload(input){
     try{
       var fd=new FormData();
       fd.append('UPLOADCARE_PUB_KEY','6597a3a05520df1ebb64');
-      fd.append('UPLOADCARE_STORE','1');
+      fd.append('UPLOADCARE_STORE','auto');
       fd.append('file',file);
       var res=await fetch('https://upload.uploadcare.com/base/',{method:'POST',body:fd});
       var data=await res.json();
       if(data.file){
-        var url='https://ucarecdn.com/'+data.file+'/';
+        var url='https://ucarecdn.com/'+data.file+'/'+encodeURIComponent(file.name);
         if(!rows[attachRowIdx].attachments)rows[attachRowIdx].attachments=[];
         rows[attachRowIdx].attachments.push({name:file.name,url:url,size:file.size});
         saveRow(rows[attachRowIdx]);
