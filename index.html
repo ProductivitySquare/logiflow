@@ -940,7 +940,7 @@ function makeDTCell(ri,field,val,ed){
 // ---- PELATIS (with tooltip) ----
 function makePelatisCell(ri,val,ed){
   var cls=ed?'ec':'rc';
-  return '<td class="'+cls+'" title="'+esc(val)+'" style="cursor:default"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" title="'+esc(val)+'" onchange="updateField('+ri+','pelatis',this.value)"></td>';
+  return '<td class="'+cls+'" title="'+esc(val)+'" style="cursor:default"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" title="'+esc(val)+'" onchange="updateField('+ri+',\'pelatis\',this.value)"></td>';
 }
 
 // ---- TEXT ----
