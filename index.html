@@ -515,9 +515,82 @@ select.with-ic{background-image:none}
 /* Hide print-only elements on screen */
 .print-header { display: none; }
 .print-footer { display: none; }
+
+/* ── DELIVERY PRINT MODE ── */
+body.print-delivery .print-header-delivery { display: block !important; }
+.print-header-delivery { display: none; }
+
+@media print {
+  /* Delivery print: hide full print header, show delivery header */
+  body.print-delivery .print-header { display: none !important; }
+  body.print-delivery .print-header-delivery { display: block !important; }
+
+  /* Delivery: show only specific columns, hide rest */
+  body.print-delivery thead th:nth-child(1) { display: table-cell !important; width:12% } /* Μερίδα */
+  body.print-delivery thead th:nth-child(2),
+  body.print-delivery thead th:nth-child(3),
+  body.print-delivery thead th:nth-child(4),
+  body.print-delivery thead th:nth-child(5),
+  body.print-delivery thead th:nth-child(6),
+  body.print-delivery thead th:nth-child(7) { display: none !important; }
+  body.print-delivery thead th:nth-child(8)  { display: table-cell !important; width:5%  } /* Κολά */
+  body.print-delivery thead th:nth-child(9)  { display: table-cell !important; width:6%  } /* Συσκ. */
+  body.print-delivery thead th:nth-child(10) { display: table-cell !important; width:6%  } /* Κιλά */
+  body.print-delivery thead th:nth-child(11) { display: table-cell !important; width:15% } /* Πελάτης */
+  body.print-delivery thead th:nth-child(12) { display: none !important; }                 /* Κατάσταση */
+  body.print-delivery thead th:nth-child(13) { display: table-cell !important; width:56% } /* Παρατηρήσεις */
+  body.print-delivery thead th:nth-child(14),
+  body.print-delivery thead th:nth-child(15),
+  body.print-delivery thead th:nth-child(16) { display: none !important; }
+
+  body.print-delivery tbody td:nth-child(2),
+  body.print-delivery tbody td:nth-child(3),
+  body.print-delivery tbody td:nth-child(4),
+  body.print-delivery tbody td:nth-child(5),
+  body.print-delivery tbody td:nth-child(6),
+  body.print-delivery tbody td:nth-child(7),
+  body.print-delivery tbody td:nth-child(12),
+  body.print-delivery tbody td:nth-child(14),
+  body.print-delivery tbody td:nth-child(15),
+  body.print-delivery tbody td:nth-child(16) { display: none !important; }
+
+  /* Delivery: keep row colors */
+  body.print-delivery tbody tr.row-apoth { background: #e6f9ec !important; }
+  body.print-delivery tbody tr.row-amesi  { background: #fde8e6 !important; }
+  body.print-delivery tbody tr.row-transit{ background: #e3eeff !important; }
+  body.print-delivery tbody tr.row-deliv  { background: #deeffe !important; }
+  body.print-delivery tbody tr.row-wait   { background: #ffffff !important; }
+
+  /* Delivery notes: full text */
+  body.print-delivery .notes-btn,
+  body.print-delivery .notes-empty { display: none !important; }
+  body.print-delivery .print-notes {
+    display: block !important;
+    font-size: 11px !important;
+    color: #1a1a1a !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.4 !important;
+  }
+  body.print-delivery tbody td:nth-child(13) {
+    white-space: normal !important;
+    height: auto !important;
+    vertical-align: top !important;
+  }
+}
 </style>
 </head>
 <body>
+
+<!-- Print-only header (hidden on screen, shown on print) -->
+<!-- Delivery print header -->
+<div class="print-header-delivery" style="display:none">
+  <div class="print-header-inner">
+    <h1 style="font-size:14px;font-weight:700;color:#1a3a2a;text-transform:uppercase;letter-spacing:.04em">CTL LogiFlow — Παραδόσεις</h1>
+    <span class="ph-week" id="delivPrintWeekLabel"></span>
+    <span class="ph-date" id="delivPrintDate"></span>
+  </div>
+</div>
 
 <!-- Print-only header (hidden on screen, shown on print) -->
 <div class="print-header">
@@ -544,6 +617,7 @@ select.with-ic{background-image:none}
   CTL LogiFlow
 </div>
   <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
+  <button class="print-btn" onclick="doPrintDelivery()" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Παραδόσεις</button>
   <button class="print-btn" onclick="doPrint()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Εκτύπωση</button>
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
@@ -767,12 +841,25 @@ function changeWeek(dir){
 
 // ── PRINT function ──
 function doPrint(){
-  // Stamp current date/time in footer
   var footer=document.getElementById('printFooter');
   if(footer)footer.textContent='Εκτυπώθηκε: '+new Date().toLocaleString('el-GR');
   var pd=document.getElementById('printDate');
   if(pd)pd.textContent=new Date().toLocaleString('el-GR');
+  document.body.classList.remove('print-delivery');
   window.print();
+}
+
+function doPrintDelivery(){
+  var pd=document.getElementById('delivPrintDate');
+  if(pd)pd.textContent=new Date().toLocaleString('el-GR');
+  var pl=document.getElementById('delivPrintWeekLabel');
+  if(pl)pl.textContent=document.getElementById('printWeekLabel').textContent;
+  var footer=document.getElementById('printFooter');
+  if(footer)footer.textContent='Εκτυπώθηκε: '+new Date().toLocaleString('el-GR');
+  document.body.classList.add('print-delivery');
+  window.print();
+  // Remove class after print dialog closes
+  setTimeout(function(){document.body.classList.remove('print-delivery');},2000);
 }
 
 // ---- FIREBASE ----
