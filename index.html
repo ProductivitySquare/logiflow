@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CTL LogiFlow — Αφίξεις</title>
+<title>CTL LogiFlow - Αφίξεις</title>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -522,7 +522,7 @@ select.with-ic{background-image:none}
 <!-- Print-only header (hidden on screen, shown on print) -->
 <div class="print-header">
   <div class="print-header-inner">
-    <h1>CTL LogiFlow — Αφίξεις</h1>
+    <h1>CTL LogiFlow - Αφίξεις</h1>
     <span class="ph-week" id="printWeekLabel"></span>
     <span class="ph-date" id="printDate"></span>
   </div>
@@ -1083,7 +1083,7 @@ function printNote(){
   if(n.address)w.document.write('<div class="sec"><div class="label">Διεύθυνση παράδοσης</div><p>'+n.address+'</p></div>');
   if(n.hours||n.phone||n.contact)w.document.write('<div class="sec"><div class="label">Επικοινωνία</div><p>'+[n.hours,n.phone,n.contact].filter(Boolean).join(' · ')+'</p></div>');
   if(n.dims||n.euro||n.volumeNote)w.document.write('<div class="sec"><div class="label">Όγκος</div><p>'+[n.dims,n.euro,n.volumeNote].filter(Boolean).join(' — ')+'</p></div>');
-  w.document.write('<br><br><small style="color:#ccc">CTL LogiFlow — εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
+  w.document.write('<br><br><small style="color:#ccc">CTL LogiFlow - εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
   w.document.write('</body></html>');w.document.close();w.print();
 }
 
