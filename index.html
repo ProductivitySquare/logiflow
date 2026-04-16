@@ -636,7 +636,7 @@ body.print-delivery .print-header-delivery { display: block !important; }
   CTL LogiFlow
 </div>
   <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
-  <button class="print-btn" onclick="doPrintDelivery()" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Παραδόσεις</button>
+  <button class="print-btn" onclick="showDelivCheckboxes()" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Παραδόσεις</button>
   <button class="print-btn" onclick="doPrint()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Εκτύπωση</button>
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
@@ -675,7 +675,7 @@ body.print-delivery .print-header-delivery { display: block !important; }
 <div class="wrap">
   <table>
     <thead><tr>
-      <th id="thDelivCheck" style="width:28px;padding:9px 4px"></th>
+      <th id="thDelivCheck" style="width:28px;padding:9px 4px;display:none"></th>
       <th style="width:108px">Μερίδα</th>
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
@@ -899,6 +899,7 @@ function doPrintDelivery(){
   setTimeout(function(){
     document.body.classList.remove('print-delivery');
     document.querySelectorAll('.deliv-selected-row').forEach(function(tr){tr.classList.remove('deliv-selected-row');});
+    hideDelivCheckboxes();
   },2000);
 }
 
@@ -1278,9 +1279,20 @@ function updateDelivBar(){
   info.textContent=n+' γραμμ'+(n===1?'ή':'ές')+' επιλεγμέν'+(n===1?'η':'ες');
 }
 
+function showDelivCheckboxes(){
+  document.querySelectorAll('.td-deliv-check').forEach(function(td){td.style.display='table-cell';});
+  document.getElementById('thDelivCheck').style.display='';
+}
+function hideDelivCheckboxes(){
+  document.querySelectorAll('.td-deliv-check').forEach(function(td){td.style.display='none';});
+  document.getElementById('thDelivCheck').style.display='none';
+  clearDelivSelection();
+}
+
 function clearDelivSelection(){
   delivSelected.clear();
   document.querySelectorAll('.deliv-check').forEach(function(cb){cb.checked=false;});
+  hideDelivCheckboxes();
   updateDelivBar();
 }
 
@@ -1398,7 +1410,7 @@ function render(){
     var sepCls=(prevBase!==null&&prevBase!==base)?' group-sep':'';
     html+='<tr class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'" data-ri="'+ri+'">';
     var chkd=delivSelected.has(ri)?'checked':'';
-    html+='<td class="td-deliv-check" style="display:table-cell"><input type="checkbox" class="deliv-check" '+chkd+' onchange="toggleDelivRow('+ri+',this)"></td>';
+    html+='<td class="td-deliv-check"><input type="checkbox" class="deliv-check" '+chkd+' onchange="toggleDelivRow('+ri+',this)"></td>';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     if(isFirstOfGroup){
       var badge='<span class="group-badge" title="Group '+gc[base]+' μερίδων">'+gc[base]+'</span>';
