@@ -1200,8 +1200,10 @@ function renderAttachList(){
   empty.style.display='none';
   list.innerHTML=atts.map(function(a,i){
     var kb=a.size?Math.round(a.size/1024)+'KB':'';
+    var baseUrl=a.url.replace(/\/[^\/]*$/,'').replace(/\/$/, '');
+    var dlUrl=baseUrl+'/-/inline/no/'+encodeURIComponent(a.name);
     return '<div class="attach-file-item">'
-      +'<a href="'+a.url+'" onclick="window.open(\''+a.url+'\',\'_blank\',\'noopener\');return false;" title="'+esc(a.name)+'">'+esc(a.name)+(kb?' <span style="color:#aaa;font-size:10px">('+kb+')</span>':'')+'</a>'
+      +'<a href="'+dlUrl+'" download="'+esc(a.name)+'" title="'+esc(a.name)+'">'+esc(a.name)+(kb?' <span style="color:#aaa;font-size:10px">('+kb+')</span>':'')+'</a>'
       +'<button class="attach-file-del" onclick="deleteAttach('+i+')" title="Διαγραφή">✕</button>'
       +'</div>';
   }).join('');
