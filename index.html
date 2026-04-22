@@ -938,7 +938,7 @@ function showNotif(nm,field){
 function makeMeridaCell(ri,val,ed){
   var cls=ed?'ec':'rc';
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
-  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="12" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="updateField('+ri+',\'id\',this.value)"></td>';
+  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="12" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="onMIBlur(this,'+ri+')"></td>';
 }
 function onMI(el,ri){
   var raw=el.value;
@@ -950,6 +950,36 @@ function onMI(el,ri){
   if(slashIdx>=0)o+='/'+afterRaw.substring(0,3);
   el.value=o;
   rows[ri].id=o;
+}
+function onMIBlur(el,ri){
+  var val=el.value;
+  updateField(ri,'id',val);
+  if(!val)return;
+  var base=baseOf(val);
+  var found=rows.filter(function(r,i){return i!==ri && baseOf(r.id)===base && base!=='';});
+  if(!found.length)return;
+  var src=found[0];
+  var dateStr='';
+  if(src.afx){try{var d=new Date(src.afx);dateStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}catch(e){}}
+  else if(src.pAfx){try{var d2=new Date(src.pAfx);dateStr=d2.getDate()+'/'+(d2.getMonth()+1)+'/'+d2.getFullYear();}catch(e){}}
+  var dateLabel=dateStr?' από '+dateStr:'';
+  var msg='Η μερίδα '+base+' υπάρχει ήδη'+dateLabel+'.\nΝα κάνω αντιγραφή των στοιχείων;';
+  if(!confirm(msg))return;
+  var newMerida=prompt('Νέος αριθμός μερίδας (π.χ. 26.04.001):','');
+  if(!newMerida)return;
+  var raw2=newMerida.replace(/[^0-9]/g,'');
+  var fmt2='';
+  for(var i=0;i<raw2.length&&i<7;i++){if(i===2||i===4)fmt2+='.';fmt2+=raw2[i];}
+  var suffix=val.indexOf('/')>=0?'/'+val.split('/')[1]:'';
+  rows[ri].id=fmt2+suffix;
+  rows[ri].xora=src.xora||'';
+  rows[ri].kola=src.kola||'';
+  rows[ri].sysk=src.sysk||'';
+  rows[ri].kila=src.kila||'';
+  rows[ri].pelatis=src.pelatis||'';
+  rows[ri].notes=src.notes?JSON.parse(JSON.stringify(src.notes)):eN();
+  saveRow(rows[ri]);
+  render();
 }
 function baseOf(id){
   if(!id)return'';
