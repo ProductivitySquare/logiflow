@@ -956,9 +956,37 @@ function onMIBlur(el,ri){
   updateField(ri,'id',val);
   if(!val)return;
   var base=baseOf(val);
-  var found=rows.filter(function(r,i){return i!==ri && baseOf(r.id)===base && base!=='';});
-  if(!found.length)return;
-  var src=found[0];
+  if(!base)return;
+  // Search ALL weeks in Firebase for same base merida
+  var {db,ref,onValue:fbOnValue}=window._fb;
+  // First check current week rows (fast)
+  var foundLocal=rows.filter(function(r,i){return i!==ri && baseOf(r.id)===base;});
+  if(foundLocal.length){
+    doMeridaCopyPrompt(foundLocal[0],ri,val,base);
+    return;
+  }
+  // Search all weeks globally
+  var weeksRef=ref(db,'weeks');
+  fbOnValue(weeksRef,function(snap){
+    var data=snap.val();
+    if(!data)return;
+    var foundSrc=null,foundDate='';
+    Object.entries(data).forEach(function(e){
+      if(foundSrc)return;
+      var weekRows=e[1].rows;
+      if(!weekRows)return;
+      Object.values(weekRows).forEach(function(r){
+        if(foundSrc)return;
+        if(baseOf(r.id)===base){
+          foundSrc=r;
+        }
+      });
+    });
+    if(foundSrc) doMeridaCopyPrompt(foundSrc,ri,val,base);
+  },{onlyOnce:true});
+}
+
+function doMeridaCopyPrompt(src,ri,val,base){
   var dateStr='';
   if(src.afx){try{var d=new Date(src.afx);dateStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}catch(e){}}
   else if(src.pAfx){try{var d2=new Date(src.pAfx);dateStr=d2.getDate()+'/'+(d2.getMonth()+1)+'/'+d2.getFullYear();}catch(e){}}
