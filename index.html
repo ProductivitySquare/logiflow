@@ -938,7 +938,7 @@ function showNotif(nm,field){
 function makeMeridaCell(ri,val,ed){
   var cls=ed?'ec':'rc';
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
-  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="12" value="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="onMIBlur(this,'+ri+')"></td>';
+  return '<td class="'+cls+'"><input class="merida-input" placeholder="26.01.000" maxlength="12" value="'+esc(val)+'" data-orig="'+esc(val)+'" oninput="onMI(this,'+ri+')" onblur="onMIBlur(this,'+ri+')"></td>';
 }
 function onMI(el,ri){
   var raw=el.value;
@@ -953,8 +953,11 @@ function onMI(el,ri){
 }
 function onMIBlur(el,ri){
   var val=el.value;
+  var orig=el.getAttribute('data-orig')||'';
   updateField(ri,'id',val);
-  if(!val)return;
+  // Only trigger copy-check if value actually changed from what was stored
+  if(!val||val===orig)return;
+  el.setAttribute('data-orig',val);
   var base=baseOf(val);
   if(!base)return;
   // Search ALL weeks in Firebase for same base merida
@@ -998,8 +1001,7 @@ function doMeridaCopyPrompt(src,ri,val,base){
   var raw2=newMerida.replace(/[^0-9]/g,'');
   var fmt2='';
   for(var i=0;i<raw2.length&&i<7;i++){if(i===2||i===4)fmt2+='.';fmt2+=raw2[i];}
-  var suffix=val.indexOf('/')>=0?'/'+val.split('/')[1]:'';
-  rows[ri].id=fmt2+suffix;
+  rows[ri].id=fmt2;
   rows[ri].xora=src.xora||'';
   rows[ri].kola=src.kola||'';
   rows[ri].sysk=src.sysk||'';
