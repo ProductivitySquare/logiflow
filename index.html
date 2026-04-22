@@ -1472,6 +1472,7 @@ function handleImportFile(input) {
         var kila  = row[8]  || '';   // Col I
         var q_val = (row[16] || '').toString().trim(); // Col Q
         var t_val = (row[19] || '').toString().trim(); // Col T
+        var s_val = (row[18] || '').toString().trim(); // Col S
         var pelatis = q_val + ' / ' + s_val;
         importRows.push({ seq: seq, kola: kola, kila: kila, pelatis: pelatis });
       }
