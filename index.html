@@ -107,6 +107,11 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .del-btn{padding:2px 7px;border-radius:5px;border:1px solid #fca5a5;background:var(--red-light);color:var(--red);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s}
 .del-btn:hover{background:var(--red);color:white;border-color:var(--red)}
 
+/* ── COPY ROW ── */
+.copy-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
+.copy-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
+.copy-btn.copied{background:#34A853;color:white;border-color:#34A853}
+
 /* ── ATTACH ── */
 .attach-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s;white-space:nowrap}
 .attach-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
@@ -589,6 +594,7 @@ select.with-ic{background-image:none}
       <th style="width:240px;max-width:240px">Παρατηρήσεις</th>
       <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
+      <th style="width:30px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></th>
       <th style="width:38px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
@@ -1368,6 +1374,29 @@ function deleteAttach(idx){
   render();
 }
 
+// ---- COPY ROW ----
+var COPY_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+var CHECK_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function copyRowData(ri){
+  var r=rows[ri];
+  var n=r.notes||eN();
+  var parts=[];
+  parts.push('Κολά: '+(r.kola||'—'));
+  parts.push('Συσκ.: '+(r.sysk||'—'));
+  parts.push('Κιλά: '+(r.kila||'—'));
+  parts.push('Πελάτης: '+(r.pelatis||'—'));
+  var nt=nTxtPrint(n);
+  if(nt)parts.push('Παρατηρήσεις: '+nt);
+  navigator.clipboard.writeText(parts.join(' | ')).then(function(){
+    var btn=document.querySelector('[data-copy-ri="'+ri+'"]');
+    if(btn){btn.classList.add('copied');btn.innerHTML=CHECK_ICON;setTimeout(function(){btn.classList.remove('copied');btn.innerHTML=COPY_ICON;},1500);}
+  }).catch(function(){alert('Αδυναμία αντιγραφής');});
+}
+function makeCopyCell(ri){
+  return '<td><button class="copy-btn" data-copy-ri="'+ri+'" onclick="copyRowData('+ri+')" title="Αντιγραφή">'+COPY_ICON+'</button></td>';
+}
+
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
@@ -1423,6 +1452,7 @@ function render(){
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
     html+=makeSignalCell(ri,row);
     html+=makeAttachCell(ri,row);
+    html+=makeCopyCell(ri);
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
     html+='</tr>';
     prevBase=base;
