@@ -107,6 +107,12 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .del-btn{padding:2px 7px;border-radius:5px;border:1px solid #fca5a5;background:var(--red-light);color:var(--red);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s}
 .del-btn:hover{background:var(--red);color:white;border-color:var(--red)}
 
+  /* ── COPY ROW ── */
+.copy-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
+.copy-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
+.copy-btn.copied{background:#34A853;color:white;border-color:#34A853}
+
+
 /* ── ATTACH ── */
 .attach-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s;white-space:nowrap}
 .attach-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
@@ -1367,6 +1373,28 @@ function deleteAttach(idx){
   saveRow(rows[attachRowIdx]);
   renderAttachList();
   render();
+}
+// ---- COPY ROW ----
+var COPY_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+var CHECK_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function copyRowData(ri){
+  var r=rows[ri];
+  var n=r.notes||eN();
+  var parts=[];
+  parts.push('Κολά: '+(r.kola||'—'));
+  parts.push('Συσκ.: '+(r.sysk||'—'));
+  parts.push('Κιλά: '+(r.kila||'—'));
+  parts.push('Πελάτης: '+(r.pelatis||'—'));
+  var nt=nTxtPrint(n);
+  if(nt)parts.push('Παρατηρήσεις: '+nt);
+  navigator.clipboard.writeText(parts.join(' | ')).then(function(){
+    var btn=document.querySelector('[data-copy-ri="'+ri+'"]');
+    if(btn){btn.classList.add('copied');btn.innerHTML=CHECK_ICON;setTimeout(function(){btn.classList.remove('copied');btn.innerHTML=COPY_ICON;},1500);}
+  }).catch(function(){alert('Αδυναμία αντιγραφής');});
+}
+function makeCopyCell(ri){
+  return '<td><button class="copy-btn" data-copy-ri="'+ri+'" onclick="copyRowData('+ri+')" title="Αντιγραφή">'+COPY_ICON+'</button></td>';
 }
 
 // ---- RENDER ----
