@@ -1746,16 +1746,11 @@ function updateStorageField(ri, field, val){
   storageRows[ri][field] = val;
   if(old !== val) saveStorageRow(storageRows[ri]);
   if(field==='katast'){
-    if(val==='ΕΚΛΕΙΣΕ' && !storageRows[ri].par){
-      var dateInput = prompt('Ημερομηνία παράδοσης (ηη/μμ):','');
-      if(dateInput){
-        var parts = dateInput.replace(/[^0-9]/g,'/').split('/').filter(Boolean);
-        var day = parts[0]||'01', mon = parts[1]||'01';
-        var year = new Date().getFullYear();
-        var iso = year+'-'+mon.padStart(2,'0')+'-'+day.padStart(2,'0')+'T00:00';
-        storageRows[ri].par = iso;
-        saveStorageRow(storageRows[ri]);
-      }
+    if(val==='ΕΚΛΕΙΣΕ'){
+      var now = new Date();
+      var iso = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+'T'+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+      storageRows[ri].par = iso;
+      saveStorageRow(storageRows[ri]);
     }
     renderStorage();
   }
@@ -1794,33 +1789,48 @@ function renderStorage(){
   var tb = document.getElementById('storageTbody');
   if(!tb) return;
   var html = '';
+  var P = 'padding:7px 6px;vertical-align:middle;';
   storageFiltered.forEach(function(row,fi){
     var ri = storageRows.indexOf(row);
     if(ri<0) return;
     var bg = storageRowBg(row.katast);
     html += '<tr style="border-bottom:1px solid rgba(26,58,42,.08);background:'+bg+'">';
-    html += '<td class="ec"><input class="merida-input" placeholder="26.01.000" value="'+esc(row.id||'')+'" onchange="updateStorageField('+ri+',&quot;id&quot;,this.value)"></td>';
+    // Merida
+    html += '<td class="ec" style="'+P+'"><input class="merida-input" placeholder="26.01.000" value="'+esc(row.id||'')+'" onchange="updateStorageField('+ri+',&quot;id&quot;,this.value)" style="font-size:13px;padding:5px 7px"></td>';
+    // Afx
     var afxIso = (row.afx&&row.afx.length>=10)?row.afx.substring(0,16):'';
-    html += '<td class="ec"><input type="datetime-local" value="'+esc(afxIso)+'" onchange="updateStorageField('+ri+',&quot;afx&quot;,this.value)"></td>';
+    html += '<td class="ec" style="'+P+'"><input type="datetime-local" value="'+esc(afxIso)+'" onchange="updateStorageField('+ri+',&quot;afx&quot;,this.value)"></td>';
+    // Par
     var parIso = (row.par&&row.par.length>=10)?row.par.substring(0,16):'';
-    html += '<td class="ec"><input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+',&quot;par&quot;,this.value)"></td>';
-    html += '<td class="ec"><input type="text" value="'+esc(row.kola||'')+'" onchange="updateStorageField('+ri+',&quot;kola&quot;,this.value)"></td>';
+    html += '<td class="ec" style="'+P+'"><input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+',&quot;par&quot;,this.value)"></td>';
+    // Kola
+    html += '<td class="ec" style="'+P+'"><input type="text" value="'+esc(row.kola||'')+'" onchange="updateStorageField('+ri+',&quot;kola&quot;,this.value)" style="font-size:13px;padding:5px 7px"></td>';
+    // Sysk
     var syskAbbr = row.sysk?(PKG_ABBR[row.sysk]||row.sysk):'';
     var syskOpts = PACKAGING.map(function(p){return'<option value="'+esc(p)+'"'+(row.sysk===p?' selected':'')+'>'+p+'</option>';}).join('');
-    html += '<td class="ec" style="position:relative;min-width:36px;max-width:60px">'
-      +'<div style="display:flex;align-items:center;justify-content:center;gap:2px">'
-      +'<span style="font-weight:600;font-size:11px;color:var(--brand)">'+esc(syskAbbr)+'</span>'
+    html += '<td class="ec" style="'+P+';position:relative;min-width:52px;max-width:70px">'
+      +'<div style="display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer">'
+      +'<span style="font-weight:700;font-size:12px;color:var(--brand)">'+esc(syskAbbr)+'</span>'
       +'<svg style="width:7px;height:7px;opacity:.4" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
       +'</div>'
       +'<select style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="updateStorageField('+ri+',&quot;sysk&quot;,this.value);this.previousSibling.querySelector(&quot;span&quot;).textContent=PKG_ABBR[this.value]||this.value"><option value=""></option>'+syskOpts+'</select>'
       +'</td>';
-    html += '<td class="ec"><input type="text" value="'+esc(row.kila||'')+'" onchange="updateStorageField('+ri+',&quot;kila&quot;,this.value)"></td>';
-    html += '<td class="ec"><input type="text" value="'+esc(row.pelatis||'')+'" onchange="updateStorageField('+ri+',&quot;pelatis&quot;,this.value)"></td>';
+    // Kila
+    html += '<td class="ec" style="'+P+'"><input type="text" value="'+esc(row.kila||'')+'" onchange="updateStorageField('+ri+',&quot;kila&quot;,this.value)" style="font-size:13px;padding:5px 7px"></td>';
+    // Pelatis
+    html += '<td class="ec" style="'+P+'"><input type="text" value="'+esc(row.pelatis||'')+'" onchange="updateStorageField('+ri+',&quot;pelatis&quot;,this.value)" style="font-size:13px;padding:5px 7px"></td>';
+    // Katast
     var stColor = (STORAGE_STATUSES.find(function(x){return x.val===row.katast;})||{}).color||'#888';
     var stOpts = STORAGE_STATUSES.map(function(s){return'<option value="'+s.val+'"'+(row.katast===s.val?' selected':'')+'>'+s.label+'</option>';}).join('');
-    html += '<td class="ec"><select style="font-size:11px;width:100%;color:'+stColor+';font-weight:700" onchange="updateStorageField('+ri+',&quot;katast&quot;,this.value)">'+stOpts+'</select></td>';
-    html += '<td class="ec"><input type="text" value="'+esc(row.notes||'')+'" placeholder="Παρατηρήσεις..." onchange="updateStorageField('+ri+',&quot;notes&quot;,this.value)" style="width:100%"></td>';
-    html += '<td><button class="del-btn" onclick="delStorageRow('+ri+')">✕</button></td>';
+    html += '<td class="ec" style="'+P+'"><select style="font-size:12px;width:100%;color:'+stColor+';font-weight:700;padding:5px 4px" onchange="updateStorageField('+ri+',&quot;katast&quot;,this.value)">'+stOpts+'</select></td>';
+    // Notes — button like Αφίξεις
+    var noteTxt = row.notes && row.notes.trim();
+    var noteBtn = noteTxt
+      ? '<button class="notes-btn" onclick="openStorageModal('+ri+')">'+esc(noteTxt)+'</button>'
+      : '<button class="notes-empty" onclick="openStorageModal('+ri+')">+ Προσθήκη</button>';
+    html += '<td class="ec" style="'+P+';max-width:260px;overflow:hidden">'+noteBtn+'</td>';
+    // Del
+    html += '<td style="'+P+'"><button class="del-btn" onclick="delStorageRow('+ri+')">✕</button></td>';
     html += '</tr>';
   });
   if(!storageFiltered.length){
@@ -1831,5 +1841,47 @@ function renderStorage(){
 
 
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- Storage Notes Modal -->
+<div class="modal-bg" id="storageModalBg" onclick="if(event.target===this)closeStorageModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div><h2>Παρατηρήσεις</h2><div class="sub" id="storageModalSub"></div></div>
+      <button class="modal-close" onclick="closeStorageModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="msec">
+        <div class="msec-title">Παρατηρήσεις</div>
+        <textarea id="storageModalNotes" placeholder="Σχόλια, παρατηρήσεις..." rows="6"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeStorageModal()">Ακύρωση</button>
+      <button class="btn-save" onclick="saveStorageModal()">Αποθήκευση</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+var storageModalRowIdx = -1;
+function openStorageModal(ri){
+  storageModalRowIdx = ri;
+  var row = storageRows[ri];
+  document.getElementById('storageModalSub').textContent = row.pelatis||row.id||'Νέα γραμμή';
+  document.getElementById('storageModalNotes').value = row.notes||'';
+  document.getElementById('storageModalBg').classList.add('open');
+}
+function closeStorageModal(){
+  document.getElementById('storageModalBg').classList.remove('open');
+  storageModalRowIdx = -1;
+}
+function saveStorageModal(){
+  if(storageModalRowIdx<0) return;
+  storageRows[storageModalRowIdx].notes = document.getElementById('storageModalNotes').value;
+  saveStorageRow(storageRows[storageModalRowIdx]);
+  closeStorageModal();
+  renderStorage();
+}
+
+</script>
 </body></html>
