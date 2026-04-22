@@ -205,18 +205,8 @@ tbody tr.in-group.group-first td {
 tbody tr.in-group.group-last td {
   border-bottom: 2px solid var(--brand);
 }
-.group-badge {
-  display:inline-flex;align-items:center;justify-content:center;
-  background:#EA4335;color:white;
-font-size:9px;font-weight:700;
-width:20px;height:20px;border-radius:50%;
-  position:absolute;top:3px;left:3px;
-  font-family:inherit;
-  letter-spacing:0;
-  flex-shrink:0;
-  z-index:2;
-  box-shadow:0 1px 3px rgba(0,0,0,.2);
-}
+.group-badge { display:none; }
+  
 tbody tr.in-group td:first-child {
   position:relative;
 }
@@ -234,7 +224,6 @@ tbody tr.in-group td:first-child > input.merida-input {
   display:inline-block;
   width:100%;
   vertical-align:middle;
-  padding-left:22px !important;
 }
 tbody tr.in-group:not(.group-first) td:first-child > input.merida-input {
   width:100%;
@@ -951,7 +940,7 @@ function canEdit(f){if(role==='admin')return true;if(role==='office')return offi
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
+function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' // ');}
 
 function updateField(idx,field,val){
   var old=rows[idx][field];
