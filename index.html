@@ -1141,8 +1141,7 @@ function printNote(){
   if(n.hours||n.phone||n.contact)w.document.write('<div class="sec"><div class="label">Επικοινωνία</div><p>'+[n.hours,n.phone,n.contact].filter(Boolean).join(' · ')+'</p></div>');
   if(n.dims||n.euro||n.volumeNote)w.document.write('<div class="sec"><div class="label">Όγκος</div><p>'+[n.dims,n.euro,n.volumeNote].filter(Boolean).join(' — ')+'</p></div>');
   w.document.write('<br><br><small style="color:#ccc">CTL LogiFlow - εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
-  w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</body></html>');w.document.close();w.print();
+  w.document.write('</body></html>');w.document.close();w.print();
 }
 
 // ---- AWARENESS / PULSE ----
@@ -1538,3 +1537,6 @@ function doImport() {
 }
 
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body>
+</html>
