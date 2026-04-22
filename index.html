@@ -551,6 +551,9 @@ select.with-ic{background-image:none}
   <button class="week-nav" onclick="changeWeek(1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
   <div style="flex:1"></div>
   <div class="sync-indicator" id="syncIndicator">⟳ Αποθήκευση...</div>
+  <button id="storageTabBtn" onclick="switchTab('storage')" style="padding:5px 14px;border:none;border-radius:6px;background:#4285F4;color:white;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:.03em;transition:all .15s">
+    Αποθηκεύσεις
+  </button>
   <div class="role-tabs">
     <button class="role-btn active" onclick="setRole('office',this)">Γραφείο</button>
     <button class="role-btn" onclick="setRole('warehouse',this)">Αποθήκη</button>
@@ -605,6 +608,46 @@ select.with-ic{background-image:none}
 </div>
 
 <div id="ac-portal"></div>
+
+<!-- STORAGE TAB -->
+<div id="storageSection" style="display:none">
+  <div class="toolbar" style="gap:8px">
+    <button class="add-btn" onclick="addStorageRow()">
+      <svg class="ic" width="13" height="13" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Νέα γραμμή
+    </button>
+    <input type="text" placeholder="Αναζήτηση..." oninput="filterStorage(this.value)" style="width:200px;padding:6px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);font-size:12px;font-family:inherit;outline:none">
+    <select onchange="filterStorageStatus(this.value)" style="padding:6px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);font-size:12px;font-family:inherit;outline:none">
+      <option value="">Όλες καταστάσεις</option>
+      <option value="ΑΠΟΘΗΚΕΥΣΗ">Αποθήκευση</option>
+      <option value="ΕΚΛΕΙΣΕ">Έκλεισε</option>
+      <option value="ΖΗΜΙΑ">Ζημιά</option>
+    </select>
+    <div class="sync-indicator" id="storageSyncIndicator"></div>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:#34A853"></span>Αποθήκευση</span>
+    <span><span class="dot" style="background:#4285F4"></span>Έκλεισε</span>
+    <span><span class="dot" style="background:#EA4335"></span>Ζημιά</span>
+  </div>
+  <div class="wrap">
+    <table style="min-width:900px">
+      <thead><tr>
+        <th style="width:108px">Μερίδα</th>
+        <th style="width:130px">Άφιξη</th>
+        <th style="width:130px">Παράδοση</th>
+        <th style="width:44px">Κολά</th>
+        <th style="width:60px">Συσκ.</th>
+        <th style="width:54px">Κιλά</th>
+        <th style="width:160px">Πελάτης</th>
+        <th style="width:120px">Κατάσταση</th>
+        <th style="width:260px">Παρατηρήσεις</th>
+        <th style="width:30px"></th>
+      </tr></thead>
+      <tbody id="storageTbody"></tbody>
+    </table>
+  </div>
+</div>
 
 <div class="notif" id="notif">
   <span id="notif-text"></span>
@@ -1597,6 +1640,202 @@ function doImport() {
 }
 
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+// ══════════════════════════════════════════════════
+// STORAGE TAB
+// ══════════════════════════════════════════════════
+var currentTab = 'arrivals'; // 'arrivals' | 'storage'
+var storageRows = [];
+var storageFiltered = [];
+var storageSearchQ = '';
+var storageStatusF = '';
+var storageUnsub = null;
+
+var STORAGE_STATUSES = [
+  { val:'ΑΠΟΘΗΚΕΥΣΗ', label:'Αποθήκευση', color:'#34A853', bg:'#d4f5dd', rowBg:'#d4f5dd' },
+  { val:'ΕΚΛΕΙΣΕ',    label:'Έκλεισε',    color:'#4285F4', bg:'#d6e6fc', rowBg:'#d6e6fc' },
+  { val:'ΖΗΜΙΑ',      label:'Ζημιά',      color:'#EA4335', bg:'#fde0dd', rowBg:'#fde0dd' },
+];
+
+function switchTab(tab){
+  currentTab = tab;
+  var mainWrap = document.querySelector('.wrap');
+  var toolbar   = document.querySelectorAll('.toolbar')[0];
+  var legend    = document.querySelector('.legend');
+  var storageSection = document.getElementById('storageSection');
+  var storageTabBtn  = document.getElementById('storageTabBtn');
+
+  if(tab === 'storage'){
+    mainWrap.style.display = 'none';
+    toolbar.style.display  = 'none';
+    legend.style.display   = 'none';
+    storageSection.style.display = '';
+    storageTabBtn.style.background = '#1a56db';
+    loadStorageRows();
+  } else {
+    mainWrap.style.display = '';
+    toolbar.style.display  = '';
+    legend.style.display   = '';
+    storageSection.style.display = 'none';
+    storageTabBtn.style.background = '#4285F4';
+    if(storageUnsub){ storageUnsub(); storageUnsub=null; }
+  }
+}
+
+function newStorageRow(){
+  return { id:'', afx:'', par:'', kola:'', sysk:'', kila:'', pelatis:'', katast:'ΑΠΟΘΗΚΕΥΣΗ', notes:'', createdAt:Date.now() };
+}
+
+function loadStorageRows(){
+  if(storageUnsub) storageUnsub();
+  var {db,ref,onValue:fbOn} = window._fb;
+  var r = ref(db,'storage/rows');
+  storageUnsub = fbOn(r, function(snap){
+    var data = snap.val();
+    storageRows = data ? Object.entries(data).map(function(e){
+      var row = e[1]; row._fbKey = e[0];
+      if(!row.notes) row.notes = '';
+      return row;
+    }) : [];
+    applyStorageFilters();
+  });
+}
+
+function pushStorageRow(r){
+  var {db,ref,push,set} = window._fb;
+  var newRef = push(ref(db,'storage/rows'));
+  r._fbKey = newRef.key;
+  set(newRef, sanitizeStorage(r));
+}
+
+function saveStorageRow(r){
+  if(!r._fbKey) return;
+  setSyncStatusStorage('saving');
+  var {db,ref,set} = window._fb;
+  set(ref(db,'storage/rows/'+r._fbKey), sanitizeStorage(r))
+    .then(function(){ setSyncStatusStorage('saved'); })
+    .catch(function(){ setSyncStatusStorage('error'); });
+}
+
+function deleteStorageRowFB(r){
+  if(!r._fbKey) return;
+  var {db,ref,remove} = window._fb;
+  remove(ref(db,'storage/rows/'+r._fbKey));
+}
+
+function sanitizeStorage(r){
+  var c = Object.assign({},r);
+  delete c._fbKey;
+  return c;
+}
+
+function setSyncStatusStorage(st){
+  var el = document.getElementById('storageSyncIndicator');
+  el.className = 'sync-indicator '+st;
+  if(st==='saving') el.textContent = '⟳ Αποθήκευση...';
+  if(st==='saved')  el.textContent = '✓ Αποθηκεύτηκε';
+  if(st==='error')  el.textContent = '✕ Σφάλμα!';
+  if(st==='saved')  setTimeout(function(){ el.className='sync-indicator'; },2500);
+}
+
+function updateStorageField(ri, field, val){
+  var old = storageRows[ri][field];
+  storageRows[ri][field] = val;
+  if(old !== val) saveStorageRow(storageRows[ri]);
+  if(field==='katast'){
+    if(val==='ΕΚΛΕΙΣΕ' && !storageRows[ri].par){
+      var dateInput = prompt('Ημερομηνία παράδοσης (ηη/μμ):','');
+      if(dateInput){
+        var parts = dateInput.replace(/[^0-9]/g,'/').split('/').filter(Boolean);
+        var day = parts[0]||'01', mon = parts[1]||'01';
+        var year = new Date().getFullYear();
+        var iso = year+'-'+mon.padStart(2,'0')+'-'+day.padStart(2,'0')+'T00:00';
+        storageRows[ri].par = iso;
+        saveStorageRow(storageRows[ri]);
+      }
+    }
+    renderStorage();
+  }
+}
+
+function addStorageRow(){
+  var r = newStorageRow();
+  pushStorageRow(r);
+}
+
+function delStorageRow(ri){
+  if(!confirm('Διαγραφή γραμμής;')) return;
+  deleteStorageRowFB(storageRows[ri]);
+  storageRows.splice(ri,1);
+  applyStorageFilters();
+}
+
+function filterStorage(q){ storageSearchQ=q.toLowerCase(); applyStorageFilters(); }
+function filterStorageStatus(s){ storageStatusF=s; applyStorageFilters(); }
+
+function applyStorageFilters(){
+  storageFiltered = storageRows.filter(function(r){
+    var mQ = !storageSearchQ || (r.id+r.pelatis+r.notes).toLowerCase().indexOf(storageSearchQ)>=0;
+    var mS = !storageStatusF || r.katast===storageStatusF;
+    return mQ && mS;
+  });
+  renderStorage();
+}
+
+function storageRowBg(katast){
+  var s = STORAGE_STATUSES.find(function(x){return x.val===katast;});
+  return s ? s.rowBg : '#fff';
+}
+
+function renderStorage(){
+  var tb = document.getElementById('storageTbody');
+  if(!tb) return;
+  var html = '';
+  storageFiltered.forEach(function(row,fi){
+    var ri = storageRows.indexOf(row);
+    if(ri<0) return;
+    var bg = storageRowBg(row.katast);
+    html += '<tr style="border-bottom:1px solid rgba(26,58,42,.08);background:'+bg+'" onmouseenter="this.style.filter='brightness(.97)'" onmouseleave="this.style.filter=''">';
+    // Merida
+    html += '<td class="ec"><input class="merida-input" placeholder="26.01.000" value="'+esc(row.id||'')+'" onchange="updateStorageField('+ri+','id',this.value)"></td>';
+    // Afx (datetime)
+    var afxIso = (row.afx&&row.afx.length>=10)?row.afx.substring(0,16):'';
+    html += '<td class="ec"><input type="datetime-local" value="'+esc(afxIso)+'" onchange="updateStorageField('+ri+','afx',this.value)"></td>';
+    // Par (datetime)
+    var parIso = (row.par&&row.par.length>=10)?row.par.substring(0,16):'';
+    html += '<td class="ec"><input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+','par',this.value)"></td>';
+    // Kola
+    html += '<td class="ec"><input type="text" value="'+esc(row.kola||'')+'" onchange="updateStorageField('+ri+','kola',this.value)"></td>';
+    // Sysk (abbr select)
+    var syskAbbr = row.sysk?(PKG_ABBR[row.sysk]||row.sysk):'';
+    var syskOpts = PACKAGING.map(function(p){return'<option value="'+esc(p)+'"'+(row.sysk===p?' selected':'')+'>'+p+'</option>';}).join('');
+    html += '<td class="ec" style="position:relative;min-width:36px;max-width:60px">'
+      +'<div style="display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer">'
+      +'<span style="font-weight:600;font-size:11px;color:var(--brand)">'+esc(syskAbbr)+'</span>'
+      +'<svg style="width:7px;height:7px;opacity:.4" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+      +'</div>'
+      +'<select style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="updateStorageField('+ri+','sysk',this.value);this.previousSibling.querySelector('span').textContent=PKG_ABBR[this.value]||this.value"><option value=""></option>'+syskOpts+'</select>'
+      +'</td>';
+    // Kila
+    html += '<td class="ec"><input type="text" value="'+esc(row.kila||'')+'" onchange="updateStorageField('+ri+','kila',this.value)"></td>';
+    // Pelatis
+    html += '<td class="ec"><input type="text" value="'+esc(row.pelatis||'')+'" onchange="updateStorageField('+ri+','pelatis',this.value)"></td>';
+    // Katast
+    var stColor = (STORAGE_STATUSES.find(function(x){return x.val===row.katast;})||{}).color||'#888';
+    var stOpts = STORAGE_STATUSES.map(function(s){return'<option value="'+s.val+'"'+(row.katast===s.val?' selected':'')+'>'+s.label+'</option>';}).join('');
+    html += '<td class="ec"><select style="font-size:11px;width:100%;color:'+stColor+';font-weight:700" onchange="updateStorageField('+ri+','katast',this.value)">'+stOpts+'</select></td>';
+    // Notes (simple textarea inline)
+    html += '<td class="ec"><input type="text" value="'+esc(row.notes||'')+'" placeholder="Παρατηρήσεις..." onchange="updateStorageField('+ri+','notes',this.value)" style="width:100%"></td>';
+    // Del
+    html += '<td><button class="del-btn" onclick="delStorageRow('+ri+')">✕</button></td>';
+    html += '</tr>';
+  });
+  if(!storageFiltered.length){
+    html = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν υπάρχουν εγγραφές — πάτα «Νέα γραμμή»</td></tr>';
+  }
+  tb.innerHTML = html;
+}
+
+</script>
 </body>
 </html>
