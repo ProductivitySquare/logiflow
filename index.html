@@ -1794,38 +1794,28 @@ function renderStorage(){
     var ri = storageRows.indexOf(row);
     if(ri<0) return;
     var bg = storageRowBg(row.katast);
-    html += '<tr style="border-bottom:1px solid rgba(26,58,42,.08);background:'+bg+'" onmouseenter="this.style.filter='brightness(.97)'" onmouseleave="this.style.filter=''">';
-    // Merida
-    html += '<td class="ec"><input class="merida-input" placeholder="26.01.000" value="'+esc(row.id||'')+'" onchange="updateStorageField('+ri+','id',this.value)"></td>';
-    // Afx (datetime)
+    html += '<tr style="border-bottom:1px solid rgba(26,58,42,.08);background:'+bg+'">';
+    html += '<td class="ec"><input class="merida-input" placeholder="26.01.000" value="'+esc(row.id||'')+'" onchange="updateStorageField('+ri+',&quot;id&quot;,this.value)"></td>';
     var afxIso = (row.afx&&row.afx.length>=10)?row.afx.substring(0,16):'';
-    html += '<td class="ec"><input type="datetime-local" value="'+esc(afxIso)+'" onchange="updateStorageField('+ri+','afx',this.value)"></td>';
-    // Par (datetime)
+    html += '<td class="ec"><input type="datetime-local" value="'+esc(afxIso)+'" onchange="updateStorageField('+ri+',&quot;afx&quot;,this.value)"></td>';
     var parIso = (row.par&&row.par.length>=10)?row.par.substring(0,16):'';
-    html += '<td class="ec"><input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+','par',this.value)"></td>';
-    // Kola
-    html += '<td class="ec"><input type="text" value="'+esc(row.kola||'')+'" onchange="updateStorageField('+ri+','kola',this.value)"></td>';
-    // Sysk (abbr select)
+    html += '<td class="ec"><input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+',&quot;par&quot;,this.value)"></td>';
+    html += '<td class="ec"><input type="text" value="'+esc(row.kola||'')+'" onchange="updateStorageField('+ri+',&quot;kola&quot;,this.value)"></td>';
     var syskAbbr = row.sysk?(PKG_ABBR[row.sysk]||row.sysk):'';
     var syskOpts = PACKAGING.map(function(p){return'<option value="'+esc(p)+'"'+(row.sysk===p?' selected':'')+'>'+p+'</option>';}).join('');
     html += '<td class="ec" style="position:relative;min-width:36px;max-width:60px">'
-      +'<div style="display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer">'
+      +'<div style="display:flex;align-items:center;justify-content:center;gap:2px">'
       +'<span style="font-weight:600;font-size:11px;color:var(--brand)">'+esc(syskAbbr)+'</span>'
       +'<svg style="width:7px;height:7px;opacity:.4" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
       +'</div>'
-      +'<select style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="updateStorageField('+ri+','sysk',this.value);this.previousSibling.querySelector('span').textContent=PKG_ABBR[this.value]||this.value"><option value=""></option>'+syskOpts+'</select>'
+      +'<select style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="updateStorageField('+ri+',&quot;sysk&quot;,this.value);this.previousSibling.querySelector(&quot;span&quot;).textContent=PKG_ABBR[this.value]||this.value"><option value=""></option>'+syskOpts+'</select>'
       +'</td>';
-    // Kila
-    html += '<td class="ec"><input type="text" value="'+esc(row.kila||'')+'" onchange="updateStorageField('+ri+','kila',this.value)"></td>';
-    // Pelatis
-    html += '<td class="ec"><input type="text" value="'+esc(row.pelatis||'')+'" onchange="updateStorageField('+ri+','pelatis',this.value)"></td>';
-    // Katast
+    html += '<td class="ec"><input type="text" value="'+esc(row.kila||'')+'" onchange="updateStorageField('+ri+',&quot;kila&quot;,this.value)"></td>';
+    html += '<td class="ec"><input type="text" value="'+esc(row.pelatis||'')+'" onchange="updateStorageField('+ri+',&quot;pelatis&quot;,this.value)"></td>';
     var stColor = (STORAGE_STATUSES.find(function(x){return x.val===row.katast;})||{}).color||'#888';
     var stOpts = STORAGE_STATUSES.map(function(s){return'<option value="'+s.val+'"'+(row.katast===s.val?' selected':'')+'>'+s.label+'</option>';}).join('');
-    html += '<td class="ec"><select style="font-size:11px;width:100%;color:'+stColor+';font-weight:700" onchange="updateStorageField('+ri+','katast',this.value)">'+stOpts+'</select></td>';
-    // Notes (simple textarea inline)
-    html += '<td class="ec"><input type="text" value="'+esc(row.notes||'')+'" placeholder="Παρατηρήσεις..." onchange="updateStorageField('+ri+','notes',this.value)" style="width:100%"></td>';
-    // Del
+    html += '<td class="ec"><select style="font-size:11px;width:100%;color:'+stColor+';font-weight:700" onchange="updateStorageField('+ri+',&quot;katast&quot;,this.value)">'+stOpts+'</select></td>';
+    html += '<td class="ec"><input type="text" value="'+esc(row.notes||'')+'" placeholder="Παρατηρήσεις..." onchange="updateStorageField('+ri+',&quot;notes&quot;,this.value)" style="width:100%"></td>';
     html += '<td><button class="del-btn" onclick="delStorageRow('+ri+')">✕</button></td>';
     html += '</tr>';
   });
