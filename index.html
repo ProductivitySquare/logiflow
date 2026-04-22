@@ -544,7 +544,7 @@ select.with-ic{background-image:none}
   CTL LogiFlow
 </div>
   <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
- <button class="excel-btn" onclick="openImportModal()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 4 17 10"/><line x1="12" y1="4" x2="12" y2="15"/></svg> Import</button>
+  <button class="excel-btn" onclick="openImportModal()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Import</button>
   <button class="print-btn" onclick="doPrint()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Εκτύπωση</button>
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
@@ -1468,12 +1468,14 @@ function handleImportFile(input) {
         var row = raw[i];
         var seq = row[0]; // Col A: sequence number
         if (!seq && seq !== 0) continue;
-        var kola  = row[3]  || '';   // Col D
-        var kila  = row[8]  || '';   // Col I
-        var q_val = (row[16] || '').toString().trim(); // Col Q
-        var t_val = (row[19] || '').toString().trim(); // Col T
-        var s_val = (row[18] || '').toString().trim(); // Col S
-        var pelatis = q_val + ' / ' + s_val;
+        var kola  = row[4]  || '';   // Col E
+        var kila  = row[9]  || '';   // Col J
+        var w_val = (row[22] || '').toString().trim(); // Col W
+        var y_val = (row[24] || '').toString().trim(); // Col Y
+        var z_val = (row[25] || '').toString().trim(); // Col Z
+        var pelatis_parts = [w_val, y_val];
+        if (z_val && z_val !== w_val) pelatis_parts.push(z_val);
+        var pelatis = pelatis_parts.filter(Boolean).join(' / ');
         importRows.push({ seq: seq, kola: kola, kila: kila, pelatis: pelatis });
       }
       showImportPreview();
