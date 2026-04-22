@@ -962,12 +962,9 @@ function onMIBlur(el,ri){
   if(!base)return;
   // Search ALL weeks in Firebase for same base merida
   var {db,ref,onValue:fbOnValue}=window._fb;
-  // First check current week rows (fast)
+  // If found in CURRENT week → it's a group, do nothing
   var foundLocal=rows.filter(function(r,i){return i!==ri && baseOf(r.id)===base;});
-  if(foundLocal.length){
-    doMeridaCopyPrompt(foundLocal[0],ri,val,base);
-    return;
-  }
+  if(foundLocal.length) return;
   // Search all weeks globally
   var weeksRef=ref(db,'weeks');
   fbOnValue(weeksRef,function(snap){
