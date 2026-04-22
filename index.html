@@ -1862,7 +1862,8 @@ function renderStorage(){
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
 var storageModalRowIdx = -1;
 function openStorageModal(ri){
   storageModalRowIdx = ri;
@@ -1882,6 +1883,7 @@ function saveStorageModal(){
   closeStorageModal();
   renderStorage();
 }
+
 
 </script>
 </body></html>
