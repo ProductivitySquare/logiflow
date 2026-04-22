@@ -1670,6 +1670,8 @@ function switchTab(tab){
     legend.style.display   = 'none';
     storageSection.style.display = '';
     storageTabBtn.style.background = '#1a56db';
+    storageTabBtn.textContent = '← Αφίξεις';
+    storageTabBtn.onclick = function(){ switchTab('arrivals'); };
     loadStorageRows();
   } else {
     mainWrap.style.display = '';
@@ -1677,6 +1679,8 @@ function switchTab(tab){
     legend.style.display   = '';
     storageSection.style.display = 'none';
     storageTabBtn.style.background = '#4285F4';
+    storageTabBtn.textContent = 'Αποθηκεύσεις';
+    storageTabBtn.onclick = function(){ switchTab('storage'); };
     if(storageUnsub){ storageUnsub(); storageUnsub=null; }
   }
 }
