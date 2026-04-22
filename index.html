@@ -1452,6 +1452,8 @@ function render(){
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
     html+=makeSignalCell(ri,row);
     html+=makeAttachCell(ri,row);
+        html+=makeCopyCell(ri);
+
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
     html+='</tr>';
     prevBase=base;
