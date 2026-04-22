@@ -107,11 +107,6 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .del-btn{padding:2px 7px;border-radius:5px;border:1px solid #fca5a5;background:var(--red-light);color:var(--red);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s}
 .del-btn:hover{background:var(--red);color:white;border-color:var(--red)}
 
-/* ── COPY ROW ── */
-.copy-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
-.copy-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
-.copy-btn.copied{background:#34A853;color:white;border-color:#34A853}
-
 /* ── ATTACH ── */
 .attach-btn{padding:2px 7px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s;white-space:nowrap}
 .attach-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
@@ -210,8 +205,18 @@ tbody tr.in-group.group-first td {
 tbody tr.in-group.group-last td {
   border-bottom: 2px solid var(--brand);
 }
-.group-badge { display:none; }
-
+.group-badge {
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#EA4335;color:white;
+font-size:9px;font-weight:700;
+width:20px;height:20px;border-radius:50%;
+  position:absolute;top:3px;left:3px;
+  font-family:inherit;
+  letter-spacing:0;
+  flex-shrink:0;
+  z-index:2;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
 tbody tr.in-group td:first-child {
   position:relative;
 }
@@ -229,6 +234,7 @@ tbody tr.in-group td:first-child > input.merida-input {
   display:inline-block;
   width:100%;
   vertical-align:middle;
+  padding-left:22px !important;
 }
 tbody tr.in-group:not(.group-first) td:first-child > input.merida-input {
   width:100%;
@@ -347,10 +353,8 @@ select.with-ic{background-image:none}
   /* ── Hide Σήμα + Delete columns in rows too ── */
   tbody td:nth-child(14),
   tbody td:nth-child(15),
-  tbody td:nth-child(16),
-  tbody td:nth-child(17) { display: none !important; }
-  thead th:nth-child(16),
-  thead th:nth-child(17) { display: none !important; }
+  tbody td:nth-child(16) { display: none !important; }
+  thead th:nth-child(16) { display: none !important; }
 
   /* ── User cell: hide the overlay select, show only the initial span ── */
   tbody td:nth-child(3) select { display: none !important; }
@@ -540,6 +544,7 @@ select.with-ic{background-image:none}
   CTL LogiFlow
 </div>
   <button class="excel-btn" onclick="exportExcel()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel</button>
+  <button class="excel-btn" onclick="openImportModal()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Import</button>
   <button class="print-btn" onclick="doPrint()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Εκτύπωση</button>
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
@@ -594,7 +599,6 @@ select.with-ic{background-image:none}
       <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
       <th style="width:38px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></th>
-      <th style="width:30px"></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
@@ -660,6 +664,62 @@ select.with-ic{background-image:none}
         </label>
         <div id="attachUploadProgress" style="display:none;font-size:11px;color:var(--brand);margin-top:6px">Ανέβασμα...</div>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Import Modal -->
+<div class="modal-bg" id="importModalBg" onclick="if(event.target===this)closeImportModal()">
+  <div class="modal" style="width:min(480px,96vw)">
+    <div class="modal-header">
+      <div><h2>Import από Excel</h2><div class="sub">Φόρτωση ομάδας μερίδων</div></div>
+      <button class="modal-close" onclick="closeImportModal()">✕</button>
+    </div>
+    <div class="modal-body" id="importModalBody">
+      <!-- Step 1: Merida + Xora -->
+      <div id="importStep1">
+        <div class="msec">
+          <div class="msec-title">Αριθμός Μερίδας</div>
+          <input id="importMerida" class="merida-input" placeholder="26.01.000" maxlength="12"
+            oninput="onImportMeridaInput(this)"
+            style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:15px;font-family:'Courier New',monospace;font-weight:700;letter-spacing:1px;outline:none"/>
+        </div>
+        <div class="msec" style="margin-top:0">
+          <div class="msec-title">Χώρα</div>
+          <input id="importXora" placeholder="π.χ. Γερμανία" list="importXoraList"
+            style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/>
+          <datalist id="importXoraList">
+            <option value="Αγγλία"/><option value="Αυστρία"/><option value="Βέλγιο"/>
+            <option value="Βουλγαρία"/><option value="Γαλλία"/><option value="Γερμανία"/>
+            <option value="Δανία"/><option value="Ελβετία"/><option value="Ελλάδα"/>
+            <option value="Ισπανία"/><option value="Ιταλία"/><option value="Κύπρος"/>
+            <option value="Ολλανδία"/><option value="Πολωνία"/><option value="Πορτογαλία"/>
+            <option value="Ρουμανία"/><option value="Σουηδία"/><option value="Τουρκία"/>
+            <option value="Τσεχία"/><option value="Φινλανδία"/>
+          </datalist>
+        </div>
+        <div class="msec" style="margin-top:0">
+          <div class="msec-title">Αρχείο Excel</div>
+          <label style="display:inline-block;padding:7px 16px;border-radius:7px;border:none;background:var(--brand);color:white;font-size:12px;cursor:pointer;font-weight:600;font-family:inherit">
+            <input type="file" id="importFileInput" accept=".xls,.xlsx" style="display:none" onchange="handleImportFile(this)"/>
+            + Επιλογή αρχείου
+          </label>
+          <span id="importFileName" style="margin-left:10px;font-size:12px;color:var(--text-muted)">Κανένα αρχείο</span>
+        </div>
+      </div>
+
+      <!-- Step 2: Preview -->
+      <div id="importStep2" style="display:none">
+        <div class="msec">
+          <div class="msec-title">Προεπισκόπηση — <span id="importPreviewCount"></span> γραμμές</div>
+          <div id="importPreviewTable" style="overflow-x:auto;font-size:11px;max-height:240px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeImportModal()">Ακύρωση</button>
+      <button class="btn-save" id="importBtn" onclick="doImport()" style="display:none">✓ Εισαγωγή</button>
     </div>
   </div>
 </div>
@@ -849,7 +909,7 @@ function canEdit(f){if(role==='admin')return true;if(role==='office')return offi
 function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' // ');}
+function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' — ');}
 
 function updateField(idx,field,val){
   var old=rows[idx][field];
@@ -1081,7 +1141,8 @@ function printNote(){
   if(n.hours||n.phone||n.contact)w.document.write('<div class="sec"><div class="label">Επικοινωνία</div><p>'+[n.hours,n.phone,n.contact].filter(Boolean).join(' · ')+'</p></div>');
   if(n.dims||n.euro||n.volumeNote)w.document.write('<div class="sec"><div class="label">Όγκος</div><p>'+[n.dims,n.euro,n.volumeNote].filter(Boolean).join(' — ')+'</p></div>');
   w.document.write('<br><br><small style="color:#ccc">CTL LogiFlow - εκτυπώθηκε '+new Date().toLocaleString('el-GR')+'</small>');
-  w.document.write('</body></html>');w.document.close();w.print();
+  w.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body></html>');w.document.close();w.print();
 }
 
 // ---- AWARENESS / PULSE ----
@@ -1220,41 +1281,6 @@ function deleteAttach(idx){
   render();
 }
 
-// ---- COPY ROW ----
-function nTxtPrint(n){
-  if(!n)return'';
-  var p=[];
-  if(n.address)p.push(n.address);
-  if(n.hours)p.push(n.hours);
-  if(n.phone)p.push(n.phone);
-  if(n.contact)p.push(n.contact);
-  if(n.dims)p.push(n.dims);
-  if(n.euro)p.push(n.euro);
-  if(n.volumeNote)p.push(n.volumeNote);
-  return p.join(' - ');
-}
-var COPY_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-var CHECK_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-
-function copyRowData(ri){
-  var r=rows[ri];
-  var n=r.notes||eN();
-  var parts=[];
-  parts.push('Κολά: '+(r.kola||'—'));
-  parts.push('Συσκ.: '+(r.sysk||'—'));
-  parts.push('Κιλά: '+(r.kila||'—'));
-  parts.push('Πελάτης: '+(r.pelatis||'—'));
-  var nt=nTxtPrint(n);
-  if(nt)parts.push('Παρατηρήσεις: '+nt);
-  navigator.clipboard.writeText(parts.join(' | ')).then(function(){
-    var btn=document.querySelector('[data-copy-ri="'+ri+'"]');
-    if(btn){btn.classList.add('copied');btn.innerHTML=CHECK_ICON;setTimeout(function(){btn.classList.remove('copied');btn.innerHTML=COPY_ICON;},1500);}
-  }).catch(function(){alert('Αδυναμία αντιγραφής');});
-}
-function makeCopyCell(ri){
-  return '<td><button class="copy-btn" data-copy-ri="'+ri+'" onclick="copyRowData('+ri+')" title="Αντιγραφή">'+COPY_ICON+'</button></td>';
-}
-
 // ---- RENDER ----
 function render(){
   var tb=document.getElementById('tbody'),html='';
@@ -1310,7 +1336,6 @@ function render(){
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
     html+=makeSignalCell(ri,row);
     html+=makeAttachCell(ri,row);
-    html+=makeCopyCell(ri);
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
     html+='</tr>';
     prevBase=base;
@@ -1390,6 +1415,126 @@ function init(){
 
 if(window._fbReady){init();}
 else{window.addEventListener('fbready',init);}
+
+// ─── IMPORT MODAL ────────────────────────────────────────────────────────────
+var importRows = [];
+var importMeridaBase = '';
+var importXoraVal = '';
+
+function openImportModal() {
+  document.getElementById('importModalBg').classList.add('open');
+  document.getElementById('importStep1').style.display = '';
+  document.getElementById('importStep2').style.display = 'none';
+  document.getElementById('importBtn').style.display = 'none';
+  document.getElementById('importMerida').value = '';
+  document.getElementById('importXora').value = '';
+  document.getElementById('importFileName').textContent = 'Κανένα αρχείο';
+  document.getElementById('importFileInput').value = '';
+  importRows = [];
+}
+
+function closeImportModal() {
+  document.getElementById('importModalBg').classList.remove('open');
+}
+
+function onImportMeridaInput(el) {
+  // Auto-format: digits only → xx.xx.xxx
+  var raw = el.value.replace(/[^0-9]/g, '');
+  var o = '';
+  for (var i = 0; i < raw.length && i < 7; i++) {
+    if (i === 2 || i === 4) o += '.';
+    o += raw[i];
+  }
+  el.value = o;
+  importMeridaBase = o;
+}
+
+function handleImportFile(input) {
+  if (!input.files || !input.files.length) return;
+  var file = input.files[0];
+  document.getElementById('importFileName').textContent = file.name;
+
+  // Read with SheetJS (already available via CDN or we load it)
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = new Uint8Array(e.target.result);
+      var wb = XLSX.read(data, { type: 'array' });
+      var ws = wb.Sheets[wb.SheetNames[0]];
+      var raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+      // Skip header row (row 0)
+      importRows = [];
+      for (var i = 1; i < raw.length; i++) {
+        var row = raw[i];
+        var seq = row[0]; // Col A: sequence number
+        if (!seq && seq !== 0) continue;
+        var kola  = row[3]  || '';   // Col D
+        var kila  = row[8]  || '';   // Col I
+        var q_val = (row[16] || '').toString().trim(); // Col Q
+        var t_val = (row[19] || '').toString().trim(); // Col T
+        var pelatis = q_val === t_val ? q_val : (q_val && t_val ? q_val + ' / ' + t_val : q_val || t_val);
+        importRows.push({ seq: seq, kola: kola, kila: kila, pelatis: pelatis });
+      }
+      showImportPreview();
+    } catch(err) {
+      alert('Σφάλμα ανάγνωσης: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function showImportPreview() {
+  if (!importRows.length) { alert('Δεν βρέθηκαν δεδομένα.'); return; }
+  var merida = document.getElementById('importMerida').value;
+  var xora   = document.getElementById('importXora').value;
+  importMeridaBase = merida;
+  importXoraVal    = xora;
+
+  document.getElementById('importPreviewCount').textContent = importRows.length;
+  document.getElementById('importStep2').style.display = '';
+
+  var html = '<table style="border-collapse:collapse;width:100%">';
+  html += '<thead><tr style="background:var(--brand-light)">';
+  ['Μερίδα','Χώρα','Κολά','Κιλά','Πελάτης'].forEach(function(h){
+    html += '<th style="padding:4px 7px;text-align:left;font-size:10px;font-weight:700;color:var(--brand);white-space:nowrap">'+h+'</th>';
+  });
+  html += '</tr></thead><tbody>';
+  importRows.forEach(function(r) {
+    var mid = merida ? merida + '/' + r.seq : '—/' + r.seq;
+    html += '<tr style="border-bottom:1px solid var(--border)">';
+    html += '<td style="padding:3px 7px;font-family:monospace;font-weight:700;font-size:11px">'+mid+'</td>';
+    html += '<td style="padding:3px 7px;font-size:11px">'+esc(xora)+'</td>';
+    html += '<td style="padding:3px 7px;font-size:11px">'+r.kola+'</td>';
+    html += '<td style="padding:3px 7px;font-size:11px">'+r.kila+'</td>';
+    html += '<td style="padding:3px 7px;font-size:11px">'+esc(r.pelatis)+'</td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('importPreviewTable').innerHTML = html;
+  document.getElementById('importBtn').style.display = '';
+}
+
+function doImport() {
+  var merida = importMeridaBase;
+  var xora   = importXoraVal || document.getElementById('importXora').value;
+  if (!merida) { alert('Συμπλήρωσε αριθμό μερίδας!'); return; }
+  if (!importRows.length) return;
+
+  importRows.forEach(function(r) {
+    var nr = newRow();
+    nr.id       = merida + '/' + r.seq;
+    nr.xora     = xora;
+    nr.kola     = String(r.kola);
+    nr.sysk     = 'Παλέτα'; // default
+    nr.kila     = String(r.kila);
+    nr.pelatis  = r.pelatis;
+    nr.katast   = 'ΑΝΑΜΟΝΗ';
+    pushRow(nr);
+  });
+
+  closeImportModal();
+  showNotif('Import', 'id');
+}
+
 </script>
-</body>
-</html>
