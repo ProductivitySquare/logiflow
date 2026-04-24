@@ -512,10 +512,37 @@ select.with-ic{background-image:none}
 /* Hide print-only elements on screen */
 .print-header { display: none; }
 .print-footer { display: none; }
+
+  #loginOverlay{position:fixed;inset:0;background:var(--brand);z-index:9999;display:flex;align-items:center;justify-content:center}
+#loginBox{background:#fff;border-radius:16px;padding:32px 28px;width:min(340px,92vw);text-align:center;font-family:inherit}
+#loginBox h2{color:var(--brand);font-size:16px;font-weight:700;margin-bottom:6px}
+#loginBox p{color:var(--text-muted);font-size:12px;margin-bottom:20px}
+#loginPin{width:100%;padding:12px;font-size:18px;border:2px solid var(--border);border-radius:8px;text-align:center;font-family:'Courier New',monospace;font-weight:700;letter-spacing:2px;outline:none;margin-bottom:12px;box-sizing:border-box}
+#loginPin:focus{border-color:var(--brand)}
+#loginErr{color:var(--red);font-size:12px;min-height:18px;margin-bottom:8px}
+#loginBtn{width:100%;padding:11px;border:none;border-radius:8px;background:var(--brand);color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
+#loginRemember{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:var(--text-muted);margin-bottom:14px;cursor:pointer}
 </style>
 </head>
 <body>
 
+<div id="loginOverlay">
+  <div id="loginBox">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1a3a2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+    </svg>
+    <h2>CTL LogiFlow</h2>
+    <p>Εισάγετε τον κωδικό σας</p>
+    <input id="loginPin" type="password" inputmode="numeric" placeholder="••••••••••" maxlength="10" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <div id="loginErr"></div>
+    <label id="loginRemember">
+      <input type="checkbox" id="rememberMe" style="accent-color:#1a3a2a"/> Θυμήσου με
+    </label>
+    <button id="loginBtn" onclick="doLogin()">Είσοδος</button>
+  </div>
+</div>
+  
 <!-- Print-only header (hidden on screen, shown on print) -->
 <div class="print-header">
   <div class="print-header-inner">
@@ -790,6 +817,45 @@ window.dispatchEvent(new Event('fbready'));
 
 <script>
 var role='office', searchQ='', statusF='', modalRowIdx=-1;
+
+  // ── LOGIN ──
+(function(){
+  var saved = localStorage.getItem('ctl_logiflow_pin');
+  if(saved){
+    // Verify against Firebase
+    var checkInterval = setInterval(function(){
+      if(!window._fbReady) return;
+      clearInterval(checkInterval);
+      var {db,ref,onValue:fbOn} = window._fb;
+      fbOn(ref(db,'pins/'+saved), function(snap){
+        if(snap.val()){
+          document.getElementById('loginOverlay').style.display='none';
+        } else {
+          localStorage.removeItem('ctl_logiflow_pin');
+        }
+      }, {onlyOnce:true});
+    }, 100);
+  }
+})();
+
+function doLogin(){
+  var pin = document.getElementById('loginPin').value.trim();
+  if(!pin){ document.getElementById('loginErr').textContent='Εισάγετε κωδικό!'; return; }
+  var {db,ref,onValue:fbOn} = window._fb;
+  fbOn(ref(db,'pins/'+pin), function(snap){
+    if(snap.val()){
+      if(document.getElementById('rememberMe').checked){
+        localStorage.setItem('ctl_logiflow_pin', pin);
+      }
+      document.getElementById('loginOverlay').style.display='none';
+    } else {
+      document.getElementById('loginErr').textContent='Λάθος κωδικός!';
+      document.getElementById('loginPin').value='';
+    }
+  }, {onlyOnce:true});
+}
+
+  
 var ICONS={
   download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
   chevronLeft:'<polyline points="15 18 9 12 15 6"/>',
