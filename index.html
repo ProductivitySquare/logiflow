@@ -664,7 +664,7 @@ select.with-ic{background-image:none}
         <th style="width:44px">Κολά</th>
         <th style="width:60px">Συσκ.</th>
         <th style="width:54px">Κιλά</th>
-        <th style="width:260px">Πελάτης</th>
+        <th style="width:320px">Πελάτης</th>
         <th style="width:120px">Κατάσταση</th>
         <th style="width:260px">Παρατηρήσεις</th>
         <th style="width:30px"></th>
@@ -1216,6 +1216,16 @@ function parseDate2(v){
   if(p.length<2) return '';
   var year=new Date().getFullYear();
   return year+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
+}
+
+  function fmtStorage(v){
+  if(!v) return '';
+  var p = v.substring(0,16).split('T');
+  if(p.length<2) return v;
+  var d = p[0].split('-');
+  if(d.length<3) return v;
+  var time = p[1].substring(0,5);
+  return d[2]+'/'+d[1]+(time && time!=='00:00' ? ' '+time : '');
 }
 // ---- DATETIME ----
 function makeDTCell(ri,field,val,ed){
@@ -1910,14 +1920,16 @@ function renderStorage(){
     html += '<td class="ec" style="'+P+'"><input class="merida-input" placeholder="26.01.000" value="'+esc(row.id||'')+'" onchange="updateStorageField('+ri+',&quot;id&quot;,this.value)" style="font-size:13px;padding:5px 7px"></td>';
     // Afx
     var afxIso = (row.afx&&row.afx.length>=10)?row.afx.substring(0,16):'';
-var afxDisp = afxIso ? fmtDT(afxIso) : '';
+var afxDisp = afxIso ? fmtStorage(afxIso) : '';
+
 html += '<td class="ec" style="'+P+';position:relative;width:80px;min-width:80px;max-width:80px">'
   +'<input type="datetime-local" value="'+esc(afxIso)+'" onchange="updateStorageField('+ri+',&quot;afx&quot;,this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
   +'<span style="font-size:12px;padding:5px 6px;display:block;pointer-events:none">'+(afxDisp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
   +'</td>';
     // Par
 var parIso = (row.par&&row.par.length>=10)?row.par.substring(0,16):'';
-var parDisp = parIso ? fmtDT(parIso) : '';
+var parDisp = parIso ? fmtStorage(parIso) : '';
+
 html += '<td class="ec" style="'+P+';position:relative;width:80px;min-width:80px;max-width:80px">'
   +'<input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+',&quot;par&quot;,this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
   +'<span style="font-size:12px;padding:5px 6px;display:block;pointer-events:none">'+(parDisp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
