@@ -1627,15 +1627,16 @@ function applyFilters(){
 
 function exportExcel(){
   var heads=['Μερίδα','Χώρα','Χρήστης','Πρβλ.Άφιξη','Άφιξη','Πρβλ.Παράδ.','Παράδοση','Κολά','Συσκ.','Κιλά','Πελάτης','Κατάσταση','Διεύθυνση','Ώρες','Τηλ.','Υπεύθυνος','Διαστάσεις','Ευροπαλ.','Σχόλια'];
-  var csv=heads.join('\t')+'\n';
+  var data = [heads];
   rows.forEach(function(r){
     var n=r.notes||eN();
-    csv+=[r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote].map(function(v){return(v||'').replace(/\t/g,' ');}).join('\t')+'\n';
+    data.push([r.id,r.xora,r.a,fmtDT(r.pAfx,true),fmtDT(r.afx),fmtDT(r.pPar,true),fmtDT(r.par),r.kola,r.sysk,r.kila,r.pelatis,r.katast,n.address,n.hours,n.phone,n.contact,n.dims,n.euro,n.volumeNote]);
   });
   var wn=getWeekNum(currentMonday);
-  var blob=new Blob(['\uFEFF'+csv],{type:'text/tab-separated-values;charset=utf-8'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='CTL_LogiFlow_KW'+wn+'_'+currentMonday.getFullYear()+'.xls';a.click();
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Αφίξεις');
+  XLSX.writeFile(wb, 'CTL_LogiFlow_KW'+wn+'_'+currentMonday.getFullYear()+'.xlsx');
 }
 
 window.addEventListener('scroll',hideACPortal,true);
