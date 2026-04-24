@@ -2180,7 +2180,12 @@ function onPelatisInput(inp, ri){
 function onPelatisBlur(el, ri){
   setTimeout(function(){
     hideACPortal();
-    updateField(ri,'pelatis',el.value);
+    var newVal = el.value.trim();
+    updateField(ri,'pelatis', newVal);
+    if(!newVal){
+      rows[ri].notes = eN();
+      saveRow(rows[ri]);
+    }
   }, 180);
 }
 
