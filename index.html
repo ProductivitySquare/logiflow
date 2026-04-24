@@ -1250,7 +1250,13 @@ return '<td class="'+cls+'" style="position:relative">'
 // ---- PELATIS (with tooltip) ----
 function makePelatisCell(ri,val,ed){
   var cls=ed?'ec':'rc';
-  return '<td class="'+cls+'" title="'+esc(val)+'" style="cursor:default"><input type="text" '+(ed?'':'disabled')+' value="'+esc(val)+'" title="'+esc(val)+'" onchange="updateField('+ri+',\'pelatis\',this.value)"></td>';
+  if(!ed) return '<td class="'+cls+'" title="'+esc(val)+'"><input disabled value="'+esc(val)+'"></td>';
+  return '<td class="'+cls+'" title="'+esc(val)+'">'
+    +'<input type="text" id="pel_'+ri+'" value="'+esc(val)+'" autocomplete="off" '
+    +'oninput="onPelatisInput(this,'+ri+')" '
+    +'onblur="onPelatisBlur('+ri+')" '
+    +'onchange="updateField('+ri+',\'pelatis\',this.value)">'
+    +'</td>';
 }
 
 // ---- TEXT ----
@@ -2142,7 +2148,70 @@ function deleteClient(key){
   remove(ref(db,'clients/'+key));
   setTimeout(renderClientsList, 300);
 }
+function onPelatisInput(inp, ri){
+  updateField(ri,'pelatis',inp.value);
+  var q = inp.value.toLowerCase().trim();
+  if(!q){ hideACPortal(); return; }
+  var matches = Object.values(clientsList).filter(function(c){
+    return c.name && c.name.toLowerCase().indexOf(q)>=0;
+  });
+  if(!matches.length){ hideACPortal(); return; }
+  var p = getPortal();
+  activeAC = {inp:inp, ri:ri, field:'pelatis'};
+  p.innerHTML = matches.map(function(c){
+    return '<div class="ac-item" onmousedown="pickClient(\''+esc(c.name)+'\','+ri+')">'+esc(c.name)+'</div>';
+  }).join('');
+  var rect = inp.getBoundingClientRect();
+  p.style.left = rect.left+'px';
+  p.style.top = (rect.bottom+2)+'px';
+  p.style.minWidth = Math.max(rect.width,200)+'px';
+  p.style.display = 'block';
+  setTimeout(function(){
+    var spaceBelow = window.innerHeight - rect.bottom;
+    if(spaceBelow < p.offsetHeight+10 && rect.top > spaceBelow){
+      p.style.top = (rect.top - p.offsetHeight - 2)+'px';
+    }
+  },0);
+}
 
+function onPelatisBlur(ri){
+  setTimeout(hideACPortal, 180);
+}
+
+function pickClient(name, ri){
+  // Βρες τον πελάτη
+  var client = Object.values(clientsList).find(function(c){ return c.name===name; });
+  hideACPortal();
+  // Ενημέρωσε το πεδίο
+  rows[ri].pelatis = name;
+  updateField(ri,'pelatis',name);
+  var el = document.getElementById('pel_'+ri);
+  if(el) el.value = name;
+  // Αν έχει στοιχεία → άνοιξε modal παρατηρήσεων προγεμισμένο
+  if(client){
+    modalRowIdx = ri;
+    var n = rows[ri].notes || eN();
+    document.getElementById('modalSub').textContent = name;
+    // Προγέμισε μόνο αν το πεδίο είναι άδειο
+    document.getElementById('mnAddress').value = n.address || (client.addresses&&client.addresses[0])||'';
+    document.getElementById('mnHours').value   = n.hours   || client.hours  ||'';
+    document.getElementById('mnPhone').value   = n.phone   || client.phone  ||'';
+    document.getElementById('mnContact').value = n.contact || client.contact||'';
+    document.getElementById('mnVolumeNote').value = n.volumeNote || client.notes||'';
+    document.getElementById('mnDims').value    = n.dims    ||'';
+    document.getElementById('mnEuro').value    = n.euro    ||'';
+    // Αν έχει πολλές διευθύνσεις → dropdown
+    if(client.addresses && client.addresses.length > 1){
+      var addrSelect = '<select onchange="document.getElementById(\'mnAddress\').value=this.value" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:inherit;margin-bottom:8px;outline:none">';
+      client.addresses.forEach(function(a){
+        addrSelect += '<option value="'+esc(a)+'"'+(n.address===a?' selected':'')+'>'+esc(a)+'</option>';
+      });
+      addrSelect += '</select>';
+      document.getElementById('mnAddress').insertAdjacentHTML('beforebegin', addrSelect);
+    }
+    document.getElementById('modalBg').classList.add('open');
+  }
+}
 </script>
 
   <div class="modal-bg" id="clientsModalBg" onclick="if(event.target===this)closeClientsModal()">
