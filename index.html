@@ -1131,14 +1131,15 @@ function showACPortal(inp,list,ri,field){
   activeAC={inp:inp,ri:ri,field:field};
   p.innerHTML=list.map(function(c){return'<div class="ac-item" data-val="'+esc(c)+'" onmousedown="pickAC(\''+esc(c)+'\','+ri+',\''+field+'\')">'+c+'</div>';}).join('');
   var rect=inp.getBoundingClientRect();
+  p.style.left=rect.left+'px';
+p.style.top=(rect.bottom+2)+'px';
+setTimeout(function(){
   var spaceBelow = window.innerHeight - rect.bottom;
-var spaceAbove = rect.top;
-if(spaceBelow < 150 && spaceAbove > spaceBelow){
-  p.style.top=(rect.top - p.offsetHeight - 2)+'px';
-} else {
-  p.style.top=(rect.bottom+2)+'px';
-}
-p.style.left=rect.left+'px';
+  var spaceAbove = rect.top;
+  if(spaceBelow < p.offsetHeight+10 && spaceAbove > spaceBelow){
+    p.style.top=(rect.top - p.offsetHeight - 2)+'px';
+  }
+},0);
   p.style.minWidth=Math.max(rect.width,140)+'px';p.style.display='block';
 }
 function hideACPortal(){var p=getPortal();p.style.display='none';activeAC=null;}
@@ -1222,8 +1223,12 @@ function makeDTCell(ri,field,val,ed){
   var isProvl=(field==='pAfx'||field==='pPar');
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
-    var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
-    return '<td class="'+cls+'"><input type="text" placeholder="ηη/μμ" maxlength="5" value="'+esc(isoDate?fmtDate2(isoDate):'')+'" onchange="updateField('+ri+',\''+field+'\',parseDate2(this.value))" style="width:80px !important;min-width:80px;max-width:80px"></td>';
+  var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
+var disp=isoDate?fmtDate2(isoDate):'';
+return '<td class="'+cls+'" style="position:relative">'
+  +'<input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+  +'<span style="font-size:12px;padding:6px 8px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
+  +'</td>';
   }
   var iso=(val&&val.length>=10)?val.substring(0,16):'';
   return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
