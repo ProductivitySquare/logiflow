@@ -1313,7 +1313,12 @@ function openModal(ri){
   document.getElementById('mnVolumeNote').value=n.volumeNote||'';
   document.getElementById('modalBg').classList.add('open');
 }
-function closeModal(){document.getElementById('modalBg').classList.remove('open');modalRowIdx=-1;}
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('open');
+  modalRowIdx=-1;
+  var oldSel = document.getElementById('clientAddrSelect');
+  if(oldSel) oldSel.remove();
+}
 function saveModal(){
   if(modalRowIdx<0)return;
   rows[modalRowIdx].notes={
@@ -2202,14 +2207,18 @@ function pickClient(name, ri){
     document.getElementById('mnDims').value    = n.dims    ||'';
     document.getElementById('mnEuro').value    = n.euro    ||'';
     // Αν έχει πολλές διευθύνσεις → dropdown
-    if(client.addresses && client.addresses.length > 1){
-      var addrSelect = '<select onchange="document.getElementById(\'mnAddress\').value=this.value" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:inherit;margin-bottom:8px;outline:none">';
-      client.addresses.forEach(function(a){
-        addrSelect += '<option value="'+esc(a)+'"'+(n.address===a?' selected':'')+'>'+esc(a)+'</option>';
-      });
-      addrSelect += '</select>';
-      document.getElementById('mnAddress').insertAdjacentHTML('beforebegin', addrSelect);
-    }
+    // Καθάρισε πρώτα τυχόν παλιό dropdown
+var oldSel = document.getElementById('clientAddrSelect');
+if(oldSel) oldSel.remove();
+
+if(client.addresses && client.addresses.length > 1){
+  var addrSelect = '<select id="clientAddrSelect" onchange="document.getElementById(\'mnAddress\').value=this.value" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:inherit;margin-bottom:8px;outline:none">';
+  client.addresses.forEach(function(a){
+    addrSelect += '<option value="'+esc(a)+'"'+(n.address===a?' selected':'')+'>'+esc(a)+'</option>';
+  });
+  addrSelect += '</select>';
+  document.getElementById('mnAddress').insertAdjacentHTML('beforebegin', addrSelect);
+}
     document.getElementById('modalBg').classList.add('open');
   }
 }
