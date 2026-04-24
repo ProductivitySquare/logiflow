@@ -1080,29 +1080,60 @@ function onMIBlur(el,ri){
   fbOnValue(weeksRef,function(snap){
     var data=snap.val();
     if(!data)return;
-    var foundSrc=null,foundDate='';
-    Object.entries(data).forEach(function(e){
+    var foundSrc=null, foundSrcFbKey=null, foundSrcWeekKey=null;
+Object.entries(data).forEach(function(e){
       if(foundSrc)return;
       var weekRows=e[1].rows;
       if(!weekRows)return;
-      Object.values(weekRows).forEach(function(r){
-        if(foundSrc)return;
-        if(baseOf(r.id)===base){
-          foundSrc=r;
-        }
-      });
+      Object.entries(weekRows).forEach(function(re){
+  if(foundSrc)return;
+  if(baseOf(re[1].id)===base){
+    foundSrc=re[1];
+    foundSrcFbKey=re[0];
+    foundSrcWeekKey=e[0];
+  }
+});
     });
-    if(foundSrc) doMeridaCopyPrompt(foundSrc,ri,val,base);
+    if(foundSrc) doMeridaCopyPrompt(foundSrc,ri,val,base,foundSrcWeekKey,foundSrcFbKey);
   },{onlyOnce:true});
 }
 
-function doMeridaCopyPrompt(src,ri,val,base){
+function doMeridaCopyPrompt(src,ri,val,base,srcWeekKey,srcFbKey){
   var dateStr='';
   if(src.afx){try{var d=new Date(src.afx);dateStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}catch(e){}}
   else if(src.pAfx){try{var d2=new Date(src.pAfx);dateStr=d2.getDate()+'/'+(d2.getMonth()+1)+'/'+d2.getFullYear();}catch(e){}}
   var dateLabel=dateStr?' από '+dateStr:'';
-  var msg='Η μερίδα '+base+' υπάρχει ήδη'+dateLabel+'.\nΝα κάνω αντιγραφή των στοιχείων;';
-  if(!confirm(msg))return;
+
+  // Αν είναι σε ΑΝΑΜΟΝΗ → προσφερε μεταφορά
+  if(src.katast==='ΑΝΑΜΟΝΗ' && srcWeekKey && srcFbKey && srcWeekKey!==weekKey){
+    var msg='Η μερίδα '+base+' είναι σε ΑΝΑΜΟΝΗ'+dateLabel+'.\nΝα τη ΜΕΤΑΦΕΡΩ στην τρέχουσα εβδομάδα;';
+    if(confirm(msg)){
+      // Αντιγραφή στοιχείων
+      rows[ri].id=val;
+      rows[ri].xora=src.xora||'';
+      rows[ri].kola=src.kola||'';
+      rows[ri].sysk=src.sysk||'';
+      rows[ri].kila=src.kila||'';
+      rows[ri].pelatis=src.pelatis||'';
+      rows[ri].katast=src.katast||'ΑΝΑΜΟΝΗ';
+      rows[ri].pAfx=src.pAfx||'';
+      rows[ri].afx=src.afx||'';
+      rows[ri].pPar=src.pPar||'';
+      rows[ri].par=src.par||'';
+      rows[ri].notes=src.notes?JSON.parse(JSON.stringify(src.notes)):eN();
+      rows[ri].attachments=src.attachments?src.attachments.slice():[];
+      saveRow(rows[ri]);
+      // Διαγραφή από παλιά εβδομάδα
+      var {db,ref,remove}=window._fb;
+      remove(ref(db,'weeks/'+srcWeekKey+'/rows/'+srcFbKey));
+      render();
+      return;
+    }
+  }
+
+  // Κανονική αντιγραφή
+  var msg2='Η μερίδα '+base+' υπάρχει ήδη'+dateLabel+'.\nΝα κάνω αντιγραφή των στοιχείων;';
+  if(!confirm(msg2))return;
   var newMerida=prompt('Νέος αριθμός μερίδας (π.χ. 26.04.001):','');
   if(!newMerida)return;
   var raw2=newMerida.replace(/[^0-9]/g,'');
@@ -1118,6 +1149,7 @@ function doMeridaCopyPrompt(src,ri,val,base){
   saveRow(rows[ri]);
   render();
 }
+  
 function baseOf(id){
   if(!id)return'';
   var i=id.indexOf('/');
