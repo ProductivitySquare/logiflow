@@ -1634,6 +1634,8 @@ window.addEventListener('resize',hideACPortal);
 function init(){
   updateWeekLabel();
   loadWeek();
+    loadClients();
+
 }
 
 if(window._fbReady){init();}
@@ -2018,6 +2020,177 @@ function saveStorageModal(){
   renderStorage();
 }
 
+  // ── CLIENTS ──
+var clientsList = {};
+var editingClientKey = null;
+var clientAddresses = [];
+
+function loadClients(){
+  var {db,ref,onValue:fbOn} = window._fb;
+  fbOn(ref(db,'clients'), function(snap){
+    clientsList = snap.val() || {};
+  }, {onlyOnce:false});
+}
+
+function openClientsModal(){
+  renderClientsList();
+  document.getElementById('clientsModalBg').classList.add('open');
+}
+function closeClientsModal(){
+  document.getElementById('clientsModalBg').classList.remove('open');
+}
+
+function renderClientsList(){
+  var body = document.getElementById('clientsModalBody');
+  var keys = Object.keys(clientsList);
+  if(!keys.length){
+    body.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:30px">Δεν υπάρχουν πελάτες — πάτα «+ Νέος Πελάτης»</p>';
+    return;
+  }
+  var html = '';
+  keys.forEach(function(k){
+    var c = clientsList[k];
+    var mainAddr = (c.addresses&&c.addresses.length) ? c.addresses[0] : '—';
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;background:#fff">'
+      +'<div style="flex:1">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--brand)">'+esc(c.name||'')+'</div>'
+      +'<div style="font-size:11px;color:var(--text-muted);margin-top:2px">'+esc(mainAddr)+(c.phone?' · '+esc(c.phone):'')+'</div>'
+      +'</div>'
+      +'<button onclick="openEditClientForm(\''+k+'\')" style="padding:5px 12px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;cursor:pointer;font-family:inherit">Επεξεργασία</button>'
+      +'<button onclick="deleteClient(\''+k+'\')" style="padding:5px 10px;border:1px solid #fca5a5;border-radius:6px;background:var(--red-light);color:var(--red);font-size:12px;cursor:pointer;font-family:inherit">✕</button>'
+      +'</div>';
+  });
+  body.innerHTML = html;
+}
+
+function openNewClientForm(){
+  editingClientKey = null;
+  clientAddresses = [''];
+  document.getElementById('clientFormTitle').textContent = 'Νέος Πελάτης';
+  document.getElementById('cfName').value = '';
+  document.getElementById('cfHours').value = '';
+  document.getElementById('cfPhone').value = '';
+  document.getElementById('cfContact').value = '';
+  document.getElementById('cfNotes').value = '';
+  renderClientAddresses();
+  document.getElementById('clientFormBg').classList.add('open');
+}
+
+function openEditClientForm(key){
+  editingClientKey = key;
+  var c = clientsList[key];
+  document.getElementById('clientFormTitle').textContent = 'Επεξεργασία Πελάτη';
+  document.getElementById('cfName').value = c.name||'';
+  document.getElementById('cfHours').value = c.hours||'';
+  document.getElementById('cfPhone').value = c.phone||'';
+  document.getElementById('cfContact').value = c.contact||'';
+  document.getElementById('cfNotes').value = c.notes||'';
+  clientAddresses = (c.addresses&&c.addresses.length) ? c.addresses.slice() : [''];
+  renderClientAddresses();
+  document.getElementById('clientFormBg').classList.add('open');
+}
+
+function closeClientForm(){
+  document.getElementById('clientFormBg').classList.remove('open');
+}
+
+function renderClientAddresses(){
+  var div = document.getElementById('cfAddresses');
+  div.innerHTML = clientAddresses.map(function(a,i){
+    return '<div style="display:flex;gap:6px;margin-bottom:6px">'
+      +'<input type="text" value="'+esc(a)+'" placeholder="Διεύθυνση '+(i+1)+'..." oninput="clientAddresses['+i+']=this.value" style="flex:1;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;outline:none"/>'
+      +(i>0?'<button onclick="removeClientAddress('+i+')" style="padding:5px 9px;border:1px solid #fca5a5;border-radius:6px;background:var(--red-light);color:var(--red);cursor:pointer;font-family:inherit">✕</button>':'')
+      +'</div>';
+  }).join('');
+}
+
+function addClientAddress(){
+  clientAddresses.push('');
+  renderClientAddresses();
+}
+
+function removeClientAddress(i){
+  clientAddresses.splice(i,1);
+  renderClientAddresses();
+}
+
+function saveClient(){
+  var name = document.getElementById('cfName').value.trim();
+  if(!name){ alert('Συμπλήρωσε όνομα!'); return; }
+  var client = {
+    name: name,
+    addresses: clientAddresses.filter(function(a){return a.trim();}),
+    hours: document.getElementById('cfHours').value.trim(),
+    phone: document.getElementById('cfPhone').value.trim(),
+    contact: document.getElementById('cfContact').value.trim(),
+    notes: document.getElementById('cfNotes').value.trim()
+  };
+  var {db,ref,set,push} = window._fb;
+  if(editingClientKey){
+    set(ref(db,'clients/'+editingClientKey), client);
+  } else {
+    var newRef = push(ref(db,'clients'));
+    set(newRef, client);
+  }
+  closeClientForm();
+  setTimeout(renderClientsList, 500);
+}
+
+function deleteClient(key){
+  if(!confirm('Διαγραφή πελάτη;')) return;
+  var {db,ref,remove} = window._fb;
+  remove(ref(db,'clients/'+key));
+  setTimeout(renderClientsList, 300);
+}
 
 </script>
+
+  <div class="modal-bg" id="clientsModalBg" onclick="if(event.target===this)closeClientsModal()">
+  <div class="modal" style="width:min(620px,96vw)">
+    <div class="modal-header">
+      <div><h2>Πελάτες</h2><div class="sub" id="clientsModalSub">Διαχείριση πελατών</div></div>
+      <button class="modal-close" onclick="closeClientsModal()">✕</button>
+    </div>
+    <div class="modal-body" id="clientsModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeClientsModal()">Κλείσιμο</button>
+      <button class="btn-save" onclick="openNewClientForm()">+ Νέος Πελάτης</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="clientFormBg" onclick="if(event.target===this)closeClientForm()">
+  <div class="modal" style="width:min(580px,96vw)">
+    <div class="modal-header">
+      <div><h2 id="clientFormTitle">Νέος Πελάτης</h2></div>
+      <button class="modal-close" onclick="closeClientForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="msec">
+        <div class="msec-title">Όνομα</div>
+        <input type="text" id="cfName" placeholder="Επωνυμία πελάτη..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/>
+      </div>
+      <div class="msec">
+        <div class="msec-title">Διευθύνσεις <button onclick="addClientAddress()" style="float:right;padding:2px 10px;border:none;background:var(--brand);color:white;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit">+ Προσθήκη</button></div>
+        <div id="cfAddresses"></div>
+      </div>
+      <div class="msec">
+        <div class="mgrid">
+          <div><div class="mlabel">Ώρες παράδοσης</div><input type="text" id="cfHours" placeholder="09:00-17:00" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/></div>
+          <div><div class="mlabel">Τηλέφωνο</div><input type="tel" id="cfPhone" placeholder="210..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/></div>
+        </div>
+        <div style="margin-top:10px"><div class="mlabel">Υπεύθυνος παραλαβής</div><input type="text" id="cfContact" placeholder="" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/></div>
+      </div>
+      <div class="msec">
+        <div class="msec-title">Παρατηρήσεις</div>
+        <textarea id="cfNotes" placeholder="π.χ. Καλέστε μια ώρα πριν..." rows="3" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none;resize:vertical"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeClientForm()">Ακύρωση</button>
+      <button class="btn-save" onclick="saveClient()">Αποθήκευση</button>
+    </div>
+  </div>
+</div>
+  
 </body></html>
