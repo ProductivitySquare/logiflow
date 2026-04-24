@@ -1767,7 +1767,11 @@ function doImport() {
     nr.kola     = String(r.kola);
     nr.sysk     = 'Παλέτα'; // default
     nr.kila     = String(r.kila);
-    nr.pelatis  = r.pelatis;
+    var matched = Object.values(clientsList).find(function(c){
+  return c.erpName && c.erpName.toLowerCase()===r.pelatis.toLowerCase();
+});
+nr.pelatis = matched ? matched.name : r.pelatis;
+
     nr.katast   = 'ΑΝΑΜΟΝΗ';
     pushRow(nr);
   });
@@ -2078,6 +2082,8 @@ function openNewClientForm(){
   clientAddresses = [''];
   document.getElementById('clientFormTitle').textContent = 'Νέος Πελάτης';
   document.getElementById('cfName').value = '';
+  document.getElementById('cfErpName').value = '';
+
   document.getElementById('cfHours').value = '';
   document.getElementById('cfPhone').value = '';
   document.getElementById('cfContact').value = '';
@@ -2091,6 +2097,8 @@ function openEditClientForm(key){
   var c = clientsList[key];
   document.getElementById('clientFormTitle').textContent = 'Επεξεργασία Πελάτη';
   document.getElementById('cfName').value = c.name||'';
+  document.getElementById('cfErpName').value = c.erpName||'';
+
   document.getElementById('cfHours').value = c.hours||'';
   document.getElementById('cfPhone').value = c.phone||'';
   document.getElementById('cfContact').value = c.contact||'';
@@ -2128,8 +2136,9 @@ function saveClient(){
   var name = document.getElementById('cfName').value.trim();
   if(!name){ alert('Συμπλήρωσε όνομα!'); return; }
   var client = {
-    name: name,
-    addresses: clientAddresses.filter(function(a){return a.trim();}),
+  name: name,
+  erpName: document.getElementById('cfErpName').value.trim(),
+  addresses: clientAddresses.filter(function(a){return a.trim();}),
     hours: document.getElementById('cfHours').value.trim(),
     phone: document.getElementById('cfPhone').value.trim(),
     contact: document.getElementById('cfContact').value.trim(),
@@ -2157,8 +2166,9 @@ function onPelatisInput(inp, ri){
   
   if(!q){ hideACPortal(); return; }
   var matches = Object.values(clientsList).filter(function(c){
-    return c.name && c.name.toLowerCase().indexOf(q)>=0;
-  });
+  return (c.name && c.name.toLowerCase().indexOf(q)>=0) ||
+         (c.erpName && c.erpName.toLowerCase().indexOf(q)>=0);
+});
   if(!matches.length){ hideACPortal(); return; }
   var p = getPortal();
   activeAC = {inp:inp, ri:ri, field:'pelatis'};
@@ -2252,9 +2262,13 @@ if(client.addresses && client.addresses.length > 1){
     </div>
     <div class="modal-body">
       <div class="msec">
-        <div class="msec-title">Όνομα</div>
-        <input type="text" id="cfName" placeholder="Επωνυμία πελάτη..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/>
-      </div>
+  <div class="msec-title">Όνομα (εμφάνιση)</div>
+  <input type="text" id="cfName" placeholder="π.χ. ΚΑΝΚΟ" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/>
+</div>
+<div class="msec">
+  <div class="msec-title">Όνομα ERP (από αρχείο Excel)</div>
+  <input type="text" id="cfErpName" placeholder="π.χ. ΚΑΝΚΟ ΔΙΕΘΝ.ΜΕΤΑΦΟΡ.& ΑΠΟΘΗΚ.ΑΕ" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none"/>
+</div>
       <div class="msec">
         <div class="msec-title">Διευθύνσεις <button onclick="addClientAddress()" style="float:right;padding:2px 10px;border:none;background:var(--brand);color:white;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit">+ Προσθήκη</button></div>
         <div id="cfAddresses"></div>
