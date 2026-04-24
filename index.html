@@ -1131,7 +1131,14 @@ function showACPortal(inp,list,ri,field){
   activeAC={inp:inp,ri:ri,field:field};
   p.innerHTML=list.map(function(c){return'<div class="ac-item" data-val="'+esc(c)+'" onmousedown="pickAC(\''+esc(c)+'\','+ri+',\''+field+'\')">'+c+'</div>';}).join('');
   var rect=inp.getBoundingClientRect();
-  p.style.left=rect.left+'px';p.style.top=(rect.bottom+2)+'px';
+  var spaceBelow = window.innerHeight - rect.bottom;
+var spaceAbove = rect.top;
+if(spaceBelow < 150 && spaceAbove > spaceBelow){
+  p.style.top=(rect.top - p.offsetHeight - 2)+'px';
+} else {
+  p.style.top=(rect.bottom+2)+'px';
+}
+p.style.left=rect.left+'px';
   p.style.minWidth=Math.max(rect.width,140)+'px';p.style.display='block';
 }
 function hideACPortal(){var p=getPortal();p.style.display='none';activeAC=null;}
@@ -1194,6 +1201,21 @@ function makeUserCell(ri,val,ed){
     +'</td>';
 }
 
+
+
+  function fmtDate2(iso){
+  if(!iso) return '';
+  var p=iso.split('-');
+  if(p.length<3) return iso;
+  return p[2].substring(0,2)+'/'+p[1];
+}
+function parseDate2(v){
+  if(!v) return '';
+  var p=v.replace(/[^0-9]/g,'/').split('/').filter(Boolean);
+  if(p.length<2) return '';
+  var year=new Date().getFullYear();
+  return year+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
+}
 // ---- DATETIME ----
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
@@ -1201,7 +1223,7 @@ function makeDTCell(ri,field,val,ed){
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
     var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
-    return '<td class="'+cls+'"><input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
+    return '<td class="'+cls+'"><input type="text" placeholder="ηη/μμ" maxlength="5" value="'+esc(isoDate?fmtDate2(isoDate):'')+'" onchange="updateField('+ri+',\''+field+'\',parseDate2(this.value))" style="width:80px !important;min-width:80px;max-width:80px"></td>';
   }
   var iso=(val&&val.length>=10)?val.substring(0,16):'';
   return '<td class="'+cls+'"><input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)"></td>';
