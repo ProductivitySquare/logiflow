@@ -1038,12 +1038,12 @@ function updateWeekStats(){
   var icApoth   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>','#86efac');
   var icParadoth= svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>','#86efac');
   el.innerHTML = '<span style="opacity:.5;margin-right:2px">|</span>'
-    +'<span style="display:flex;align-items:center;gap:3px">'+icTotal+' '+total+'</span>'
-    +(anamoni?'<span style="display:flex;align-items:center;gap:3px;color:#fef08a">'+icAnamoni+' '+anamoni+'</span>':'')
-    +(amesi?'<span style="display:flex;align-items:center;gap:3px;color:#fca5a5">'+icAmesi+' '+amesi+'</span>':'')
-    +(transit?'<span style="display:flex;align-items:center;gap:3px;color:#93c5fd">'+icTransit+' '+transit+'</span>':'')
-    +(apoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac">'+icApoth+' '+apoth+'</span>':'')
-    +(paradoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac">'+icParadoth+' '+paradoth+'</span>':'');
+    +'<span style="display:flex;align-items:center;gap:3px">'+icTotal+' '+total+' Παραλαβές</span>'
+    +(anamoni?'<span style="display:flex;align-items:center;gap:3px;color:#fef08a">'+icAnamoni+' '+anamoni+' Αναμονή</span>':'')
+    +(amesi?'<span style="display:flex;align-items:center;gap:3px;color:#fca5a5">'+icAmesi+' '+amesi+' Αμεσες</span>':'')
+    +(transit?'<span style="display:flex;align-items:center;gap:3px;color:#93c5fd">'+icTransit+' '+transit+' Μεταφορά</span>':'')
+    +(apoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac">'+icApoth+' '+apoth+' Αποθήκη</span>':'')
+    +(paradoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac">'+icParadoth+' '+paradoth+' Παραδόθηκαν</span>':'');
 }
 // ---- GLOBAL SEARCH ----
 function toggleGlobalSearch(){
