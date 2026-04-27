@@ -582,7 +582,8 @@ select.with-ic{background-image:none}
 </div>
 
 <div class="toolbar">
-  <input type="text" placeholder="Αναζήτηση..." oninput="filterRows(this.value)">
+  <input type="text" id="searchInput" placeholder="Αναζήτηση..." oninput="filterRows(this.value)">
+<button id="globalSearchBtn" onclick="toggleGlobalSearch()" title="Αναζήτηση σε όλες τις εβδομάδες" style="padding:6px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);cursor:pointer;font-size:14px;transition:all .15s"></button>
   <select onchange="filterStatus(this.value)">
     <option value="">Όλες καταστάσεις</option>
     <option value="ΣΤΗΝ ΑΠΟΘΗΚΗ">Στην Αποθήκη</option>
@@ -883,6 +884,8 @@ var currentMonday=getThisMonday();
 var rows=[];
 var filtered=[];
 var weekKey='';
+var globalSearchMode = false;
+var globalSearchResults = [];
 var isSyncing=false;
 var saveTimer=null;
 
@@ -1013,7 +1016,110 @@ function setSyncStatus(st){
   if(st==='error')el.textContent='✕ Σφάλμα!';
   if(st==='saved')setTimeout(function(){el.className='sync-indicator';},2500);
 }
+// ---- GLOBAL SEARCH ----
+function toggleGlobalSearch(){
+  globalSearchMode = !globalSearchMode;
+  var btn = document.getElementById('globalSearchBtn');
+  var inp = document.getElementById('searchInput');
+  if(globalSearchMode){
+    btn.style.background = 'var(--brand)';
+    btn.style.color = 'white';
+    btn.style.borderColor = 'var(--brand)';
+    if(inp.value.trim()) doGlobalSearch(inp.value.trim());
+  } else {
+    btn.style.background = 'var(--bg)';
+    btn.style.color = 'var(--text)';
+    btn.style.borderColor = 'var(--border)';
+    filterRows(inp.value);
+  }
+}
 
+function filterRows(q){
+  searchQ=q.toLowerCase();
+  if(globalSearchMode && q.trim()){
+    doGlobalSearch(q.trim());
+  } else {
+    applyFilters();
+  }
+}
+
+function doGlobalSearch(q){
+  var {db,ref,onValue:fbOn} = window._fb;
+  document.getElementById('loadingOverlay').style.display='flex';
+  fbOn(ref(db,'weeks'), function(snap){
+    document.getElementById('loadingOverlay').style.display='none';
+    var data = snap.val();
+    if(!data){ applyFilters(); return; }
+    var results = [];
+    Object.entries(data).forEach(function(e){
+      var wk = e[0];
+      var weekRows = e[1].rows;
+      if(!weekRows) return;
+      Object.values(weekRows).forEach(function(r){
+        if(!r.notes) r.notes = eN();
+        if(!r.seenBy) r.seenBy = {};
+        if(!r.attachments) r.attachments = [];
+        var match = (r.id+r.pelatis+(r.xora||'')).toLowerCase().indexOf(q.toLowerCase())>=0;
+        if(match) results.push({row:r, weekKey:wk});
+      });
+    });
+    renderGlobalResults(results, q);
+  },{onlyOnce:true});
+}
+
+function renderGlobalResults(results, q){
+  var tb = document.getElementById('tbody');
+  if(!results.length){
+    tb.innerHTML = '<tr><td colspan="17" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
+    return;
+  }
+  var html = '';
+  results.forEach(function(item){
+    var row = item.row;
+    var wk = item.weekKey;
+    // Μετατροπή weekKey σε label πχ week_2026_17 → Εβδ.17
+    var parts = wk.split('_');
+    var wLabel = parts.length>=3 ? 'Εβδ.'+parseInt(parts[2])+' '+parts[1] : wk;
+    var isCurrentWeek = wk === weekKey;
+    html += '<tr class="'+rowClass(row.katast)+'" style="'+(isCurrentWeek?'':'opacity:.8')+'">';
+    html += '<td class="rc"><input disabled value="'+esc(row.id||'')+'"></td>';
+    html += '<td colspan="10" style="padding:6px 8px;font-size:12px;color:var(--text)">'
+      +'<strong>'+esc(row.pelatis||'—')+'</strong>'
+      +' · '+esc(row.xora||'')
+      +' · Κολά: '+esc(row.kola||'—')
+      +' · '+esc(row.katast||'')
+      +'</td>';
+    html += '<td colspan="5" style="padding:6px 8px">'
+      +'<span style="font-size:11px;padding:3px 8px;border-radius:12px;background:'+(isCurrentWeek?'var(--brand)':'var(--border)')+';color:'+(isCurrentWeek?'white':'var(--text-muted)')+'">'+wLabel+'</span>'
+      +(isCurrentWeek?'':' <button onclick="goToWeek(\''+wk+'\')" style="margin-left:6px;padding:3px 10px;border:1px solid var(--border);border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;background:#fff">Μετάβαση</button>')
+      +'</td>';
+    html += '</tr>';
+  });
+  document.getElementById('tbody').innerHTML = html;
+}
+
+function goToWeek(wk){
+  // Μετάβαση σε συγκεκριμένη εβδομάδα
+  var parts = wk.split('_');
+  if(parts.length<3) return;
+  var year = parseInt(parts[1]);
+  var week = parseInt(parts[2]);
+  // Βρες τη Δευτέρα της εβδομάδας
+  var d = new Date(year, 0, 1+((week-1)*7));
+  var day = d.getDay()||7;
+  d.setDate(d.getDate()-(day-1));
+  currentMonday = d;
+  // Απενεργοποίησε global search
+  globalSearchMode = false;
+  var btn = document.getElementById('globalSearchBtn');
+  btn.style.background = 'var(--bg)';
+  btn.style.color = 'var(--text)';
+  btn.style.borderColor = 'var(--border)';
+  document.getElementById('searchInput').value = '';
+  updateWeekLabel();
+  loadWeek();
+}
+  
 // ---- FIELD LOGIC ----
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
 function rowClass(k){if(k==='ΣΤΗΝ ΑΠΟΘΗΚΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
