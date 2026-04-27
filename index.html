@@ -572,7 +572,8 @@ select.with-ic{background-image:none}
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
   <button class="week-nav" onclick="changeWeek(1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-  <div style="flex:1"></div>
+<div id="weekStats" style="font-size:11px;color:rgba(255,255,255,.8);font-weight:600;letter-spacing:.02em;display:flex;gap:10px;flex-wrap:wrap"></div>
+<div style="flex:1"></div>
   <div class="sync-indicator" id="syncIndicator">⟳ Αποθήκευση...</div>
   <div class="role-tabs">
     <button class="role-btn active" onclick="setRole('office',this)">Γραφείο</button>
@@ -1017,6 +1018,26 @@ function setSyncStatus(st){
   if(st==='saved')el.textContent='✓ Αποθηκεύτηκε';
   if(st==='error')el.textContent='✕ Σφάλμα!';
   if(st==='saved')setTimeout(function(){el.className='sync-indicator';},2500);
+}
+
+// ---- GLOBAL ΣΤΑΤΙΣΤΙΚΑ ONTOP ----
+function updateWeekStats(){
+  var el = document.getElementById('weekStats');
+  if(!el) return;
+  var total = rows.length;
+  var anamoni = rows.filter(function(r){return r.katast==='ΑΝΑΜΟΝΗ';}).length;
+  var amesi = rows.filter(function(r){return r.katast==='ΑΜΕΣΗ';}).length;
+  var apoth = rows.filter(function(r){return r.katast==='ΑΠΟΘΗΚΕΥΣΗ';}).length;
+  var transit = rows.filter(function(r){return r.katast==='ΣΕ ΜΕΤΑΦΟΡΑ';}).length;
+  var paradoth = rows.filter(function(r){return r.katast==='ΠΑΡΑΔΟΘΗΚΕ';}).length;
+  el.innerHTML = ''
+    +'<span style="opacity:.6">|</span>'
+    +'<span>📦 '+total+' παραλαβές</span>'
+    +(anamoni?'<span style="color:#fef08a">⏳ '+anamoni+' αναμονή</span>':'')
+    +(amesi?'<span style="color:#fca5a5">⚡ '+amesi+' άμεσες</span>':'')
+    +(transit?'<span style="color:#93c5fd">🚛 '+transit+' μεταφορά</span>':'')
+    +(apoth?'<span style="color:#86efac">📂 '+apoth+' αποθήκη</span>':'')
+    +(paradoth?'<span style="color:#86efac">✓ '+paradoth+' παραδόθηκαν</span>':'');
 }
 // ---- GLOBAL SEARCH ----
 function toggleGlobalSearch(){
