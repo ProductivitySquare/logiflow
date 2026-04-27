@@ -1067,6 +1067,9 @@ function filterRows(q){
   searchQ=q.toLowerCase();
   if(globalSearchMode && q.trim()){
     doGlobalSearch(q.trim());
+  } else if(globalSearchMode && !q.trim()){
+    // Global mode αλλά άδειο search → reset
+    applyFilters();
   } else {
     applyFilters();
   }
@@ -1766,10 +1769,16 @@ function setRole(r,btn){
 }
 
 function filterRows(q){searchQ=q.toLowerCase();applyFilters();}
-function filterStatus(s){statusF=s;applyFilters();}
+function filterStatus(s){
+  statusF=s;
+  globalSearchMode=false;
+  var btn=document.getElementById('globalSearchBtn');
+  if(btn){btn.style.background='var(--bg)';btn.style.color='var(--text)';btn.style.borderColor='var(--border)';}
+  applyFilters();
+}
 function applyFilters(){
   var matched=rows.filter(function(r){
-    var mQ=!searchQ||(r.id+r.pelatis+(r.xora||'')).toLowerCase().indexOf(searchQ)>=0;
+    var mQ=!searchQ||(r.id+r.pelatis+(r.xora||'')+( r.katast||'')).toLowerCase().indexOf(searchQ)>=0;
     var mS=!statusF||r.katast===statusF;
     return mQ&&mS;
   });
