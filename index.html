@@ -1091,7 +1091,7 @@ function doGlobalSearch(q){
         if(!r.notes) r.notes = eN();
         if(!r.seenBy) r.seenBy = {};
         if(!r.attachments) r.attachments = [];
-        var match = (r.id+r.pelatis+(r.xora||'')).toLowerCase().indexOf(q.toLowerCase())>=0;
+        var match = ((r.id||'')+(r.pelatis||'')+(r.xora||'')+(r.katast||'')).toLowerCase().indexOf(q.toLowerCase())>=0;
         if(match) results.push({row:r, weekKey:wk});
       });
     });
@@ -1778,7 +1778,7 @@ function filterStatus(s){
 }
 function applyFilters(){
   var matched=rows.filter(function(r){
-    var mQ=!searchQ||(r.id+r.pelatis+(r.xora||'')+( r.katast||'')).toLowerCase().indexOf(searchQ)>=0;
+    var mQ=!searchQ||((r.id||'')+(r.pelatis||'')+(r.xora||'')+(r.katast||'')+(r.kola||'')).toLowerCase().indexOf(searchQ)>=0;
     var mS=!statusF||r.katast===statusF;
     return mQ&&mS;
   });
