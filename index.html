@@ -1016,7 +1016,7 @@ function setSyncStatus(st){
 
 // ---- FIELD LOGIC ----
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
-function rowClass(k){if(k==='ΣΤΗΝ ΑΠΟΘΗΚΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
+function rowClass(k){if(k==='ΑΠΟΘΗΚΕΥΣΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' // ');}
@@ -1299,7 +1299,7 @@ function makeTxtCell(ri,field,val,ed){
 // ---- KATAST ----
 function makeKatastCell(ri,val,ed){
   var cls=ed?'ec':'rc';
-  var opts=['ΑΝΑΜΟΝΗ','ΑΠΟΘΗΚΕΥΣΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+  var opts=['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
   var iconName=STATUS_ICONS[val]||'hourglass';
   var s='<div style="display:flex;align-items:center;gap:5px;width:100%">'+ic(iconName,13)+'<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px;flex:1">';
   opts.forEach(function(o){s+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
