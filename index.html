@@ -1066,11 +1066,13 @@ function toggleGlobalSearch(){
 
 function filterRows(q){
   searchQ=q.toLowerCase();
-  if(globalSearchMode && q.trim()){
-    doGlobalSearch(q.trim());
-  } else if(globalSearchMode && !q.trim()){
-    // Global mode αλλά άδειο search → reset
-    applyFilters();
+  if(globalSearchMode){
+    if(q.trim()){
+      _cachedAllWeeks = null; // reset cache για φρέσκο search
+      doGlobalSearch(q.trim());
+    } else {
+      applyFilters();
+    }
   } else {
     applyFilters();
   }
