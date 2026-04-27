@@ -572,7 +572,7 @@ select.with-ic{background-image:none}
   <button class="week-nav" onclick="changeWeek(-1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <span id="weekLabel"></span>
   <button class="week-nav" onclick="changeWeek(1)"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-<div id="weekStats" style="font-size:11px;color:rgba(255,255,255,.8);font-weight:600;letter-spacing:.02em;display:flex;gap:10px;flex-wrap:wrap"></div>
+<div id="weekStats" style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;letter-spacing:.02em;display:flex;gap:10px;flex-wrap:wrap"></div>
 <div style="flex:1"></div>
   <div class="sync-indicator" id="syncIndicator">⟳ Αποθήκευση...</div>
   <div class="role-tabs">
@@ -1030,14 +1030,20 @@ function updateWeekStats(){
   var apoth = rows.filter(function(r){return r.katast==='ΣΤΗΝ ΑΠΟΘΗΚΗ';}).length;
   var transit = rows.filter(function(r){return r.katast==='ΣΕ ΜΕΤΑΦΟΡΑ';}).length;
   var paradoth = rows.filter(function(r){return r.katast==='ΠΑΡΑΔΟΘΗΚΕ';}).length;
-  el.innerHTML = ''
-    +'<span style="opacity:.6">|</span>'
-    +'<span>📦 '+total+' παραλαβές</span>'
-    +(anamoni?'<span style="color:#fef08a">⏳ '+anamoni+' αναμονή</span>':'')
-    +(amesi?'<span style="color:#fca5a5">⚡ '+amesi+' άμεσες</span>':'')
-    +(transit?'<span style="color:#93c5fd">🚛 '+transit+' μεταφορά</span>':'')
-    +(apoth?'<span style="color:#86efac">📂 '+apoth+' αποθήκη</span>':'')
-    +(paradoth?'<span style="color:#86efac">✓ '+paradoth+' παραδόθηκαν</span>':'');
+  var svg = function(path,col){return '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="'+(col||'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';};
+  var icTotal   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>');
+  var icAnamoni = svg('<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>','#fef08a');
+  var icAmesi   = svg('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>','#fca5a5');
+  var icTransit = svg('<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>','#93c5fd');
+  var icApoth   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>','#86efac');
+  var icParadoth= svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>','#86efac');
+  el.innerHTML = '<span style="opacity:.5;margin-right:2px">|</span>'
+    +'<span style="display:flex;align-items:center;gap:3px">'+icTotal+' '+total+'</span>'
+    +(anamoni?'<span style="display:flex;align-items:center;gap:3px;color:#fef08a">'+icAnamoni+' '+anamoni+'</span>':'')
+    +(amesi?'<span style="display:flex;align-items:center;gap:3px;color:#fca5a5">'+icAmesi+' '+amesi+'</span>':'')
+    +(transit?'<span style="display:flex;align-items:center;gap:3px;color:#93c5fd">'+icTransit+' '+transit+'</span>':'')
+    +(apoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac">'+icApoth+' '+apoth+'</span>':'')
+    +(paradoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac">'+icParadoth+' '+paradoth+'</span>':'');
 }
 // ---- GLOBAL SEARCH ----
 function toggleGlobalSearch(){
