@@ -1027,7 +1027,7 @@ function updateWeekStats(){
   var total = rows.length;
   var anamoni = rows.filter(function(r){return r.katast==='ΑΝΑΜΟΝΗ';}).length;
   var amesi = rows.filter(function(r){return r.katast==='ΑΜΕΣΗ';}).length;
-  var apoth = rows.filter(function(r){return r.katast==='ΑΠΟΘΗΚΕΥΣΗ';}).length;
+  var apoth = rows.filter(function(r){return r.katast==='ΣΤΗΝ ΑΠΟΘΗΚΗ';}).length;
   var transit = rows.filter(function(r){return r.katast==='ΣΕ ΜΕΤΑΦΟΡΑ';}).length;
   var paradoth = rows.filter(function(r){return r.katast==='ΠΑΡΑΔΟΘΗΚΕ';}).length;
   el.innerHTML = ''
