@@ -1024,32 +1024,30 @@ function onDragOver(e,tr){
   document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
   tr.classList.add('drag-over');
 }
-function onDrop(e, fi){
+function onDrop(e,fi){
   e.preventDefault();
-  document.querySelectorAll('tbody tr').forEach(function(r){ r.classList.remove('drag-over'); });
-  if(dragSrcIdx < 0 || dragSrcIdx === fi) return;
-
-  var srcRow = filtered[dragSrcIdx];
-  var dstRow = filtered[fi];
-  var srcRi = rows.indexOf(srcRow);
-  var dstRi = rows.indexOf(dstRow);
-  if(srcRi < 0 || dstRi < 0) return;
-
-  rows.splice(srcRi, 1);
-  var newDstRi = rows.indexOf(dstRow);
-  rows.splice(newDstRi, 0, srcRow);
-  dragSrcIdx = -1;
-
-  rows.forEach(function(r, i){ r.order = i; saveRow(r); });
-
-  // Ενημέρωσε το filtered χωρίς re-sort
-  filtered = rows.filter(function(r){
-    var mQ = !searchQ || ((r.id||'')+(r.pelatis||'')+(r.xora||'')+(r.katast||'')).toLowerCase().indexOf(searchQ) >= 0;
-    var mS = !statusF || r.katast === statusF;
-    return mQ && mS;
+  document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
+  if(dragSrcIdx<0||dragSrcIdx===fi)return;
+  var srcRow=filtered[dragSrcIdx];
+  var dstRow=filtered[fi];
+  var srcRi=rows.indexOf(srcRow);
+  var dstRi=rows.indexOf(dstRow);
+  if(srcRi<0||dstRi<0)return;
+  rows.splice(srcRi,1);
+  var newDstRi=rows.indexOf(dstRow);
+  rows.splice(newDstRi,0,srcRow);
+  dragSrcIdx=-1;
+  // Αποθήκευσε order σε όλες
+  rows.forEach(function(r,i){r.order=i;});
+  // Render ΠΡΩΤΑ χωρίς να περιμένεις Firebase
+  filtered=rows.filter(function(r){
+    var mQ=!searchQ||((r.id||'')+(r.pelatis||'')+(r.xora||'')+(r.katast||'')).toLowerCase().indexOf(searchQ)>=0;
+    var mS=!statusF||r.katast===statusF;
+    return mQ&&mS;
   });
-
-  render(); // Μόνο render, όχι applyFilters
+  render();
+  // Αποθήκευσε μετά (ασύγχρονα)
+  rows.forEach(function(r){saveRow(r);});
 }
 
   
@@ -1122,6 +1120,7 @@ function loadWeek(){
         if(!r.attachments)r.attachments=[];
         return r;
       });
+      rows.sort(function(a,b){ return (a.order||0)-(b.order||0); });
     } else {
       rows=[newRow(),newRow(),newRow()];
       rows.forEach(function(r){pushRow(r);});
