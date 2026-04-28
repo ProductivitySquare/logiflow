@@ -1586,6 +1586,10 @@ function parseDate2(v){
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   var isProvl=(field==='pAfx'||field==='pPar');
+  if(field==='par'){
+    if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"></td>';
+    return '<td class="'+cls+'"><input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\'par\',this.value)" style="font-size:11px;padding:4px 5px;width:100%"></td>';
+  }
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
   var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
