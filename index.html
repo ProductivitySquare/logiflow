@@ -84,14 +84,14 @@ tbody tr.row-wait{background:#ffffff}
 
 tbody td{padding:6px 5px;vertical-align:middle;height:38px}
 tbody td:nth-child(13){max-width:240px;overflow:hidden}
-tbody td input,tbody td select{width:100%;padding:6px 8px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--text);font-size:13px;font-family:inherit}
+tbody td input,tbody td select{width:100%;padding:6px 8px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--text);font-size:13px;font-family:inherit;transition:border-color .15s,background .15s,box-shadow .15s}
 
+/* ── INLINE / EMBEDDED look: χωρίς border όταν δεν έχει focus ── */
+.ec input,.ec select{background:transparent;border-color:transparent;border-radius:4px}
+.ec input:hover,.ec select:hover{border-color:rgba(26,58,42,.25);background:rgba(255,255,255,.7)}
 tbody td input:focus,tbody td select:focus{border-color:var(--brand);background:#fff;outline:none;box-shadow:0 0 0 2px rgba(26,58,42,.12)}
 tbody td input:disabled,tbody td select:disabled{opacity:.75;cursor:not-allowed}
-
-.ec input,.ec select{background:#fff;border-color:var(--green-border)}
-.ec input:hover,.ec select:hover{border-color:var(--brand)}
-.rc input,.rc select{opacity:.5}
+.rc input,.rc select{opacity:.5;background:transparent;border-color:transparent}
 
 /* ── AUTOCOMPLETE ── */
 #ac-portal{position:fixed;background:#fff;border:1.5px solid var(--brand);border-radius:8px;z-index:9999;max-height:200px;overflow-y:auto;box-shadow:0 6px 20px rgba(26,58,42,.18);display:none;min-width:140px;font-family:inherit}
