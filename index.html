@@ -1582,17 +1582,15 @@ function makeKatastCell(ri,val,ed){
   var drop = document.getElementById(id);
   if(!drop) return;
   var isOpen = drop.style.display==='block';
-  // Reset όλα τα td
   document.querySelectorAll('[id^="katast-drop-"]').forEach(function(d){
     d.style.display='none';
     if(d.parentElement) d.parentElement.style.zIndex='';
   });
   if(!isOpen){
-    var rect = el.getBoundingClientRect();
-    drop.style.left = rect.left+'px';
-    drop.style.top = (rect.bottom+2)+'px';
+    drop.style.position='absolute';
+    drop.style.left='0';
+    drop.style.top='100%';
     drop.style.display='block';
-    // Ανέβασε το td πάνω από τα γειτονικά
     if(drop.parentElement) drop.parentElement.style.zIndex='9999';
   }
 }
