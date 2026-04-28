@@ -527,7 +527,14 @@ select.with-ic{background-image:none}
   .topbar{height:44px}
   .toolbar{padding:7px 12px}
   tbody td{padding:3px 4px;height:30px}
-  tbody td input,tbody td select{font-size:12px}
+  tbody td input,tbody td select{font-size:11px}
+  tbody td input:disabled{font-size:11px}
+  input.merida-input{font-size:11px;letter-spacing:.5px}
+  input[type="datetime-local"],input[type="date"]{font-size:11px !important}
+  .notes-btn,.notes-empty{font-size:11px;padding:3px 6px}
+  .attach-btn{font-size:11px;padding:3px 6px}
+  .del-btn,.copy-btn{font-size:11px;padding:3px 6px}
+  select{font-size:11px}
   table{min-width:960px}
   thead th{padding:6px 5px;font-size:9px}
   
@@ -542,12 +549,22 @@ select.with-ic{background-image:none}
   thead th:nth-child(1){width:90px}   /* Μερίδα */
   thead th:nth-child(2){width:80px}   /* Χώρα */
   thead th:nth-child(4){width:70px}   /* Πρβλ.Άφιξη */
-  thead th:nth-child(5){width:65px}   /* Άφιξη */
+  thead th:nth-child(5){width:60px}   /* Άφιξη */
   thead th:nth-child(6){width:70px}   /* Πρβλ.Παράδ */
-  thead th:nth-child(7){width:65px}   /* Παράδοση */
+  thead th:nth-child(7){width:60px}   /* Παράδοση */
+  thead th:nth-child(8){width:32px}   /* Κολά */  
+  thead th:nth-child(9){width:42px}   /* Συσκ */
+  thead th:nth-child(10){width:42px}  /* Κιλά */
+
   thead th:nth-child(11){width:120px} /* Πελάτης */
   thead th:nth-child(12){width:100px} /* Κατάσταση */
   thead th:nth-child(13){width:180px} /* Παρατηρήσεις */
+
+  thead th:nth-child(14){width:60px}  /* Σήμα */
+  thead th:nth-child(15){width:28px}
+  thead th:nth-child(16){width:28px}
+  thead th:nth-child(17){width:28px}
+
 
   /* Week stats μικρότερα */
   #weekStats{font-size:10px;gap:7px}
