@@ -1586,78 +1586,21 @@ function parseDate2(v){
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   var isProvl=(field==='pAfx'||field==='pPar');
-  var calIcon='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
-  var penIcon='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-
-  // ── AFX dual mode ──
-  if(field==='afx'){
-    var isText=val&&val.charAt(0)==='#';
-    var displayVal=isText?val.substring(1):val;
-    if(!ed){
-      if(isText){
-        var short=displayVal.length>14?displayVal.substring(0,14)+'…':displayVal;
-        return '<td class="'+cls+'" data-tippy="'+esc(displayVal)+'"><span style="font-size:11px;padding:4px 5px;display:block;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(short)+'</span></td>';
-      }
-      return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,false))+'" style="padding:2px 3px !important;font-size:11px"></td>';
-    }
-    if(isText){
-      return '<td class="'+cls+'" style="position:relative">'
-        +'<div style="display:flex;align-items:center;gap:2px">'
-        +'<input type="text" id="afx_txt_'+ri+'" value="'+esc(displayVal)+'" oninput="rows['+ri+'].afx=\'#\'+this.value" onblur="updateField('+ri+',\'afx\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
-        +'<button onclick="updateField('+ri+',\'afx\',\'\')" title="Εναλλαγή σε ημερομηνία" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+calIcon+'</button>'
-        +'</div>'
-        +'</td>';
-    }
-    var isoA=val&&val.length>=10?val.substring(0,16):'';
-    var dispA=isoA?(isoA.substring(8,10)+'/'+isoA.substring(5,7)+(isoA.substring(11,16)&&isoA.substring(11,16)!='00:00'?' '+isoA.substring(11,16):'')):'';
-    return '<td class="'+cls+'" style="position:relative">'
-      +'<div style="display:flex;align-items:center;gap:2px">'
-      +'<div style="position:relative;flex:1">'
-      +'<input type="datetime-local" value="'+esc(isoA)+'" onchange="updateField('+ri+',\'afx\',this.value)" style="opacity:0;position:absolute;inset:0;width:calc(100% - 22px);height:100%;cursor:pointer">'
-      +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(dispA||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
-      +'</div>'
-      +'<button onclick="switchToText('+ri+',\'afx\')" title="Εναλλαγή σε σχόλιο" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+penIcon+'</button>'
-      +'</div>'
-      +'</td>';
-  }
-
-// ── PAR ──
-// ── PAR ──
-if(field==='par'){
-  if(!ed){
-    var isoRd=(val&&val.length>=10)?val.substring(0,16):'';
-    var dispRd=isoRd?(isoRd.substring(8,10)+'/'+isoRd.substring(5,7)+(isoRd.substring(11,16)&&isoRd.substring(11,16)!='00:00'?' '+isoRd.substring(11,16):'')):'';
-    var displayTxt = (!isoRd && val) ? val : dispRd;
-    var shortTxt = (displayTxt && displayTxt.length > 9) ? displayTxt.substring(0,9)+'…' : (displayTxt||'');
-    return '<td class="'+cls+'" '+(displayTxt?'data-tippy="'+esc(displayTxt)+'"':'')+'>'
-      +'<span style="font-size:11px;padding:4px 5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(shortTxt)+'</span>'
-      +'</td>';
-  }
-  var displayVal = val||'';
-  return '<td class="'+cls+'" '+(displayVal?'data-tippy="'+esc(displayVal)+'"':'')+' style="position:relative">'
-    +'<input type="text" value="'+esc(displayVal)+'" placeholder="ηη/μμ" '
-    +'onchange="updateField('+ri+',\'par\',this.value);var td=this.closest(\'td\');td.setAttribute(\'data-tippy\',this.value);if(td._tippyPar){td._tippyPar.setContent(this.value);}else{td._tippyPar=tippy(td,{content:this.value,placement:\'top\',theme:\'light-border\',arrow:true});}" '
-    +'style="font-size:11px;padding:4px 5px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
-    +'</td>';
-}
-  // ── PROVL (pAfx, pPar) ──
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
-    var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
-    var dispDate=isoDate?fmtDate2(isoDate):'';
-    return '<td class="'+cls+'" style="position:relative">'
-      +'<input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
-      +'<span style="font-size:12px;padding:6px 8px;display:block;pointer-events:none">'+(dispDate||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
-      +'</td>';
+  var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
+var disp=isoDate?fmtDate2(isoDate):'';
+return '<td class="'+cls+'" style="position:relative">'
+  +'<input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+  +'<span style="font-size:12px;padding:6px 8px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
+  +'</td>';
   }
-
-  // ── DEFAULT ──
   var iso=(val&&val.length>=10)?val.substring(0,16):'';
-  var disp=iso?(iso.substring(8,10)+'/'+iso.substring(5,7)+(iso.substring(11,16)&&iso.substring(11,16)!='00:00'?' '+iso.substring(11,16):'')):'';
-  return '<td class="'+cls+'" style="position:relative">'
-    +'<input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
-    +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
-    +'</td>';
+var disp=iso?(iso.substring(8,10)+'/'+iso.substring(5,7)+(iso.substring(11,16)&&iso.substring(11,16)!='00:00'?' '+iso.substring(11,16):'')):'';
+return '<td class="'+cls+'" style="position:relative">'
+  +'<input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+  +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
+  +'</td>';
 }
 var COUNTRY_ISO={
   'Αγγλία':'GB','Αυστρία':'AT','Αυστραλία':'AU','Βέλγιο':'BE',
@@ -2047,22 +1990,6 @@ function render(){
     prevBase=base;
   });
   tb.innerHTML=html;
-  // Tippy για afx text mode
-// Tippy για afx + par cells (data-tippy)
-document.querySelectorAll('td[data-tippy]').forEach(function(td){
-  var content = td.getAttribute('data-tippy');
-  if(td._tippyAfx){
-    td._tippyAfx.setContent(content);
-    return;
-  }
-  td._tippyAfx = tippy(td, {
-    content: content,
-    placement: 'top',
-    theme: 'light-border',
-    arrow: true
-  });
-});
-  
   updateWeekStats();
   if(window.tippy){
   document.querySelectorAll('.katast-icon').forEach(function(el){
@@ -2144,14 +2071,7 @@ tippy(el, {
   });
 }
 }
-function switchToText(ri,field){
-  rows[ri][field]='#';
-  render();
-  setTimeout(function(){
-    var el=document.getElementById(field+'_txt_'+ri);
-    if(el)el.focus();
-  },30);
-}
+
 function addRow(){
   var r=newRow();
   pushRow(r);
@@ -2531,11 +2451,12 @@ html += '<td class="ec" style="'+P+';position:relative;width:80px;min-width:80px
   +'<span style="font-size:12px;padding:5px 6px;display:block;pointer-events:none">'+(afxDisp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
   +'</td>';
     // Par
-// Par
-var parDisp = row.par||'';
+var parIso = (row.par&&row.par.length>=10)?row.par.substring(0,16):'';
+var parDisp = parIso ? (parIso.substring(8,10)+'/'+parIso.substring(5,7)+(parIso.substring(11,16)&&parIso.substring(11,16)!='00:00'?' '+parIso.substring(11,16):'')) : '';
 
-html += '<td class="ec" style="'+P+';width:80px;min-width:80px;max-width:80px">'
-  +'<input type="text" value="'+esc(parDisp)+'" placeholder="ηη/μμ" onchange="updateStorageField('+ri+',\'par\',this.value)" style="font-size:12px;padding:5px 6px;width:100%">'
+html += '<td class="ec" style="'+P+';position:relative;width:80px;min-width:80px;max-width:80px">'
+  +'<input type="datetime-local" value="'+esc(parIso)+'" onchange="updateStorageField('+ri+',&quot;par&quot;,this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+  +'<span style="font-size:12px;padding:5px 6px;display:block;pointer-events:none">'+(parDisp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
   +'</td>';
     // Kola
     html += '<td class="ec" style="'+P+'"><input type="text" value="'+esc(row.kola||'')+'" onchange="updateStorageField('+ri+',&quot;kola&quot;,this.value)" style="font-size:13px;padding:5px 7px"></td>';
