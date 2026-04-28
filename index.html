@@ -525,9 +525,8 @@ select.with-ic{background-image:none}
 
   @media screen and (max-width:1280px){
 
-  .xora-full { display:none; }
-  .xora-iso { display:inline; }
-  td.ec input[data-xora] { font-size:11px; }
+  .xora-full { display:none !important; }
+.xora-iso { display:flex !important; font-size:11px; font-weight:700; color:var(--brand); }
 
     
   .topbar{height:44px}
@@ -1433,10 +1432,10 @@ function makeACCell(ri,field,val,list,ed){
       +'<select style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="updateField('+ri+',\'sysk\',this.value);this.previousSibling.querySelector(\'span\').textContent=PKG_ABBR[this.value]||this.value"><option value=""></option>'+opts+'</select>'
       +'</td>';
   }
-  if(field==='xora'){
+ if(field==='xora'){
   var iso=COUNTRY_ISO[val]||val;
-  return '<td class="'+cls+'" title="'+esc(val)+'" style="position:relative">'
-    +'<span class="xora-iso" style="display:none;font-size:11px;font-weight:700;padding:5px 6px;cursor:default;position:absolute;inset:0;align-items:center;justify-content:center">'+esc(iso)+'</span>'
+  return '<td class="'+cls+'" title="'+esc(val)+'">'
+    +'<span class="xora-iso" style="display:none;font-size:11px;font-weight:700;padding:5px 6px;cursor:default;align-items:center;justify-content:center;color:var(--brand)">'+esc(iso)+'</span>'
     +'<input class="xora-full" id="ac_'+ri+'_'+field+'" value="'+esc(val)+'" autocomplete="off" placeholder="..." oninput="onACInput(this,'+ri+',\''+field+'\')" onblur="onACBlur()" onchange="updateField('+ri+',\''+field+'\',this.value)">'
     +'</td>';
 }
