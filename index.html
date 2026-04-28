@@ -1621,14 +1621,14 @@ function makeDTCell(ri,field,val,ed){
       +'</td>';
   }
 
-  // ── PAR ──
-// ── PAR ──
 // ── PAR ──
 if(field==='par'){
   if(!ed){
     var isoRd=(val&&val.length>=10)?val.substring(0,16):'';
     var dispRd=isoRd?(isoRd.substring(8,10)+'/'+isoRd.substring(5,7)+(isoRd.substring(11,16)&&isoRd.substring(11,16)!='00:00'?' '+isoRd.substring(11,16):'')):'';
-    return '<td class="'+cls+'"><input disabled value="'+esc(dispRd)+'" style="padding:2px 3px !important;font-size:11px"></td>';
+    return '<td class="'+cls+'" '+(dispRd?'data-tippy-content="'+esc(dispRd)+'"':'')+' style="cursor:default">'
+      +'<input disabled value="'+esc(dispRd)+'" style="padding:2px 3px !important;font-size:11px;pointer-events:none">'
+      +'</td>';
   }
   var displayVal = val||'';
   return '<td class="'+cls+'" '+(displayVal?'data-tippy-content="'+esc(displayVal)+'"':'')+' style="position:relative">'
@@ -1637,7 +1637,6 @@ if(field==='par'){
     +'style="font-size:11px;padding:4px 5px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
     +'</td>';
 }
-
   // ── PROVL (pAfx, pPar) ──
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
