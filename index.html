@@ -1603,7 +1603,7 @@ function makeDTCell(ri,field,val,ed){
     if(isText){
       return '<td class="'+cls+'" style="position:relative">'
         +'<div style="display:flex;align-items:center;gap:2px">'
-        +'<input type="text" value="'+esc(displayVal)+'" onchange="updateField('+ri+',\'afx\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
+        +'<input type="text" id="afx_txt_'+ri+'" value="'+esc(displayVal)+'" onchange="updateField('+ri+',\'afx\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
         +'<button onclick="updateField('+ri+',\'afx\',\'\')" title="Εναλλαγή σε ημερομηνία" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+calIcon+'</button>'
         +'</div>'
         +'</td>';
@@ -1616,7 +1616,7 @@ function makeDTCell(ri,field,val,ed){
       +'<input type="datetime-local" value="'+esc(isoA)+'" onchange="updateField('+ri+',\'afx\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
       +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(dispA||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
       +'</div>'
-      +'<button onclick="updateField('+ri+',\'afx\',\'#\')" title="Εναλλαγή σε σχόλιο" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+penIcon+'</button>'
+      +'<button onclick="switchToText('+ri+',\'afx\')" title="Εναλλαγή σε σχόλιο" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+penIcon+'</button>'
       +'</div>'
       +'</td>';
   }
@@ -1637,7 +1637,7 @@ function makeDTCell(ri,field,val,ed){
     if(isTextP){
       return '<td class="'+cls+'" style="position:relative">'
         +'<div style="display:flex;align-items:center;gap:2px">'
-        +'<input type="text" value="'+esc(displayValP)+'" onchange="updateField('+ri+',\'par\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
+        +'<input type="text" id="par_txt_'+ri+'" value="'+esc(displayValP)+'" onchange="updateField('+ri+',\'par\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
         +'<button onclick="updateField('+ri+',\'par\',\'\')" title="Εναλλαγή σε ημερομηνία" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+calIcon+'</button>'
         +'</div>'
         +'</td>';
@@ -2164,7 +2164,14 @@ tippy(el, {
   });
 }
 }
-
+function switchToText(ri,field){
+  rows[ri][field]='#';
+  render();
+  setTimeout(function(){
+    var el=document.getElementById(field+'_txt_'+ri);
+    if(el)el.focus();
+  },30);
+}
 function addRow(){
   var r=newRow();
   pushRow(r);
