@@ -1626,8 +1626,12 @@ if(field==='par'){
   if(!ed){
     var isoRd=(val&&val.length>=10)?val.substring(0,16):'';
     var dispRd=isoRd?(isoRd.substring(8,10)+'/'+isoRd.substring(5,7)+(isoRd.substring(11,16)&&isoRd.substring(11,16)!='00:00'?' '+isoRd.substring(11,16):'')):'';
-    return '<td class="'+cls+'" '+(dispRd?'data-tippy-content="'+esc(dispRd)+'"':'')+' style="cursor:default">'
-      +'<input disabled value="'+esc(dispRd)+'" style="padding:2px 3px !important;font-size:11px;pointer-events:none">'
+    // Αν είναι ελεύθερο κείμενο (όχι ISO date), δείξε το απευθείας
+    var displayTxt = (!isoRd && val) ? val : dispRd;
+    var isTruncated = displayTxt && displayTxt.length > 8;
+    var shortTxt = isTruncated ? displayTxt.substring(0,8)+'…' : displayTxt;
+    return '<td class="'+cls+'" '+(displayTxt?'data-tippy-content="'+esc(displayTxt)+'"':'')+'>'
+      +'<span style="font-size:11px;padding:2px 3px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:78px;cursor:default">'+esc(shortTxt)+'</span>'
       +'</td>';
   }
 var displayVal = val||'';
@@ -2070,7 +2074,10 @@ document.querySelectorAll('td[data-tippy]').forEach(function(td){
 });
   // Tippy για par cells
 document.querySelectorAll('td[data-tippy-content]').forEach(function(td){
-  if(td._tippy) return;
+  if(td._tippy){
+    td._tippy.setContent(td.getAttribute('data-tippy-content'));
+    return;
+  }
   tippy(td, {
     content: td.getAttribute('data-tippy-content'),
     placement: 'top',
