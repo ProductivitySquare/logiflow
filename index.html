@@ -1029,6 +1029,8 @@ function onDrop(e,fi){
   document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
   if(dragSrcIdx<0||dragSrcIdx===fi)return;
 
+  var goingDown = fi > dragSrcIdx; // πάμε κάτω ή πάνω;
+
   var srcRow=filtered[dragSrcIdx];
   var dstRow=filtered[fi];
 
@@ -1036,12 +1038,11 @@ function onDrop(e,fi){
   var dstRi=rows.indexOf(dstRow);
   if(srcRi<0||dstRi<0)return;
 
-  // Αφαίρεσε πρώτα
   rows.splice(srcRi,1);
-  // Βρες ξανά τη θέση του destination μετά το splice
   var newDstRi=rows.indexOf(dstRow);
-  // Εισαγωγή ΜΕΤΑ το destination (όχι πριν)
-  rows.splice(newDstRi+1,0,srcRow);
+
+  // Κάτω → μετά το target, Πάνω → πριν το target
+  rows.splice(goingDown ? newDstRi+1 : newDstRi, 0, srcRow);
 
   dragSrcIdx=-1;
 
