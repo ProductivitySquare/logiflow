@@ -570,7 +570,7 @@ select.with-ic{background-image:none}
 #weekStats span:hover::after {
   content: attr(data-label);
   position:absolute;
-  bottom:calc(100% + 6px);
+  top:calc(100% + 6px);
   left:50%;
   transform:translateX(-50%);
   background:var(--brand);
@@ -582,7 +582,7 @@ select.with-ic{background-image:none}
   pointer-events:none;
   z-index:999;
 }
-
+.topbar{height:44px;overflow:visible}
   /* Week stats μικρότερα */
   #weekStats{font-size:10px;gap:7px}
   #weekLabel{font-size:10px;min-width:180px}
