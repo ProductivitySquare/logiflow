@@ -1630,10 +1630,13 @@ if(field==='par'){
       +'<input disabled value="'+esc(dispRd)+'" style="padding:2px 3px !important;font-size:11px;pointer-events:none">'
       +'</td>';
   }
-  var displayVal = val||'';
+var displayVal = val||'';
+  // Δείξε μόνο τα πρώτα 8 χαρακτήρες στο input (ηη/μμ ωω:λλ)
+  var shortVal = displayVal.length > 8 ? displayVal.substring(0,8)+'…' : displayVal;
   return '<td class="'+cls+'" '+(displayVal?'data-tippy-content="'+esc(displayVal)+'"':'')+' style="position:relative">'
     +'<input type="text" value="'+esc(displayVal)+'" placeholder="ηη/μμ" '
-    +'onchange="updateField('+ri+',\'par\',this.value);this.closest(\'td\').setAttribute(\'data-tippy-content\',this.value);if(this.closest(\'td\')._tippy)this.closest(\'td\')._tippy.setContent(this.value)" '
+    +'title="'+esc(displayVal)+'" '
+    +'onchange="updateField('+ri+',\'par\',this.value);var td=this.closest(\'td\');td.setAttribute(\'data-tippy-content\',this.value);if(td._tippy)td._tippy.setContent(this.value);" '
     +'style="font-size:11px;padding:4px 5px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
     +'</td>';
 }
