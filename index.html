@@ -1555,10 +1555,10 @@ function makeKatastCell(ri,val,ed){
   var dropId='katast-drop-'+ri;
   var dropHtml='<div id="'+dropId+'" style="display:none;position:absolute;left:0;top:100%;background:#fff;border:1.5px solid var(--brand);border-radius:8px;z-index:9999;box-shadow:0 6px 20px rgba(26,58,42,.18);min-width:160px;font-family:inherit">'
     +opts.map(function(o){
-      return '<div onclick="updateField('+ri+',\'katast\',\''+o+'\');hidKatastDrop(\''+dropId+'\')" '
-        +'style="padding:8px 14px;cursor:pointer;font-size:12px;'+(val===o?'background:var(--brand-light);color:var(--brand);font-weight:700;':'')+'">'
-        +o+'</div>';
-    }).join('')
+  return '<div onmousedown="event.stopPropagation();updateField('+ri+',\'katast\',\''+o+'\');hidKatastDrop(\''+dropId+'\')" '
+    +'style="padding:8px 14px;cursor:pointer;font-size:12px;'+(val===o?'background:var(--brand-light);color:var(--brand);font-weight:700;':'')+'">'
+    +o+'</div>';
+}).join('')
     +'</div>';
 
   var icon='<div class="katast-icon" style="display:none" '
