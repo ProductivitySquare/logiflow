@@ -716,7 +716,7 @@ tbody td:nth-child(13) .notes-empty { font-size:10px !important; padding:3px 4px
       <th style="width:108px">Μερίδα</th>
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
-      <th style="width:90px;cursor:pointer" onclick="sortBy('pAfx')">Πρβλ. Άφιξη ↕</th>
+      <th style="width:90px;cursor:pointer" onclick="sortBy('pAfx')">Πρβλ. Άφιξη ↕ <span onclick="event.stopPropagation();sortField=null;applyFilters()" style="opacity:.5;font-size:9px;cursor:pointer" title="Reset">✕</span></th>
       <th style="width:80px">Άφιξη</th>
       <th style="width:90px">Πρβλ. Παράδ.</th>
       <th style="width:80px">Παράδοση</th>
@@ -990,6 +990,10 @@ var globalSearchMode = false;
 var globalSearchResults = [];
 var isSyncing=false;
 var saveTimer=null;
+
+var dragSrcIdx = -1;
+var sortField = null;
+var sortDir = 1;
 
 var COUNTRIES=['Αγγλία','Αυστρία','Αυστραλία','Βέλγιο','Βουλγαρία','Γαλλία','Γερμανία','Δανία','Ελβετία','Ελλάδα','Ισπανία','Ιταλία','Κίνα','Κύπρος','Λετονία','Λιθουανία','Λουξεμβούργο','Νορβηγία','Ολλανδία','Ουγγαρία','Πολωνία','Πορτογαλία','Ρουμανία','Σλοβακία','Σλοβενία','Σουηδία','Τουρκία','Τσεχία','Φινλανδία','Β&Γ'];
 var PACKAGING=['Παλέτα','Κιβώτιο','Κόλο','Δεξαμενή','Ξύλινη βάση','Χαρτοκούτι','Μηχάνημα','Τύμπανο'];
@@ -2757,9 +2761,7 @@ function closeGroupShareModal(){
   groupShareSourceRi = -1;
 }
 
-  var dragSrcIdx = -1;
-var sortField = null;
-var sortDir = 1;
+
 
 function applyGroupShare(){
   if(groupShareSourceRi<0) return;
