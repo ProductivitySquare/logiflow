@@ -1014,8 +1014,8 @@ function sortBy(field){
   render();
 }
 
-function onDragStart(e,ri){
-  dragSrcIdx=ri;
+function onDragStart(e,fi){
+  dragSrcIdx=fi;
   e.dataTransfer.effectAllowed='move';
 }
 function onDragOver(e,tr){
@@ -1023,19 +1023,22 @@ function onDragOver(e,tr){
   document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
   tr.classList.add('drag-over');
 }
-function onDrop(e,ri){
+function onDrop(e,fi){
   e.preventDefault();
   document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
-  if(dragSrcIdx<0||dragSrcIdx===ri)return;
-  var tmp=rows[dragSrcIdx];
-  rows.splice(dragSrcIdx,1);
-  rows.splice(ri,0,tmp);
+  if(dragSrcIdx<0||dragSrcIdx===fi)return;
+  // Δουλεύουμε με filtered indices
+  var srcRow=filtered[dragSrcIdx];
+  var dstRow=filtered[fi];
+  // Βρες τις θέσεις στο rows[]
+  var srcRi=rows.indexOf(srcRow);
+  var dstRi=rows.indexOf(dstRow);
+  if(srcRi<0||dstRi<0)return;
+  rows.splice(srcRi,1);
+  var newDstRi=rows.indexOf(dstRow);
+  rows.splice(newDstRi,0,srcRow);
   dragSrcIdx=-1;
-  // Save order to Firebase
-  rows.forEach(function(r,i){
-    r.order=i;
-    saveRow(r);
-  });
+  rows.forEach(function(r,i){r.order=i;saveRow(r);});
   applyFilters();
 }
 
@@ -1932,7 +1935,7 @@ function render(){
       if(isLastOfGroup)groupCls+=' group-last';
     }
     var sepCls=(prevBase!==null&&prevBase!==base)?' group-sep':'';
-    html+='<tr draggable="true" ondragstart="onDragStart(event,'+ri+')" ondragover="onDragOver(event,this)" ondrop="onDrop(event,'+ri+')" class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
+    html+='<tr draggable="true" ondragstart="onDragStart(event,'+fi+')" ondragover="onDragOver(event,this)" ondrop="onDrop(event,'+fi+')" class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     if(isFirstOfGroup){
       var badge='<span class="group-badge" title="Group '+gc[base]+' μερίδων">'+gc[base]+'</span>';
