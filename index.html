@@ -564,7 +564,7 @@ select.with-ic{background-image:none}
   .del-btn{font-size:12px;padding:4px 7px}
   .copy-btn{font-size:12px;padding:4px 7px}
   .add-btn{font-size:11px;padding:5px 12px}
-  input.merida-input{font-size:10px !important;letter-spacing:.3px}
+  input.merida-input{font-size:10px !important;letter-spacing:0px}
   /* Μικρότερα column widths */
 thead th:nth-child(1){width:80px}
 thead th:nth-child(2){width:36px}
@@ -1430,10 +1430,17 @@ function pickAC(val,ri,field){
 function makeACCell(ri,field,val,list,ed){
   var cls=ed?'ec':'rc';
   if(!ed){
-    var disAbbr=val?(PKG_ABBR[val]||val):'';
-    if(field==='sysk')return '<td class="'+cls+'"><input disabled value="'+esc(disAbbr)+'"></td>';
-    return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+  var disAbbr=val?(PKG_ABBR[val]||val):'';
+  if(field==='sysk')return '<td class="'+cls+'"><input disabled value="'+esc(disAbbr)+'"></td>';
+  if(field==='xora'){
+    var iso=COUNTRY_ISO[val]||val;
+    return '<td class="'+cls+'" title="'+esc(val)+'">'
+      +'<span class="xora-iso" style="display:none;font-size:11px;font-weight:700;padding:5px 6px;align-items:center;justify-content:center;color:var(--brand)">'+esc(iso)+'</span>'
+      +'<input class="xora-full" disabled value="'+esc(val)+'">'
+      +'</td>';
   }
+  return '<td class="'+cls+'"><input disabled value="'+esc(val)+'"></td>';
+}
   // For packaging (sysk): show abbreviation + hidden select overlay
   if(field==='sysk'){
     var abbr=val?(PKG_ABBR[val]||val):'';
