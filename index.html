@@ -1586,21 +1586,62 @@ function parseDate2(v){
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   var isProvl=(field==='pAfx'||field==='pPar');
+  
+  // Μόνο για afx → dual mode
+  if(field==='afx'){
+    var isText = val && isNaN(Date.parse(val)) && !/^\d/.test(val);
+    
+    if(!ed){
+      if(isText){
+        var short = val.length>14 ? val.substring(0,14)+'…' : val;
+        return '<td class="'+cls+'" data-tippy="'+esc(val)+'"><span style="font-size:11px;padding:4px 5px;display:block;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(short)+'</span></td>';
+      }
+      return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,false))+'" style="padding:2px 3px !important;font-size:11px"></td>';
+    }
+
+    // Editable
+    var modeIcon = isText
+      ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+      : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+
+    if(isText){
+      return '<td class="'+cls+'" style="position:relative">'
+        +'<div style="display:flex;align-items:center;gap:2px">'
+        +'<input type="text" value="'+esc(val)+'" onchange="updateField('+ri+',\'afx\',this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
+        +'<button onclick="updateField('+ri+',\'afx\',\'\')" title="Εναλλαγή σε ημερομηνία" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+modeIcon+'</button>'
+        +'</div>'
+        +'</td>';
+    }
+
+    var iso=val&&val.length>=10?val.substring(0,16):'';
+    var disp=iso?(iso.substring(8,10)+'/'+iso.substring(5,7)+(iso.substring(11,16)&&iso.substring(11,16)!='00:00'?' '+iso.substring(11,16):'')):'';
+    return '<td class="'+cls+'" style="position:relative">'
+      +'<div style="display:flex;align-items:center;gap:2px">'
+      +'<div style="position:relative;flex:1">'
+      +'<input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\'afx\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+      +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
+      +'</div>'
+      +'<button onclick="updateField('+ri+',\'afx\',\' \')" title="Εναλλαγή σε σχόλιο" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+modeIcon+'</button>'
+      +'</div>'
+      +'</td>';
+  }
+
+  // Κανονικά για pAfx, pPar, par
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
-  var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
-var disp=isoDate?fmtDate2(isoDate):'';
-return '<td class="'+cls+'" style="position:relative">'
-  +'<input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
-  +'<span style="font-size:12px;padding:6px 8px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
-  +'</td>';
+    var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
+    var disp=isoDate?fmtDate2(isoDate):'';
+    return '<td class="'+cls+'" style="position:relative">'
+      +'<input type="date" value="'+esc(isoDate)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+      +'<span style="font-size:12px;padding:6px 8px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
+      +'</td>';
   }
   var iso=(val&&val.length>=10)?val.substring(0,16):'';
-var disp=iso?(iso.substring(8,10)+'/'+iso.substring(5,7)+(iso.substring(11,16)&&iso.substring(11,16)!='00:00'?' '+iso.substring(11,16):'')):'';
-return '<td class="'+cls+'" style="position:relative">'
-  +'<input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
-  +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
-  +'</td>';
+  var disp=iso?(iso.substring(8,10)+'/'+iso.substring(5,7)+(iso.substring(11,16)&&iso.substring(11,16)!='00:00'?' '+iso.substring(11,16):'')):'';
+  return '<td class="'+cls+'" style="position:relative">'
+    +'<input type="datetime-local" value="'+esc(iso)+'" onchange="updateField('+ri+',\''+field+'\',this.value)" style="opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer">'
+    +'<span style="font-size:11px;padding:4px 5px;display:block;pointer-events:none">'+(disp||'<span style=\'color:#bbb\'>ηη/μμ</span>')+'</span>'
+    +'</td>';
 }
 var COUNTRY_ISO={
   'Αγγλία':'GB','Αυστρία':'AT','Αυστραλία':'AU','Βέλγιο':'BE',
@@ -1990,6 +2031,17 @@ function render(){
     prevBase=base;
   });
   tb.innerHTML=html;
+  // Tippy για afx text mode
+document.querySelectorAll('td[data-tippy]').forEach(function(td){
+  if(td._tippyAfx) return;
+  td._tippyAfx = true;
+  tippy(td, {
+    content: td.getAttribute('data-tippy'),
+    placement: 'top',
+    theme: 'light-border',
+    arrow: true
+  });
+});
   updateWeekStats();
   if(window.tippy){
   document.querySelectorAll('.katast-icon').forEach(function(el){
