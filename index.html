@@ -555,7 +555,7 @@ select.with-ic{background-image:none}
   .attach-btn{font-size:11px;padding:3px 6px}
   .del-btn,.copy-btn{font-size:11px;padding:3px 6px}
   select{font-size:11px}
-  table{min-width:1360px;table-layout:fixed}
+table{width:100%;table-layout:fixed;min-width:1360px}
     thead th{padding:6px 5px;font-size:9px}
   
   /* Μικρότερα κουμπιά */
@@ -566,23 +566,29 @@ select.with-ic{background-image:none}
   .add-btn{font-size:11px;padding:5px 12px}
   input.merida-input{font-size:10px !important;letter-spacing:0px}
   /* Μικρότερα column widths */
-thead th:nth-child(1){width:80px}   /* Μερίδα — μεγαλύτερο */
-thead th:nth-child(2){width:26px}   /* Χώρα */
-thead th:nth-child(3){width:28px}   /* Χρήστης */
-thead th:nth-child(4){width:55px}   /* Πρβλ.Άφιξη */
-thead th:nth-child(5){width:75px}   /* Άφιξη */
-thead th:nth-child(6){width:55px}   /* Πρβλ.Παράδ */
-thead th:nth-child(7){width:75px}   /* Παράδοση */
-thead th:nth-child(8){width:28px}   /* Κολά */
-thead th:nth-child(9){width:32px}   /* Συσκ */
-thead th:nth-child(10){width:38px}  /* Κιλά — μεγαλύτερο */
-thead th:nth-child(11){width:125px} /* Πελάτης — μεγαλύτερο */
-thead th:nth-child(12){width:44px}  /* Κατάσταση */
-thead th:nth-child(13){width:120px} /* Παρατηρήσεις — μικρότερο */
-thead th:nth-child(14){width:55px}  /* Σήμα */
-thead th:nth-child(15){width:26px}
-thead th:nth-child(16){width:26px}
-thead th:nth-child(17){width:27px}
+thead th:nth-child(1){width:95px}
+thead th:nth-child(2){width:30px}
+thead th:nth-child(3){width:28px}
+thead th:nth-child(4){width:58px}
+thead th:nth-child(5){width:80px}
+thead th:nth-child(6){width:58px}
+thead th:nth-child(7){width:80px}
+thead th:nth-child(8){width:30px}
+thead th:nth-child(9){width:34px}
+thead th:nth-child(10){width:45px}
+thead th:nth-child(11){width:140px}
+thead th:nth-child(12){width:46px}
+thead th:nth-child(13){width:200px}
+thead th:nth-child(14){width:58px}
+thead th:nth-child(15){width:30px}
+thead th:nth-child(16){width:30px}
+thead th:nth-child(17){width:318px}
+
+    
+    tbody td:nth-child(10) input { font-size:10px !important; } /* Κιλά */
+tbody td:nth-child(11) input { font-size:10px !important; overflow:hidden; text-overflow:ellipsis; } /* Πελάτης */
+tbody td:nth-child(13) .notes-btn,
+tbody td:nth-child(13) .notes-empty { font-size:10px !important; padding:3px 4px !important; }
 
     #weekStats span .stat-label { display:none; }
 #weekStats span { position:relative; cursor:default; }
