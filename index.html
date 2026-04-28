@@ -688,7 +688,7 @@ tbody td:nth-child(13) .notes-empty { font-size:10px !important; padding:3px 4px
     <option value="ΣΤΗΝ ΑΠΟΘΗΚΗ">Στην Αποθήκη</option>
     <option value="ΑΜΕΣΗ">Άμεση</option>
     <option value="ΠΑΡΑΔΟΘΗΚΕ">Παραδόθηκε</option>
-    <option value="ΣΕ ΜΕΤΑΦΟΡΑ">Σε μεταφορά</option>
+    <option value="ΠΡΟΣ ΜΕΤΑΦΟΡΑ">Προς μεταφορά</option>
     <option value="ΑΝΑΜΟΝΗ">Αναμονή</option>
   </select>
   <button class="add-btn" onclick="addRow()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Νέα γραμμή</button>
@@ -978,7 +978,7 @@ function ic(name,size){
   size=size||14;
   return '<svg class="ic" width="'+size+'" height="'+size+'" viewBox="0 0 24 24">'+ICONS[name]+'</svg>';
 }
-var STATUS_ICONS={'ΑΝΑΜΟΝΗ':'hourglass','ΣΤΗΝ ΑΠΟΘΗΚΗ':'package','ΑΜΕΣΗ':'alert','ΣΕ ΜΕΤΑΦΟΡΑ':'truck','ΠΑΡΑΔΟΘΗΚΕ':'checkCircle'};
+var STATUS_ICONS={'ΑΝΑΜΟΝΗ':'hourglass','ΣΤΗΝ ΑΠΟΘΗΚΗ':'package','ΑΜΕΣΗ':'alert','ΠΡΟΣ ΜΕΤΑΦΟΡΑ':'truck','ΠΑΡΑΔΟΘΗΚΕ':'checkCircle'};
 var currentMonday=getThisMonday();
 var rows=[];
 var filtered=[];
@@ -1125,7 +1125,7 @@ function updateWeekStats(){
   var anamoni = rows.filter(function(r){return r.katast==='ΑΝΑΜΟΝΗ';}).length;
   var amesi = rows.filter(function(r){return r.katast==='ΑΜΕΣΗ';}).length;
   var apoth = rows.filter(function(r){return r.katast==='ΣΤΗΝ ΑΠΟΘΗΚΗ';}).length;
-  var transit = rows.filter(function(r){return r.katast==='ΣΕ ΜΕΤΑΦΟΡΑ';}).length;
+  var transit = rows.filter(function(r){return r.katast==='ΠΡΟΣ ΜΕΤΑΦΟΡΑ';}).length;
   var paradoth = rows.filter(function(r){return r.katast==='ΠΑΡΑΔΟΘΗΚΕ';}).length;
   var svg = function(path,col){return '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="'+(col||'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';};
   var icTotal   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>');
@@ -1261,7 +1261,7 @@ function goToWeek(wk){
   
 // ---- FIELD LOGIC ----
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
-function rowClass(k){if(k==='ΣΤΗΝ ΑΠΟΘΗΚΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΣΕ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
+function rowClass(k){if(k==='ΣΤΗΝ ΑΠΟΘΗΚΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΠΡΟΣ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' // ');}
@@ -1570,7 +1570,7 @@ function makeTxtCell(ri,field,val,ed){
 // ---- KATAST ----
 function makeKatastCell(ri,val,ed){
   var cls=ed?'ec':'rc';
-  var opts=['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+  var opts=['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΠΡΟΣ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
   var iconName=STATUS_ICONS[val]||'hourglass';
 
   // Μεγάλες οθόνες — κανονικό select
