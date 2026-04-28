@@ -1965,15 +1965,27 @@ function render(){
       div.appendChild(item);
     });
 
-    tippy(el, {
-      content: div,
-      trigger: 'click',
-      placement: 'bottom',
-      interactive: true,
-      arrow: true,
-      appendTo: document.body,
-      theme: 'light-border'
-    });
+    // Click tippy για επιλογή
+tippy(el, {
+  content: div,
+  trigger: 'click',
+  placement: 'bottom',
+  interactive: true,
+  arrow: true,
+  appendTo: document.body,
+  theme: 'light-border'
+});
+
+// Hover tippy για tooltip με την τρέχουσα κατάσταση
+tippy(el, {
+  content: val,
+  trigger: 'mouseenter',
+  placement: 'top',
+  arrow: true,
+  appendTo: document.body,
+  theme: 'light-border',
+  hideOnClick: true
+});
   });
 }
 }
