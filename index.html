@@ -565,6 +565,23 @@ select.with-ic{background-image:none}
   thead th:nth-child(16){width:28px}
   thead th:nth-child(17){width:28px}
 
+    #weekStats span .stat-label { display:none; }
+#weekStats span { position:relative; cursor:default; }
+#weekStats span:hover::after {
+  content: attr(data-label);
+  position:absolute;
+  bottom:calc(100% + 6px);
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--brand);
+  color:white;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:10px;
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:999;
+}
 
   /* Week stats μικρότερα */
   #weekStats{font-size:10px;gap:7px}
