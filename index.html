@@ -1914,22 +1914,57 @@ function render(){
     var ri = parseInt(el.getAttribute('data-ri'));
     var val = el.getAttribute('data-val');
     var opts = ['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+    
+    var STATUS_COLORS = {
+      'ΑΝΑΜΟΝΗ':      {bg:'#f5f4f0', color:'#6b7280', icon:'⏳'},
+      'ΣΤΗΝ ΑΠΟΘΗΚΗ': {bg:'#e8f5e9', color:'#2e7d32', icon:'📦'},
+      'ΑΜΕΣΗ':        {bg:'#fce8e6', color:'#c62828', icon:'⚡'},
+      'ΣΕ ΜΕΤΑΦΟΡΑ':  {bg:'#e3f2fd', color:'#1565c0', icon:'🚛'},
+      'ΠΑΡΑΔΟΘΗΚΕ':   {bg:'#fff8e1', color:'#f57f17', icon:'✓'}
+    };
+
     var div = document.createElement('div');
-    div.style.fontFamily = 'inherit';
+    div.style.cssText = 'font-family:inherit;padding:6px;display:flex;flex-direction:column;gap:4px;min-width:170px';
+    
     opts.forEach(function(o){
+      var sc = STATUS_COLORS[o]||{bg:'#f5f4f0',color:'#333',icon:''};
+      var isActive = o===val;
       var item = document.createElement('div');
-      item.textContent = o;
-      item.style.cssText = 'padding:8px 14px;cursor:pointer;font-size:12px;white-space:nowrap;'+(o===val?'background:#e8f0eb;color:#1a3a2a;font-weight:700;':'');
+      item.style.cssText = 'padding:7px 12px;cursor:pointer;font-size:12px;white-space:nowrap;border-radius:8px;display:flex;align-items:center;gap:8px;transition:all .12s;'
+        +(isActive ? 'background:'+sc.bg+';color:'+sc.color+';font-weight:700;border:1.5px solid '+sc.color+'20;'
+                   : 'background:#fff;color:#374151;border:1.5px solid #e2e1d9;');
+      
+      var dot = document.createElement('span');
+      dot.style.cssText = 'width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+sc.color;
+      item.appendChild(dot);
+      
+      var txt = document.createElement('span');
+      txt.textContent = o;
+      item.appendChild(txt);
+      
+      if(isActive){
+        var check = document.createElement('span');
+        check.textContent = '✓';
+        check.style.cssText = 'margin-left:auto;font-size:11px;color:'+sc.color;
+        item.appendChild(check);
+      }
+
+      item.addEventListener('mouseover', function(){
+        if(!isActive) this.style.background = sc.bg;
+        this.style.borderColor = sc.color+'60';
+      });
+      item.addEventListener('mouseout', function(){
+        if(!isActive){ this.style.background='#fff'; this.style.borderColor='#e2e1d9'; }
+      });
       item.addEventListener('mousedown', function(e){
         e.preventDefault();
         e.stopPropagation();
         updateField(ri,'katast',o);
         if(el._tippy) el._tippy.hide();
       });
-      item.addEventListener('mouseover', function(){ this.style.background='#e8f0eb'; });
-      item.addEventListener('mouseout', function(){ this.style.background = o===val?'#e8f0eb':''; });
       div.appendChild(item);
     });
+
     tippy(el, {
       content: div,
       trigger: 'click',
@@ -1937,9 +1972,7 @@ function render(){
       interactive: true,
       arrow: true,
       appendTo: document.body,
-      onShow: function(instance){
-        // Tooltip hover — πρόσθεσε data-tippy-content για hover στο ίδιο element
-      }
+      theme: 'light-border'
     });
   });
 }
