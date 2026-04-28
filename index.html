@@ -1603,7 +1603,7 @@ function makeDTCell(ri,field,val,ed){
     if(isText){
       return '<td class="'+cls+'" style="position:relative">'
         +'<div style="display:flex;align-items:center;gap:2px">'
-        +'<input type="text" id="afx_txt_'+ri+'" value="'+esc(displayVal)+'" onchange="updateField('+ri+',\'afx\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
+        +'<input type="text" id="afx_txt_'+ri+'" value="'+esc(displayVal)+'" oninput="rows['+ri+'].afx=\'#\'+this.value" onblur="updateField('+ri+',\'afx\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
         +'<button onclick="updateField('+ri+',\'afx\',\'\')" title="Εναλλαγή σε ημερομηνία" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+calIcon+'</button>'
         +'</div>'
         +'</td>';
@@ -1637,7 +1637,7 @@ function makeDTCell(ri,field,val,ed){
     if(isTextP){
       return '<td class="'+cls+'" style="position:relative">'
         +'<div style="display:flex;align-items:center;gap:2px">'
-        +'<input type="text" id="par_txt_'+ri+'" value="'+esc(displayValP)+'" onchange="updateField('+ri+',\'par\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
+        +'<input type="text" id="par_txt_'+ri+'" value="'+esc(displayValP)+'" oninput="rows['+ri+'].par=\'#\'+this.value" onblur="updateField('+ri+',\'par\',\'#\'+this.value)" style="flex:1;font-size:11px;padding:4px 4px;min-width:0">'
         +'<button onclick="updateField('+ri+',\'par\',\'\')" title="Εναλλαγή σε ημερομηνία" style="flex-shrink:0;padding:3px 4px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;color:var(--brand);display:flex;align-items:center">'+calIcon+'</button>'
         +'</div>'
         +'</td>';
