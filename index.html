@@ -1622,25 +1622,21 @@ function makeDTCell(ri,field,val,ed){
   }
 
 // ── PAR ──
+// ── PAR ──
 if(field==='par'){
   if(!ed){
     var isoRd=(val&&val.length>=10)?val.substring(0,16):'';
     var dispRd=isoRd?(isoRd.substring(8,10)+'/'+isoRd.substring(5,7)+(isoRd.substring(11,16)&&isoRd.substring(11,16)!='00:00'?' '+isoRd.substring(11,16):'')):'';
-    // Αν είναι ελεύθερο κείμενο (όχι ISO date), δείξε το απευθείας
     var displayTxt = (!isoRd && val) ? val : dispRd;
-    var isTruncated = displayTxt && displayTxt.length > 8;
-    var shortTxt = isTruncated ? displayTxt.substring(0,8)+'…' : displayTxt;
-    return '<td class="'+cls+'" '+(displayTxt?'data-tippy-content="'+esc(displayTxt)+'"':'')+'>'
-      +'<span style="font-size:11px;padding:2px 3px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:78px;cursor:default">'+esc(shortTxt)+'</span>'
+    var shortTxt = (displayTxt && displayTxt.length > 9) ? displayTxt.substring(0,9)+'…' : (displayTxt||'');
+    return '<td class="'+cls+'" '+(displayTxt?'data-tippy="'+esc(displayTxt)+'"':'')+'>'
+      +'<span style="font-size:11px;padding:4px 5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(shortTxt)+'</span>'
       +'</td>';
   }
-var displayVal = val||'';
-  // Δείξε μόνο τα πρώτα 8 χαρακτήρες στο input (ηη/μμ ωω:λλ)
-  var shortVal = displayVal.length > 8 ? displayVal.substring(0,8)+'…' : displayVal;
-  return '<td class="'+cls+'" '+(displayVal?'data-tippy-content="'+esc(displayVal)+'"':'')+' style="position:relative">'
+  var displayVal = val||'';
+  return '<td class="'+cls+'" '+(displayVal?'data-tippy="'+esc(displayVal)+'"':'')+' style="position:relative">'
     +'<input type="text" value="'+esc(displayVal)+'" placeholder="ηη/μμ" '
-    +'title="'+esc(displayVal)+'" '
-    +'onchange="updateField('+ri+',\'par\',this.value);var td=this.closest(\'td\');td.setAttribute(\'data-tippy-content\',this.value);if(td._tippy)td._tippy.setContent(this.value);" '
+    +'onchange="updateField('+ri+',\'par\',this.value);var td=this.closest(\'td\');td.setAttribute(\'data-tippy\',this.value);if(td._tippyPar){td._tippyPar.setContent(this.value);}else{td._tippyPar=tippy(td,{content:this.value,placement:\'top\',theme:\'light-border\',arrow:true});}" '
     +'style="font-size:11px;padding:4px 5px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
     +'</td>';
 }
@@ -2052,39 +2048,21 @@ function render(){
   });
   tb.innerHTML=html;
   // Tippy για afx text mode
+// Tippy για afx + par cells (data-tippy)
 document.querySelectorAll('td[data-tippy]').forEach(function(td){
-  if(td._tippyAfx) return;
-  td._tippyAfx = true;
-  tippy(td, {
-    content: td.getAttribute('data-tippy'),
-    placement: 'top',
-    theme: 'light-border',
-    arrow: true
-  });
-});
-  document.querySelectorAll('td[data-tippy-par]').forEach(function(td){
-  if(td._tippyPar) return;
-  td._tippyPar = true;
-  tippy(td, {
-    content: td.getAttribute('data-tippy-par'),
-    placement: 'top',
-    theme: 'light-border',
-    arrow: true
-  });
-});
-  // Tippy για par cells
-document.querySelectorAll('td[data-tippy-content]').forEach(function(td){
-  if(td._tippy){
-    td._tippy.setContent(td.getAttribute('data-tippy-content'));
+  var content = td.getAttribute('data-tippy');
+  if(td._tippyAfx){
+    td._tippyAfx.setContent(content);
     return;
   }
-  tippy(td, {
-    content: td.getAttribute('data-tippy-content'),
+  td._tippyAfx = tippy(td, {
+    content: content,
     placement: 'top',
     theme: 'light-border',
     arrow: true
   });
 });
+  
   updateWeekStats();
   if(window.tippy){
   document.querySelectorAll('.katast-icon').forEach(function(el){
