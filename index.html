@@ -1569,14 +1569,10 @@ function makeKatastCell(ri,val,ed){
     +'</div>';
 
   var icon='<div class="katast-icon" style="display:none;cursor:pointer" '
-    +'data-tippy-content="'+esc(tippyContent)+'" '
-    +'data-tippy-allowhtml="true" '
-    +'data-tippy-trigger="click" '
-    +'data-tippy-placement="bottom" '
-    +'data-tippy-interactive="true" '
-    +'data-tippy-theme="light-border">'
-    +ic(iconName,16)
-    +'</div>';
+  +'data-ri="'+ri+'" '
+  +'data-val="'+esc(val)+'">'
+  +ic(iconName,16)
+  +'</div>';
 
   return '<td class="'+cls+'">'+full+icon+'</td>';
 }
@@ -1914,15 +1910,37 @@ function render(){
   tb.innerHTML=html;
   updateWeekStats();
   if(window.tippy){
-  tippy('.katast-icon', {
-    content: function(el){ return el.getAttribute('data-tippy-content'); },
-    allowHTML: true,
-    trigger: 'click',
-    placement: 'bottom',
-    interactive: true,
-    theme: 'light-border',
-    arrow: true,
-    appendTo: document.body
+  document.querySelectorAll('.katast-icon').forEach(function(el){
+    var ri = parseInt(el.getAttribute('data-ri'));
+    var val = el.getAttribute('data-val');
+    var opts = ['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+    var div = document.createElement('div');
+    div.style.fontFamily = 'inherit';
+    opts.forEach(function(o){
+      var item = document.createElement('div');
+      item.textContent = o;
+      item.style.cssText = 'padding:8px 14px;cursor:pointer;font-size:12px;white-space:nowrap;'+(o===val?'background:#e8f0eb;color:#1a3a2a;font-weight:700;':'');
+      item.addEventListener('mousedown', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        updateField(ri,'katast',o);
+        if(el._tippy) el._tippy.hide();
+      });
+      item.addEventListener('mouseover', function(){ this.style.background='#e8f0eb'; });
+      item.addEventListener('mouseout', function(){ this.style.background = o===val?'#e8f0eb':''; });
+      div.appendChild(item);
+    });
+    tippy(el, {
+      content: div,
+      trigger: 'click',
+      placement: 'bottom',
+      interactive: true,
+      arrow: true,
+      appendTo: document.body,
+      onShow: function(instance){
+        // Tooltip hover — πρόσθεσε data-tippy-content για hover στο ίδιο element
+      }
+    });
   });
 }
 }
