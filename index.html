@@ -1553,7 +1553,7 @@ function makeKatastCell(ri,val,ed){
 
   // Icon-only (μικρές οθόνες)
   var dropId='katast-drop-'+ri;
-  var dropHtml='<div id="'+dropId+'" style="display:none;position:fixed;background:#fff;border:1.5px solid var(--brand);border-radius:8px;z-index:9999;box-shadow:0 6px 20px rgba(26,58,42,.18);min-width:160px;font-family:inherit">'
+  var dropHtml='<div id="'+dropId+'" style="display:none;position:absolute;left:0;top:100%;background:#fff;border:1.5px solid var(--brand);border-radius:8px;z-index:9999;box-shadow:0 6px 20px rgba(26,58,42,.18);min-width:160px;font-family:inherit">'
     +opts.map(function(o){
       return '<div onclick="updateField('+ri+',\'katast\',\''+o+'\');hidKatastDrop(\''+dropId+'\')" '
         +'style="padding:8px 14px;cursor:pointer;font-size:12px;'+(val===o?'background:var(--brand-light);color:var(--brand);font-weight:700;':'')+'">'
@@ -1567,21 +1567,15 @@ function makeKatastCell(ri,val,ed){
     +ic(iconName,16)
     +'</div>';
 
-  return '<td class="'+cls+'" style="position:relative">'+full+icon+dropHtml+'</td>';
+  return '<td class="'+cls+'" style="position:relative;overflow:visible">'+full+icon+dropHtml+'</td>';
 }
 
   function togKatastDrop(id, el){
   var drop = document.getElementById(id);
   if(!drop) return;
   var isOpen = drop.style.display==='block';
-  // Κλείσε όλα τα άλλα
   document.querySelectorAll('[id^="katast-drop-"]').forEach(function(d){ d.style.display='none'; });
-  if(!isOpen){
-    var rect = el.getBoundingClientRect();
-    drop.style.display='block';
-    drop.style.left=rect.left+'px';
-    drop.style.top=(rect.bottom+2)+'px';
-  }
+  if(!isOpen) drop.style.display='block';
 }
 function hidKatastDrop(id){
   var drop=document.getElementById(id);
