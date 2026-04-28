@@ -258,6 +258,11 @@ select.with-ic{background-image:none}
    PRINT STYLES
    ═══════════════════════════════════════════════════ */
 @media print {
+
+  tbody td span[style*="color:#bbb"] { display: none !important; }
+  tbody td span > span[style*="color:#bbb"] { display: none !important; }
+  .no-print { display: none !important; }
+
   /* ── Page setup: landscape, A4, tight margins ── */
   @page {
     size: A4 landscape;
@@ -716,7 +721,7 @@ tbody td:nth-child(13) .notes-empty { font-size:10px !important; padding:3px 4px
       <th style="width:108px">Μερίδα</th>
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
-      <th style="width:90px;cursor:pointer" onclick="sortBy('pAfx')">Πρβλ. Άφιξη ↕ <span onclick="event.stopPropagation();sortField=null;applyFilters()" style="opacity:.5;font-size:9px;cursor:pointer" title="Reset">✕</span></th>
+      <th style="width:90px;cursor:pointer" onclick="sortBy('pAfx')">Πρβλ. Άφιξη <span class="no-print" style="opacity:.5;font-size:9px">↕ <span onclick="event.stopPropagation();sortField=null;applyFilters()" style="cursor:pointer" title="Reset">✕</span></span></th>
       <th style="width:80px">Άφιξη</th>
       <th style="width:90px">Πρβλ. Παράδ.</th>
       <th style="width:80px">Παράδοση</th>
