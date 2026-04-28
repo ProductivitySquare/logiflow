@@ -1553,29 +1553,32 @@ function makeKatastCell(ri,val,ed){
   var opts=['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
   var iconName=STATUS_ICONS[val]||'hourglass';
 
-  // Κανονική εμφάνιση (μεγάλες οθόνες)
+  // Μεγάλες οθόνες — κανονικό select
   var full='<div class="katast-full" style="display:flex;align-items:center;gap:5px;width:100%">'+ic(iconName,13)
     +'<select '+(ed?'':'disabled')+' onchange="updateField('+ri+',\'katast\',this.value)" style="font-size:11px;flex:1">';
   opts.forEach(function(o){full+='<option'+(val===o?' selected':'')+'>'+o+'</option>';});
   full+='</select></div>';
 
-  // Icon-only (μικρές οθόνες)
-  var dropId='katast-drop-'+ri;
-  var dropHtml='<div id="'+dropId+'" style="display:none;position:absolute;left:0;top:100%;background:#fff;border:1.5px solid var(--brand);border-radius:8px;z-index:9999;box-shadow:0 6px 20px rgba(26,58,42,.18);min-width:160px;font-family:inherit">'
+  // Μικρές οθόνες — icon με tippy dropdown
+  var tippyContent='<div style=\'font-family:inherit\'>'
     +opts.map(function(o){
-  return '<div onmousedown="event.stopPropagation();updateField('+ri+',\'katast\',\''+o+'\');hidKatastDrop(\''+dropId+'\')" '
-    +'style="padding:8px 14px;cursor:pointer;font-size:12px;'+(val===o?'background:var(--brand-light);color:var(--brand);font-weight:700;':'')+'">'
-    +o+'</div>';
-}).join('')
+      return '<div onmousedown=\'updateField('+ri+',\\\'katast\\\',\\\''+o+'\\\');document.querySelectorAll(".tippy-box").forEach(function(t){t._tippy&&t._tippy.hide()})\' '
+        +'style=\'padding:8px 14px;cursor:pointer;font-size:12px;white-space:nowrap;'+(val===o?'background:#e8f0eb;color:#1a3a2a;font-weight:700;':'')+'\'>'
+        +o+'</div>';
+    }).join('')
     +'</div>';
 
-  var icon='<div class="katast-icon" style="display:none" '
-    +(ed?'onclick="togKatastDrop(\''+dropId+'\',this)"':'')+' '
-    +'data-tippy-content="'+esc(val)+'">'
+  var icon='<div class="katast-icon" style="display:none;cursor:pointer" '
+    +'data-tippy-content="'+esc(tippyContent)+'" '
+    +'data-tippy-allowhtml="true" '
+    +'data-tippy-trigger="click" '
+    +'data-tippy-placement="bottom" '
+    +'data-tippy-interactive="true" '
+    +'data-tippy-theme="light-border">'
     +ic(iconName,16)
     +'</div>';
 
-  return '<td class="'+cls+'" style="position:relative;overflow:visible">'+full+icon+dropHtml+'</td>';
+  return '<td class="'+cls+'">'+full+icon+'</td>';
 }
 
   function togKatastDrop(id, el){
@@ -1910,7 +1913,18 @@ function render(){
   });
   tb.innerHTML=html;
   updateWeekStats();
-  if(window.tippy) tippy('.katast-icon', {placement:'bottom', arrow:true});
+  if(window.tippy){
+  tippy('.katast-icon', {
+    content: function(el){ return el.getAttribute('data-tippy-content'); },
+    allowHTML: true,
+    trigger: 'click',
+    placement: 'bottom',
+    interactive: true,
+    theme: 'light-border',
+    arrow: true,
+    appendTo: document.body
+  });
+}
 }
 
 function addRow(){
