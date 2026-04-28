@@ -990,7 +990,8 @@ var globalSearchMode = false;
 var globalSearchResults = [];
 var isSyncing=false;
 var saveTimer=null;
-
+var dragMode = false;
+  
 var dragSrcIdx = -1;
 var sortField = null;
 var sortDir = 1;
@@ -1027,10 +1028,8 @@ function onDrop(e,fi){
   e.preventDefault();
   document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
   if(dragSrcIdx<0||dragSrcIdx===fi)return;
-  // Δουλεύουμε με filtered indices
   var srcRow=filtered[dragSrcIdx];
   var dstRow=filtered[fi];
-  // Βρες τις θέσεις στο rows[]
   var srcRi=rows.indexOf(srcRow);
   var dstRi=rows.indexOf(dstRow);
   if(srcRi<0||dstRi<0)return;
@@ -1039,7 +1038,9 @@ function onDrop(e,fi){
   rows.splice(newDstRi,0,srcRow);
   dragSrcIdx=-1;
   rows.forEach(function(r,i){r.order=i;saveRow(r);});
+  dragMode=true;
   applyFilters();
+  dragMode=false;
 }
 
   
@@ -2099,6 +2100,7 @@ function applyFilters(){
     baseCount[b]++;
   });
   var withIdx=matched.map(function(r,i){return{r:r,i:i};});
+if(!dragMode){
   withIdx.sort(function(a,b){
     var ba=baseOf(a.r.id), bb=baseOf(b.r.id);
     var ka=ba?baseFirstIdx[ba]:a.i;
@@ -2106,7 +2108,8 @@ function applyFilters(){
     if(ka!==kb)return ka-kb;
     return a.i-b.i;
   });
-  filtered=withIdx.map(function(x){return x.r;});
+}
+filtered=withIdx.map(function(x){return x.r;});
   window._groupCount=baseCount;
   render();
 }
