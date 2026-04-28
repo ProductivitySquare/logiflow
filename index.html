@@ -33,6 +33,9 @@
 }
 body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh}
 
+tbody tr[draggable="true"]{cursor:grab}
+tbody tr.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
+  
 /* ── TOPBAR (CTL brand) ── */
 .topbar{background:var(--brand);border-bottom:1px solid var(--brand);padding:0 16px;height:54px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:100;color:white}
 .logo{font-size:15px;font-weight:700;color:white;letter-spacing:.02em;display:flex;align-items:center;gap:9px;margin-right:6px}
@@ -713,7 +716,7 @@ tbody td:nth-child(13) .notes-empty { font-size:10px !important; padding:3px 4px
       <th style="width:108px">Μερίδα</th>
       <th style="width:100px">Χώρα</th>
       <th style="width:44px">Χρήστης</th>
-      <th style="width:90px">Πρβλ. Άφιξη</th>
+      <th style="width:90px;cursor:pointer" onclick="sortBy('pAfx')">Πρβλ. Άφιξη ↕</th>
       <th style="width:80px">Άφιξη</th>
       <th style="width:90px">Πρβλ. Παράδ.</th>
       <th style="width:80px">Παράδοση</th>
@@ -997,6 +1000,42 @@ var USER_INITIALS={'Πάνος':'Π','Λούης':'Λ','Ντέμη':'Ν','Στα
 var warehouseFields=['afx','par','katast','notes'];
 var officeFields=['id','xora','a','pAfx','pPar','kola','sysk','kila','pelatis','notes','katast'];
 
+function sortBy(field){
+  if(sortField===field) sortDir*=-1;
+  else{sortField=field;sortDir=1;}
+  filtered.sort(function(a,b){
+    var av=a[field]||'', bv=b[field]||'';
+    return av<bv?-sortDir:av>bv?sortDir:0;
+  });
+  render();
+}
+
+function onDragStart(e,ri){
+  dragSrcIdx=ri;
+  e.dataTransfer.effectAllowed='move';
+}
+function onDragOver(e,tr){
+  e.preventDefault();
+  document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
+  tr.classList.add('drag-over');
+}
+function onDrop(e,ri){
+  e.preventDefault();
+  document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('drag-over');});
+  if(dragSrcIdx<0||dragSrcIdx===ri)return;
+  var tmp=rows[dragSrcIdx];
+  rows.splice(dragSrcIdx,1);
+  rows.splice(ri,0,tmp);
+  dragSrcIdx=-1;
+  // Save order to Firebase
+  rows.forEach(function(r,i){
+    r.order=i;
+    saveRow(r);
+  });
+  applyFilters();
+}
+
+  
 function eN(){return{address:'',hours:'',phone:'',contact:'',dims:'',euro:'',volumeNote:''};}
 function newRow(){return{id:'',xora:'',a:'',pAfx:'',afx:'',pPar:'',par:'',kola:'',sysk:'',kila:'',pelatis:'',katast:'ΑΝΑΜΟΝΗ',notes:eN(),attachments:[],lastChangedBy:'',lastChangedAt:0,seenBy:{}};}
 
@@ -1889,7 +1928,7 @@ function render(){
       if(isLastOfGroup)groupCls+=' group-last';
     }
     var sepCls=(prevBase!==null&&prevBase!==base)?' group-sep':'';
-    html+='<tr class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
+    html+='<tr draggable="true" ondragstart="onDragStart(event,'+ri+')" ondragover="onDragOver(event,this)" ondrop="onDrop(event,'+ri+')" class="'+rowClass(row.katast)+pulseCls+groupCls+sepCls+'" data-base="'+esc(base)+'">';
     html+=makeMeridaCell(ri,row.id,canEdit('id'));
     if(isFirstOfGroup){
       var badge='<span class="group-badge" title="Group '+gc[base]+' μερίδων">'+gc[base]+'</span>';
@@ -2717,6 +2756,10 @@ function closeGroupShareModal(){
   document.getElementById('groupShareModalBg').classList.remove('open');
   groupShareSourceRi = -1;
 }
+
+  var dragSrcIdx = -1;
+var sortField = null;
+var sortDir = 1;
 
 function applyGroupShare(){
   if(groupShareSourceRi<0) return;
