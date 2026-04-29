@@ -2188,17 +2188,19 @@ function applyFilters(){
   });
   // Πρόσθεσε group-first αν λείπει
   if(statusF){
-    var extraRows=[];
-    matched.forEach(function(r){
-      var base=baseOf(r.id);
-      if(!base) return;
-      var groupFirst=rows.find(function(gr){ return baseOf(gr.id)===base; });
-      if(groupFirst && matched.indexOf(groupFirst)<0 && extraRows.indexOf(groupFirst)<0){
-        extraRows.push(groupFirst);
+  var extraRows=[];
+  matched.forEach(function(r){
+    var base=baseOf(r.id);
+    if(!base) return;
+    // Βρες ΟΛΕΣ τις γραμμές του group από το rows[]
+    rows.forEach(function(gr){
+      if(baseOf(gr.id)===base && matched.indexOf(gr)<0 && extraRows.indexOf(gr)<0){
+        extraRows.push(gr);
       }
     });
-    matched=extraRows.concat(matched);
-  }
+  });
+  matched=extraRows.concat(matched);
+}
   var baseCount={}, baseFirstIdx={};
   matched.forEach(function(r,i){
     var b=baseOf(r.id);
