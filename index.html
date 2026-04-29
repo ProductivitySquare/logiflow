@@ -1981,10 +1981,11 @@ function copyRowData(ri){
   var r=rows[ri];
   var n=r.notes||eN();
   var parts=[];
-  parts.push('Κολά: '+(r.kola||'—'));
-  parts.push('Συσκ.: '+(r.sysk||'—'));
-  parts.push('Κιλά: '+(r.kila||'—'));
-  parts.push('Πελάτης: '+(r.pelatis||'—'));
+  parts.push(r.kola||'—');
+parts.push(r.sysk||'—');
+parts.push(r.kila||'—');
+parts.push(r.pelatis||'—');
+
   var nt=nTxtPrint(n);
   if(nt)parts.push('Παρατηρήσεις: '+nt);
   navigator.clipboard.writeText(parts.join(' | ')).then(function(){
