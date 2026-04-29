@@ -2030,12 +2030,12 @@ function render(){
       }
     }
     // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
-    var isGroupFollower=inGroup&&!isFirstOfGroup;
-    if(isGroupFollower){
-      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
-      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
-      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
-      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
+var isGroupFollower=inGroup&&!isFirstOfGroup&&!statusF;
+if(isGroupFollower){
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
     } else {
       html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
       html+=makeUserCell(ri,row.a,canEdit('a'));
