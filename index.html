@@ -2032,30 +2032,16 @@ function render(){
     // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
     var isGroupFollower=inGroup&&!isFirstOfGroup;
     if(isGroupFollower){
-  // Πάρε τα δεδομένα πάντα από τον πραγματικό leader (χωρίς suffix)
-  var groupLeader=rows.find(function(r){ return r.id===base; })
-    || rows.find(function(r){ return baseOf(r.id)===base; })
-    || row;
-var leaderInFiltered=filtered.findIndex(function(r){ return r.id===base; });
-var leaderVisibleAbove=leaderInFiltered>=0 && leaderInFiltered<fi;
-if(leaderVisibleAbove){
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-} else {
-  var lri=rows.indexOf(groupLeader);
-  html+=makeACCell(lri,'xora',groupLeader.xora,COUNTRIES,false);
-  html+=makeUserCell(lri,groupLeader.a,false);
-  html+=makeDTCell(lri,'pAfx',groupLeader.pAfx,false);
-  html+=makeDTCell(lri,'afx',groupLeader.afx,false);
-}
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
     } else {
-    html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
-    html+=makeUserCell(ri,row.a,canEdit('a'));
-    html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
-    html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
-  }
+      html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
+      html+=makeUserCell(ri,row.a,canEdit('a'));
+      html+=makeDTCell(ri,'pAfx',row.pAfx,canEdit('pAfx'));
+      html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
+    }
     html+=makeDTCell(ri,'pPar',row.pPar,canEdit('pPar'));
     html+=makeDTCell(ri,'par',row.par,canEdit('par'));
     html+=makeTxtCell(ri,'kola',row.kola,canEdit('kola'));
