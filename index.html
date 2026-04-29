@@ -330,13 +330,13 @@ tbody td span { display: none !important; }
 /* Άφιξη + Παράδοση: wrap */
   tbody td:nth-child(5),
   tbody td:nth-child(6),
-  tbody td:nth-child(7) {
-    white-space: normal !important;
-    height: auto !important;
-    vertical-align: top !important;
-    padding-top: 3px !important;
-    word-break: break-word !important;
-  }
+tbody td:nth-child(7) input {
+  white-space: normal !important;
+  word-break: break-word !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
 
   /* ── Wrap: no scroll, full width ── */
   .wrap {
@@ -1133,7 +1133,8 @@ function doPrint(){
   document.querySelectorAll('tbody td input[type="date"], tbody td input[type="datetime-local"]').forEach(function(inp){
     inp.setAttribute('data-print-orig-type', inp.type);
     inp.setAttribute('data-print-orig-val', inp.value);
-    var formatted = inp.value ? (inp.value.substring(8,10)+'/'+inp.value.substring(5,7)) : '';
+var time = inp.value.length>=16 ? inp.value.substring(11,16) : '';
+var formatted = inp.value ? (inp.value.substring(8,10)+'/'+inp.value.substring(5,7)+(time&&time!='00:00'?' '+time:'')) : '';
     inp.type = 'text';
     inp.value = formatted;
   });
