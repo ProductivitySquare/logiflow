@@ -2189,10 +2189,13 @@ function applyFilters(){
   if(statusF){
     var basesInMatched={};
     matched.forEach(function(r){ var b=baseOf(r.id); if(b) basesInMatched[b]=true; });
+    var extras=[];
     rows.forEach(function(r){
       var b=baseOf(r.id);
-      if(b && basesInMatched[b] && matched.indexOf(r)<0) matched.push(r);
+      if(b && basesInMatched[b] && matched.indexOf(r)<0) extras.push(r);
     });
+    // Πρέπει να μπουν ΠΡΙΝ, όχι μετά, για να είναι group-first
+    matched=extras.concat(matched);
   }
 
   var baseCount={}, baseFirstIdx={};
