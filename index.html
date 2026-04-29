@@ -602,7 +602,7 @@ tbody td:nth-child(14) .ack-btn { font-size:9px !important; padding:3px 5px !imp
   .del-btn,.copy-btn{font-size:11px;padding:3px 6px}
   select{font-size:11px}
 table{width:100%;table-layout:fixed;min-width:1100px}
-    thead th{padding:6px 5px;font-size:9px;position:sticky;top:0;z-index:5;background:var(--brand-light);}
+    thead th{padding:6px 5px;font-size:9px}
   
   /* Μικρότερα κουμπιά */
   .notes-btn,.notes-empty{font-size:12px;padding:4px 7px}
@@ -2030,12 +2030,12 @@ function render(){
       }
     }
     // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
-var isGroupFollower=inGroup&&!isFirstOfGroup&&!statusF;
-if(isGroupFollower){
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
-  html+='<td class="rc group-shared"><input disabled value=""></td>';
+    var isGroupFollower=inGroup&&!isFirstOfGroup;
+    if(isGroupFollower){
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
+      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
     } else {
       html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
       html+=makeUserCell(ri,row.a,canEdit('a'));
@@ -2184,20 +2184,6 @@ function applyFilters(){
     var mS=!statusF||r.katast===statusF;
     return mQ&&mS;
   });
-
-  // Αν υπάρχει φίλτρο κατάστασης, πρόσθεσε όλες τις γραμμές του ίδιου group
-  if(statusF){
-    var basesInMatched={};
-    matched.forEach(function(r){ var b=baseOf(r.id); if(b) basesInMatched[b]=true; });
-    var extras=[];
-    rows.forEach(function(r){
-      var b=baseOf(r.id);
-      if(b && basesInMatched[b] && matched.indexOf(r)<0) extras.push(r);
-    });
-    // Πρέπει να μπουν ΠΡΙΝ, όχι μετά, για να είναι group-first
-    matched=extras.concat(matched);
-  }
-
   var baseCount={}, baseFirstIdx={};
   matched.forEach(function(r,i){
     var b=baseOf(r.id);
@@ -2206,16 +2192,16 @@ function applyFilters(){
     baseCount[b]++;
   });
   var withIdx=matched.map(function(r,i){return{r:r,i:i};});
-  if(!dragMode){
-    withIdx.sort(function(a,b){
-      var ba=baseOf(a.r.id), bb=baseOf(b.r.id);
-      var ka=ba?baseFirstIdx[ba]:a.i;
-      var kb=bb?baseFirstIdx[bb]:b.i;
-      if(ka!==kb)return ka-kb;
-      return a.i-b.i;
-    });
-  }
-  filtered=withIdx.map(function(x){return x.r;});
+if(!dragMode){
+  withIdx.sort(function(a,b){
+    var ba=baseOf(a.r.id), bb=baseOf(b.r.id);
+    var ka=ba?baseFirstIdx[ba]:a.i;
+    var kb=bb?baseFirstIdx[bb]:b.i;
+    if(ka!==kb)return ka-kb;
+    return a.i-b.i;
+  });
+}
+filtered=withIdx.map(function(x){return x.r;});
   window._groupCount=baseCount;
   render();
 }
