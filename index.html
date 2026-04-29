@@ -2032,24 +2032,23 @@ function render(){
     // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
     var isGroupFollower=inGroup&&!isFirstOfGroup;
     if(isGroupFollower){
-      var groupLeader=rows.find(function(r){ return r.id===base; })
+   var groupLeader=rows.find(function(r){ return r.id===base; })
   || rows.find(function(r){ return baseOf(r.id)===base; })
   || row;
-      var leaderVisible=filtered.some(function(r,i){ return i<fi && baseOf(r.id)===base; });
-      console.log('base:',base,'fi:',fi,'leaderVisible:',leaderVisible,'groupLeader id:',groupLeader.id);
-
-      if(leaderVisible){
-        html+='<td class="rc group-shared"><input disabled value=""></td>';
-        html+='<td class="rc group-shared"><input disabled value=""></td>';
-        html+='<td class="rc group-shared"><input disabled value=""></td>';
-        html+='<td class="rc group-shared"><input disabled value=""></td>';
-      } else {
-        var lri=rows.indexOf(groupLeader);
-        html+=makeACCell(lri,'xora',groupLeader.xora,COUNTRIES,false);
-        html+=makeUserCell(lri,groupLeader.a,false);
-        html+=makeDTCell(lri,'pAfx',groupLeader.pAfx,false);
-        html+=makeDTCell(lri,'afx',groupLeader.afx,false);
-      }
+var leaderInFiltered=filtered.findIndex(function(r){ return r.id===base; });
+var leaderVisibleAbove=leaderInFiltered>=0 && leaderInFiltered<fi;
+if(leaderVisibleAbove){
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+  html+='<td class="rc group-shared"><input disabled value=""></td>';
+} else {
+  var lri=rows.indexOf(groupLeader);
+  html+=makeACCell(lri,'xora',groupLeader.xora,COUNTRIES,false);
+  html+=makeUserCell(lri,groupLeader.a,false);
+  html+=makeDTCell(lri,'pAfx',groupLeader.pAfx,false);
+  html+=makeDTCell(lri,'afx',groupLeader.afx,false);
+}
     } else {
       html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
       html+=makeUserCell(ri,row.a,canEdit('a'));
