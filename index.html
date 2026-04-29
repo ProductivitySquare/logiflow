@@ -2032,7 +2032,9 @@ function render(){
     // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
     var isGroupFollower=inGroup&&!isFirstOfGroup;
     if(isGroupFollower){
-      var groupLeader=rows.find(function(r){ return baseOf(r.id)===base; })||row;
+      var groupLeader=rows.find(function(r){ return r.id===base; })
+  || rows.find(function(r){ return baseOf(r.id)===base; })
+  || row;
       var leaderVisible=filtered.some(function(r,i){ return i<fi && baseOf(r.id)===base; });
       console.log('base:',base,'fi:',fi,'leaderVisible:',leaderVisible,'groupLeader id:',groupLeader.id);
 
