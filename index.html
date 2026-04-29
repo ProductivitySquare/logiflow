@@ -481,7 +481,21 @@ tbody td:nth-child(11) {
     word-break: break-word !important;
     line-height: 1.4 !important;
   }
-
+tbody td:nth-child(7) input { display: none !important; }
+tbody td:nth-child(7) {
+  white-space: normal !important;
+  height: auto !important;
+  vertical-align: top !important;
+  padding-top: 4px !important;
+}
+tbody td:nth-child(7) .print-par {
+  display: block !important;
+  font-size: 11px !important;
+  color: #000 !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.4 !important;
+}
   /* Merida input: monospace */
   input.merida-input {
     font-family: 'Courier New', monospace !important;
@@ -1631,8 +1645,10 @@ function makeDTCell(ri,field,val,ed){
   var isProvl=(field==='pAfx'||field==='pPar');
   if(field==='par'){
     if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"></td>';
-    return '<td class="'+cls+'"><input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\'par\',this.value)" style="font-size:11px;padding:4px 5px;width:100%"></td>';
-  }
+return '<td class="'+cls+'">'
+  +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\'par\',this.value);this.nextElementSibling.textContent=this.value" style="font-size:11px;padding:4px 5px;width:100%">'
+  +'<span class="print-par" style="display:none">'+esc(val||'')+'</span>'
+  +'</td>';  }
   if(!ed)return '<td class="'+cls+'"><input disabled value="'+esc(fmtDT(val,isProvl))+'" style="padding:2px 3px !important;font-size:11px"></td>';
   if(isProvl){
   var isoDate=(val&&val.length>=10)?val.substring(0,10):'';
