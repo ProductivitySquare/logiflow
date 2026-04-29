@@ -2034,6 +2034,8 @@ function render(){
     if(isGroupFollower){
       var groupLeader=rows.find(function(r){ return baseOf(r.id)===base; })||row;
       var leaderVisible=filtered.some(function(r,i){ return i<fi && baseOf(r.id)===base; });
+      console.log('base:',base,'fi:',fi,'leaderVisible:',leaderVisible,'groupLeader id:',groupLeader.id);
+
       if(leaderVisible){
         html+='<td class="rc group-shared"><input disabled value=""></td>';
         html+='<td class="rc group-shared"><input disabled value=""></td>';
