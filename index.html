@@ -31,7 +31,7 @@
   --amber-text:#b8860b;
   --purple:#9334EA;
 }
-body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh}
+body{font-family:'Comfortaa','Segoe UI',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;overflow-y:auto}
 
 tbody tr[draggable="true"]{cursor:grab}
 tbody tr.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
@@ -72,7 +72,7 @@ tbody tr.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
 .legend .hint{margin-left:6px;color:var(--brand);font-weight:600}
 
 /* ── TABLE ── */
-.wrap{overflow-x:auto;background:var(--bg)}
+.wrap{overflow-x:auto;background:var(--bg);overflow-y:visible}
 table{width:100%;border-collapse:collapse;min-width:1050px}
 thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size:10px;font-weight:700;color:var(--brand);border-bottom:2px solid var(--brand);white-space:nowrap;position:sticky;top:130px;z-index:5;text-transform:uppercase;letter-spacing:.04em}
 
