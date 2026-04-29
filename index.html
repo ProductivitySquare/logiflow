@@ -602,7 +602,7 @@ tbody td:nth-child(14) .ack-btn { font-size:9px !important; padding:3px 5px !imp
   .del-btn,.copy-btn{font-size:11px;padding:3px 6px}
   select{font-size:11px}
 table{width:100%;table-layout:fixed;min-width:1100px}
-    thead th{padding:6px 5px;font-size:9px}
+    thead th{padding:6px 5px;font-size:9px;position:sticky;top:0;z-index:5;background:var(--brand-light);}
   
   /* Μικρότερα κουμπιά */
   .notes-btn,.notes-empty{font-size:12px;padding:4px 7px}
@@ -2182,8 +2182,23 @@ function applyFilters(){
   var matched=rows.filter(function(r){
     var mQ=!searchQ||((r.id||'')+(r.pelatis||'')+(r.xora||'')+(r.katast||'')+(r.kola||'')).toLowerCase().indexOf(searchQ)>=0;
     var mS=!statusF||r.katast===statusF;
-    return mQ&&mS;
+    if(!mQ||!mS) return false;
+    // Αν είναι σε group και δεν είναι group-first, φέρε και την group-first
+    return true;
   });
+  // Πρόσθεσε group-first αν λείπει
+  if(statusF){
+    var extraRows=[];
+    matched.forEach(function(r){
+      var base=baseOf(r.id);
+      if(!base) return;
+      var groupFirst=rows.find(function(gr){ return baseOf(gr.id)===base; });
+      if(groupFirst && matched.indexOf(groupFirst)<0 && extraRows.indexOf(groupFirst)<0){
+        extraRows.push(groupFirst);
+      }
+    });
+    matched=extraRows.concat(matched);
+  }
   var baseCount={}, baseFirstIdx={};
   matched.forEach(function(r,i){
     var b=baseOf(r.id);
