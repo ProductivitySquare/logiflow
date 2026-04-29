@@ -1105,14 +1105,30 @@ function changeWeek(dir){
 
 // ── PRINT function ──
 function doPrint(){
-  // Stamp current date/time in footer
   var footer=document.getElementById('printFooter');
   if(footer)footer.textContent='Εκτυπώθηκε: '+new Date().toLocaleString('el-GR');
   var pd=document.getElementById('printDate');
   if(pd)pd.textContent=new Date().toLocaleString('el-GR');
-  window.print();
-}
 
+  // Φτιάξε τα date inputs για print
+  document.querySelectorAll('tbody td input[type="date"], tbody td input[type="datetime-local"]').forEach(function(inp){
+    inp.setAttribute('data-print-orig-type', inp.type);
+    inp.setAttribute('data-print-orig-val', inp.value);
+    var formatted = inp.value ? (inp.value.substring(8,10)+'/'+inp.value.substring(5,7)) : '';
+    inp.type = 'text';
+    inp.value = formatted;
+  });
+
+  window.print();
+
+  // Επαναφορά μετά το print
+  document.querySelectorAll('tbody td input[data-print-orig-type]').forEach(function(inp){
+    inp.type = inp.getAttribute('data-print-orig-type');
+    inp.value = inp.getAttribute('data-print-orig-val');
+    inp.removeAttribute('data-print-orig-type');
+    inp.removeAttribute('data-print-orig-val');
+  });
+}
 // ---- FIREBASE ----
 var unsubscribe=null;
 
