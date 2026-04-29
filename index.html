@@ -2146,7 +2146,7 @@ tippy(el, {
     tippy(el, {content:el.textContent, trigger:'mouseenter', placement:'top', theme:'light-border', maxWidth:320});
   });
 }
-}
+
 
 function addRow(){
   var r=newRow();
@@ -2567,9 +2567,7 @@ html += '<td class="ec" style="'+P+';position:relative;width:80px;min-width:80px
   if(!storageFiltered.length){
     html = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν υπάρχουν εγγραφές — πάτα «Νέα γραμμή»</td></tr>';
   }
-    if(!storageFiltered.length){
-    html = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν υπάρχουν εγγραφές — πάτα «Νέα γραμμή»</td></tr>';
-  }
+
 
   tb.innerHTML = html;
 }
