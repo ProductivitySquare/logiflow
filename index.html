@@ -2032,17 +2032,22 @@ function render(){
     // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
 // Group non-first: Χώρα / Χρήστης / Πρβλ.Άφιξη / Άφιξη κενά & locked
     var isGroupFollower=inGroup&&!isFirstOfGroup;
-    if(isGroupFollower){
-      // Βρες την πρώτη γραμμή του group από ΟΛΕΣ τις rows (όχι μόνο filtered)
-      var groupLeader=rows.find(function(r){ return baseOf(r.id)===base; })||row;
-      var leaderInFiltered=filtered.some(function(r){ return baseOf(r.id)===base && r!==row && filtered.indexOf(r)<fi; });
-      if(leaderInFiltered){
-        // Κανονικά κρυμμένα (leader φαίνεται ήδη)
-        html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
-        html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
-        html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
-        html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
-      } else {
+if(isGroupFollower){
+  var groupLeader=rows.find(function(r){ return baseOf(r.id)===base; })||row;
+  var leaderVisible=filtered.some(function(r,i){ return i<fi && baseOf(r.id)===base; });
+  if(leaderVisible){
+    html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
+    html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
+    html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
+    html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
+  } else {
+    var lri=rows.indexOf(groupLeader);
+    html+=makeACCell(lri,'xora',groupLeader.xora,COUNTRIES,false);
+    html+=makeUserCell(lri,groupLeader.a,false);
+    html+=makeDTCell(lri,'pAfx',groupLeader.pAfx,false);
+    html+=makeDTCell(lri,'afx',groupLeader.afx,false);
+  }
+} else {
         // Leader δεν φαίνεται λόγω φίλτρου → δείξε τα στοιχεία του leader
         var lri=rows.indexOf(groupLeader);
         html+=makeACCell(lri,'xora',groupLeader.xora,COUNTRIES,false);
