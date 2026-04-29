@@ -456,11 +456,20 @@ select.with-ic{background-image:none}
     line-height: 1.4 !important;
   }
   /* td with notes: let height grow naturally */
-  tbody td:nth-child(13) {
+  /* Πελάτης: wrap + μικρότερο font */
+  tbody td:nth-child(11) {
     white-space: normal !important;
     height: auto !important;
     vertical-align: top !important;
     padding-top: 4px !important;
+    word-break: break-word !important;
+  }
+  tbody td:nth-child(11) input {
+    font-size: 11px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow: visible !important;
+    height: auto !important;
   }
 
   /* Merida input: monospace */
