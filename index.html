@@ -2138,6 +2138,14 @@ tippy(el, {
 });
   });
 }
+  // Tippy Πελάτης + Παρατηρήσεις
+  document.querySelectorAll('#tbody td:nth-child(11) input').forEach(function(el){
+    if(el.value) tippy(el, {content:el.value, trigger:'mouseenter', placement:'top', theme:'light-border'});
+  });
+  document.querySelectorAll('#tbody td:nth-child(13) .notes-btn').forEach(function(el){
+    tippy(el, {content:el.textContent, trigger:'mouseenter', placement:'top', theme:'light-border', maxWidth:320});
+  });
+}
 }
 
 function addRow(){
@@ -2559,6 +2567,10 @@ html += '<td class="ec" style="'+P+';position:relative;width:80px;min-width:80px
   if(!storageFiltered.length){
     html = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν υπάρχουν εγγραφές — πάτα «Νέα γραμμή»</td></tr>';
   }
+    if(!storageFiltered.length){
+    html = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν υπάρχουν εγγραφές — πάτα «Νέα γραμμή»</td></tr>';
+  }
+
   tb.innerHTML = html;
 }
 
