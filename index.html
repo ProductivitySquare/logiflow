@@ -2046,7 +2046,8 @@ function render(){
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
-      html+='<td class="rc"><input disabled value="'+esc(row.afx||'')+'" style="opacity:0.4;font-size:11px;padding:2px 3px !important"></td>';  // Άφιξη
+      html+=makeDTCell(ri,'afx',row.afx,canEdit('afx'));
+
     } else {
       html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
       html+=makeUserCell(ri,row.a,canEdit('a'));
