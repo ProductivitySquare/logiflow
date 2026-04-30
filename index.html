@@ -1148,7 +1148,10 @@ function doPrint(){
   if(pd)pd.textContent=new Date().toLocaleString('el-GR');
 
   // Φτιάξε τα date inputs για print
-  document.querySelectorAll('tbody td input[type="date"], tbody td input[type="datetime-local"]').forEach(function(inp){
+  document.querySelectorAll('tbody td input[type="text"].afx-field').forEach(function(inp){
+  inp.nextElementSibling && (inp.nextElementSibling.textContent = inp.value);
+});
+document.querySelectorAll('tbody td input[type="date"], tbody td input[type="datetime-local"]').forEach(function(inp){
     inp.setAttribute('data-print-orig-type', inp.type);
     inp.setAttribute('data-print-orig-val', inp.value);
 var time = inp.value.length>=16 ? inp.value.substring(11,16) : '';
@@ -1652,7 +1655,7 @@ function makeDTCell(ri,field,val,ed){
   var printCls=field==='par'?'print-par':'print-afx';
   if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"><span class="'+printCls+'" style="display:none">'+esc(val||'')+'</span></td>';
   return '<td class="'+cls+'">'
-    +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\''+fieldName+'\',this.value);this.nextElementSibling.textContent=this.value" style="font-size:11px;padding:4px 5px;width:100%">'
+    +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\''+fieldName+'\',this.value);this.nextElementSibling.textContent=this.value" style="font-size:11px;padding:4px 5px;width:100%" oninput="this.nextElementSibling.textContent=this.value">'
     +'<span class="'+printCls+'" style="display:none">'+esc(val||'')+'</span>'
     +'</td>';
 }
