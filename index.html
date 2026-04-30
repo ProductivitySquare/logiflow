@@ -2157,6 +2157,10 @@ tippy(el, {
 document.querySelectorAll('#tbody td:nth-child(13) .notes-btn').forEach(function(el){
   if(el.scrollWidth > el.clientWidth) tippy(el, {content:el.textContent, trigger:'mouseenter', placement:'top', theme:'light-border', maxWidth:320});
 });
+// Tippy Άφιξη + Παράδοση
+document.querySelectorAll('#tbody td:nth-child(5) input, #tbody td:nth-child(7) input').forEach(function(el){
+  if(el.value && el.scrollWidth > el.clientWidth) tippy(el, {content:el.value, trigger:'mouseenter', placement:'top', theme:'light-border'});
+});
 
 }
 
