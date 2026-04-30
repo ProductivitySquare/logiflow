@@ -1647,7 +1647,14 @@ function parseDate2(v){
 function makeDTCell(ri,field,val,ed){
   var cls=ed?'ec':'rc';
   var isProvl=(field==='pAfx'||field==='pPar');
-  if(field==='par'){
+  if(field==='par'||field==='afx'){
+  var fieldName=field;
+  if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"></td>';
+  return '<td class="'+cls+'">'
+    +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\''+fieldName+'\',this.value)" style="font-size:11px;padding:4px 5px;width:100%">'
+    +'</td>';
+}
+if(field==='par'){
     if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"></td>';
 return '<td class="'+cls+'">'
   +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\'par\',this.value);this.nextElementSibling.textContent=this.value" style="font-size:11px;padding:4px 5px;width:100%">'
@@ -2039,7 +2046,7 @@ function render(){
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χώρα
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Χρήστης
       html+='<td class="rc group-shared"><input disabled value=""></td>';  // Πρβλ.Άφιξη
-      html+='<td class="rc group-shared"><input disabled value=""></td>';  // Άφιξη
+      html+='<td class="rc"><input disabled value="'+esc(row.afx||'')+'" style="opacity:0.4;font-size:11px;padding:2px 3px !important"></td>';  // Άφιξη
     } else {
       html+=makeACCell(ri,'xora',row.xora,COUNTRIES,canEdit('xora'));
       html+=makeUserCell(ri,row.a,canEdit('a'));
