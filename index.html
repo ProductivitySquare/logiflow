@@ -2000,12 +2000,12 @@ function copyRowData(ri){
   var n=r.notes||eN();
   var parts=[];
   parts.push(r.kola||'—');
-parts.push(r.sysk||'—');
-parts.push(r.kila||'—');
-parts.push(r.pelatis||'—');
-
+  parts.push(r.sysk||'—');
+  parts.push(r.kila||'—');
+  parts.push(r.pelatis||'—');
   var nt=nTxtPrint(n);
   if(nt)parts.push(nt);
+  if(r.id)parts.push(r.id);
   navigator.clipboard.writeText(parts.join(' | ')).then(function(){
     var btn=document.querySelector('[data-copy-ri="'+ri+'"]');
     if(btn){btn.classList.add('copied');btn.innerHTML=CHECK_ICON;setTimeout(function(){btn.classList.remove('copied');btn.innerHTML=COPY_ICON;},1500);}
