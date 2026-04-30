@@ -485,8 +485,8 @@ tbody td:nth-child(11) {
     word-break: break-word !important;
     line-height: 1.4 !important;
   }
-tbody td:nth-child(7) input { display: none !important; }
-tbody td:nth-child(7) {
+tbody td:nth-child(5) input, tbody td:nth-child(7) input { display: none !important; }
+tbody td:nth-child(5) .print-afx, tbody td:nth-child(7) .print-par {
   white-space: normal !important;
   height: auto !important;
   vertical-align: top !important;
@@ -1649,9 +1649,11 @@ function makeDTCell(ri,field,val,ed){
   var isProvl=(field==='pAfx'||field==='pPar');
   if(field==='par'||field==='afx'){
   var fieldName=field;
-  if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"></td>';
+  var printCls=field==='par'?'print-par':'print-afx';
+  if(!ed) return '<td class="'+cls+'"><input disabled value="'+esc(val||'')+'" style="padding:2px 3px !important;font-size:11px"><span class="'+printCls+'" style="display:none">'+esc(val||'')+'</span></td>';
   return '<td class="'+cls+'">'
-    +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\''+fieldName+'\',this.value)" style="font-size:11px;padding:4px 5px;width:100%">'
+    +'<input type="text" value="'+esc(val||'')+'" placeholder="ηη/μμ" onchange="updateField('+ri+',\''+fieldName+'\',this.value);this.nextElementSibling.textContent=this.value" style="font-size:11px;padding:4px 5px;width:100%">'
+    +'<span class="'+printCls+'" style="display:none">'+esc(val||'')+'</span>'
     +'</td>';
 }
 if(field==='par'){
