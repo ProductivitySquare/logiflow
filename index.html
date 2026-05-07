@@ -2159,7 +2159,7 @@ tippy(el, {
 }
   // Tippy Πελάτης + Παρατηρήσεις
   document.querySelectorAll('#tbody td:nth-child(11) input').forEach(function(el){
-  if(el.value && el.scrollWidth > el.clientWidth) tippy(el, {content:el.value, trigger:'mouseenter', placement:'top', theme:'light-border'});
+  if(el.value) tippy(el, {content:el.value, trigger:'mouseenter', placement:'top', theme:'light-border'});
 });
 document.querySelectorAll('#tbody td:nth-child(13) .notes-btn').forEach(function(el){
   if(el.scrollWidth > el.clientWidth) tippy(el, {content:el.textContent, trigger:'mouseenter', placement:'top', theme:'light-border', maxWidth:320});
