@@ -1431,7 +1431,7 @@ function onMI(el,ri){
   var beforeRaw=(slashIdx>=0?raw.substring(0,slashIdx):raw).replace(/[^0-9]/g,'');
   var afterRaw=slashIdx>=0?raw.substring(slashIdx+1).replace(/[^0-9]/g,''):'';
   var o='';
-  for(var i=0;i<beforeRaw.length&&i<7;i++){if(i===2||i===4)o+='.';o+=beforeRaw[i];}
+  for(var i=0;i<beforeRaw.length&&i<8;i++){if(i===2||i===4)o+='.';o+=beforeRaw[i];}
   if(slashIdx>=0)o+='/'+afterRaw.substring(0,3);
   el.value=o;
   rows[ri].id=o;
@@ -1512,8 +1512,8 @@ function doMeridaCopyPrompt(src,ri,val,base,srcWeekKey,srcFbKey){
   var newMerida=prompt('Νέος αριθμός μερίδας (π.χ. 26.04.001):','');
   if(!newMerida)return;
   var raw2=newMerida.replace(/[^0-9]/g,'');
-  var fmt2='';
-  for(var i=0;i<raw2.length&&i<7;i++){if(i===2||i===4)fmt2+='.';fmt2+=raw2[i];}
+var fmt2='';
+for(var i=0;i<raw2.length&&i<8;i++){if(i===2||i===4)fmt2+='.';fmt2+=raw2[i];}
   rows[ri].id=fmt2;
   rows[ri].xora=src.xora||'';
   rows[ri].kola=src.kola||'';
@@ -2287,7 +2287,7 @@ function onImportMeridaInput(el) {
   // Auto-format: digits only → xx.xx.xxx
   var raw = el.value.replace(/[^0-9]/g, '');
   var o = '';
-  for (var i = 0; i < raw.length && i < 7; i++) {
+  for (var i = 0; i < raw.length && i < 8; i++) {
     if (i === 2 || i === 4) o += '.';
     o += raw[i];
   }
