@@ -2187,8 +2187,13 @@ function addRow(){
 function delRow(ri){
   if(!confirm('Διαγραφή γραμμής;'))return;
   deleteRowFB(rows[ri]);
-  rows.splice(ri,1);
-  applyFilters();
+  // Don't splice rows[] locally — the Firebase onValue listener will remove it
+  // automatically once the deletion is confirmed (same pattern as addRow()).
+  // Splicing here too was the bug: Firebase's local echo can rebuild rows[]
+  // (new array reference) before this line runs, so "ri" ends up pointing at
+  // the WRONG row by the time we splice — that neighbor row only disappears
+  // locally (never actually deleted from Firebase), which is why it silently
+  // reappeared the next time the listener re-synced (e.g. on addRow()).
 }
 
 function setRole(r,btn){
