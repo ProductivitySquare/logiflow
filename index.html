@@ -82,6 +82,9 @@ thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size
 .katast-full { display:none !important; }
 .katast-icon { display:flex !important; align-items:center; justify-content:center; cursor:pointer; width:100%; }
 tbody td:nth-child(12){ text-align:center; }
+thead th:nth-child(12){ text-align:center !important; }
+/* Στην πρώτη γραμμή δεν χωράει το tooltip από πάνω (κρύβεται πίσω από το sticky header) — εκεί το δείχνουμε από κάτω */
+tbody tr:first-child .katast-icon:hover::after{ bottom:auto; top:calc(100% + 6px); }
 /* Tooltip στο hover του εικονιδίου Κατάστασης (χωρίς tippy, γιατί το tippy σβήνει το native title) */
 .katast-icon:hover::after{
   content: attr(data-label);
