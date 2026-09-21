@@ -83,24 +83,6 @@ thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size
 .katast-icon { display:flex !important; align-items:center; justify-content:center; cursor:pointer; width:100%; }
 tbody td:nth-child(12){ text-align:center; }
 thead th:nth-child(12){ text-align:center !important; }
-/* Στην πρώτη γραμμή δεν χωράει το tooltip από πάνω (κρύβεται πίσω από το sticky header) — εκεί το δείχνουμε από κάτω */
-tbody tr:first-child .katast-icon:hover::after{ bottom:auto; top:calc(100% + 6px); }
-/* Tooltip στο hover του εικονιδίου Κατάστασης (χωρίς tippy, γιατί το tippy σβήνει το native title) */
-.katast-icon:hover::after{
-  content: attr(data-label);
-  position:absolute;
-  bottom:calc(100% + 6px);
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--brand);
-  color:white;
-  padding:4px 8px;
-  border-radius:6px;
-  font-size:10px;
-  white-space:nowrap;
-  pointer-events:none;
-  z-index:999;
-}
 tbody tr{border-bottom:1px solid rgba(26,58,42,.08)}
 tbody tr:hover{filter:brightness(.97)}
 
@@ -1743,8 +1725,7 @@ function makeKatastCell(ri,val,ed){
     }).join('')
     +'</div>';
 
-  var icon='<div class="katast-icon" style="display:none;cursor:pointer;width:100% !important;justify-content:center !important;position:relative" '
-  +'data-label="'+esc(val)+'" '
+  var icon='<div class="katast-icon" style="display:none;cursor:pointer;width:100% !important;justify-content:center !important" '
   +'data-ri="'+ri+'" '
   +'data-val="'+esc(val)+'">'
   +ic(iconName,16)
@@ -2137,21 +2118,31 @@ function render(){
         e.preventDefault();
         e.stopPropagation();
         updateField(ri,'katast',o);
-        if(el._tippy) el._tippy.hide();
+        clickTip.hide();
       });
       div.appendChild(item);
     });
 
-    // Click tippy για επιλογή (το hover tooltip καλύπτεται πλέον από το native title="" στο icon)
-tippy(el, {
-  content: div,
-  trigger: 'click',
-  placement: 'bottom',
-  interactive: true,
-  arrow: true,
-  appendTo: document.body,
-  theme: 'light-border'
-});
+    // Click tippy για επιλογή
+    var clickTip = tippy(el, {
+      content: div,
+      trigger: 'click',
+      placement: 'bottom',
+      interactive: true,
+      arrow: true,
+      appendTo: document.body,
+      theme: 'light-border'
+    });
+
+    // Hover tippy για tooltip με την τρέχουσα κατάσταση (ίδιο στυλ με τα υπόλοιπα tooltips της εφαρμογής)
+    tippy(el, {
+      content: val,
+      trigger: 'mouseenter',
+      placement: 'top',
+      arrow: true,
+      appendTo: document.body,
+      theme: 'light-border'
+    });
   });
 }
   // Tippy Πελάτης + Παρατηρήσεις
