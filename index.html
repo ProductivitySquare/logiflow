@@ -2082,37 +2082,36 @@ function render(){
     };
 
     var div = document.createElement('div');
-    div.style.cssText = 'font-family:inherit;padding:6px;display:flex;flex-direction:column;gap:4px;min-width:170px';
-    
+    div.style.cssText = 'font-family:inherit;padding:4px;display:flex;flex-direction:column;gap:2px;min-width:120px';
+
     opts.forEach(function(o){
       var sc = STATUS_COLORS[o]||{bg:'#f5f4f0',color:'#333',icon:''};
       var isActive = o===val;
       var item = document.createElement('div');
-      item.style.cssText = 'padding:7px 12px;cursor:pointer;font-size:12px;white-space:nowrap;border-radius:8px;display:flex;align-items:center;gap:8px;transition:all .12s;'
-        +(isActive ? 'background:'+sc.bg+';color:'+sc.color+';font-weight:700;border:1.5px solid '+sc.color+'20;'
-                   : 'background:#fff;color:#374151;border:1.5px solid #e2e1d9;');
-      
+      item.style.cssText = 'padding:4px 8px;cursor:pointer;font-size:10px;white-space:nowrap;border-radius:6px;display:flex;align-items:center;gap:6px;transition:all .12s;background:#fff;border:1px solid '
+        +(isActive ? sc.color+'50' : 'transparent')
+        +';color:'+(isActive ? sc.color : '#374151')+';font-weight:'+(isActive?'700':'500')+';';
+
       var dot = document.createElement('span');
-      dot.style.cssText = 'width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+sc.color;
+      dot.style.cssText = 'width:6px;height:6px;border-radius:50%;flex-shrink:0;background:'+sc.color;
       item.appendChild(dot);
-      
+
       var txt = document.createElement('span');
       txt.textContent = o;
       item.appendChild(txt);
-      
+
       if(isActive){
         var check = document.createElement('span');
         check.textContent = '✓';
-        check.style.cssText = 'margin-left:auto;font-size:11px;color:'+sc.color;
+        check.style.cssText = 'margin-left:auto;font-size:9px;color:'+sc.color;
         item.appendChild(check);
       }
 
       item.addEventListener('mouseover', function(){
-        if(!isActive) this.style.background = sc.bg;
-        this.style.borderColor = sc.color+'60';
+        this.style.background = '#f5f4f0';
       });
       item.addEventListener('mouseout', function(){
-        if(!isActive){ this.style.background='#fff'; this.style.borderColor='#e2e1d9'; }
+        this.style.background = '#fff';
       });
       item.addEventListener('mousedown', function(e){
         e.preventDefault();
