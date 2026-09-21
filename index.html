@@ -725,7 +725,6 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
   <div class="role-tabs">
     <button class="role-btn active" onclick="setRole('office',this)">Γραφείο</button>
     <button class="role-btn" onclick="setRole('warehouse',this)">Αποθήκη</button>
-    <button class="role-btn" onclick="setRole('admin',this)">Admin</button>
   </div>
 </div>
 
@@ -747,15 +746,6 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
 
   <div style="flex:1"></div>
  <button id="storageTabBtn" onclick="switchTab('storage')" style="padding:6px 14px;border:none;border-radius:7px;background:#4285F4;color:white;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s">Αποθηκεύσεις →</button>
-</div>
-
-<div class="legend">
-  <span><span class="dot" style="background:#34A853"></span>Στην Αποθήκη</span>
-  <span><span class="dot" style="background:#EA4335"></span>Άμεση</span>
-  <span><span class="dot" style="background:#4285F4"></span>Σε μεταφορά</span>
-  <span><span class="dot" style="background:#7eb8f5"></span>Παραδόθηκε</span>
-  <span><span class="dot" style="background:#e5e7eb"></span>Αναμονή</span>
-  <span class="hint">▸ πράσινο πλαίσιο = επεξεργάσιμο από τον ρόλο σου</span>
 </div>
 
 <div class="wrap">
@@ -1265,12 +1255,12 @@ function updateWeekStats(){
   var icApoth   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>','#86efac');
   var icParadoth= svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>','#86efac');
   el.innerHTML = '<span style="opacity:.5;margin-right:2px">|</span>'
-    +'<span style="display:flex;align-items:center;gap:3px" data-label="Παραλαβές">'+icTotal+' '+total+' <span class="stat-label">Παραλαβές</span></span>'
-+(anamoni?'<span style="display:flex;align-items:center;gap:3px;color:#fef08a" data-label="Αναμονή">'+icAnamoni+' '+anamoni+' <span class="stat-label">Αναμονή</span></span>':'')
-+(amesi?'<span style="display:flex;align-items:center;gap:3px;color:#fca5a5" data-label="Άμεσες">'+icAmesi+' '+amesi+' <span class="stat-label">Άμεσες</span></span>':'')
-+(transit?'<span style="display:flex;align-items:center;gap:3px;color:#93c5fd" data-label="Μεταφορά">'+icTransit+' '+transit+' <span class="stat-label">Μεταφορά</span></span>':'')
-+(apoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac" data-label="Αποθήκη">'+icApoth+' '+apoth+' <span class="stat-label">Αποθήκη</span></span>':'')
-+(paradoth?'<span style="display:flex;align-items:center;gap:3px;color:#86efac" data-label="Παραδόθηκαν">'+icParadoth+' '+paradoth+' <span class="stat-label">Παραδόθηκαν</span></span>':'');
+    +'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Παραλαβές">'+icTotal+' '+total+' <span class="stat-label">Παραλαβές</span></span>'
++(anamoni?'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Αναμονή">'+icAnamoni+' '+anamoni+' <span class="stat-label">Αναμονή</span></span>':'')
++(amesi?'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Άμεσες">'+icAmesi+' '+amesi+' <span class="stat-label">Άμεσες</span></span>':'')
++(transit?'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Μεταφορά">'+icTransit+' '+transit+' <span class="stat-label">Μεταφορά</span></span>':'')
++(apoth?'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Αποθήκη">'+icApoth+' '+apoth+' <span class="stat-label">Αποθήκη</span></span>':'')
++(paradoth?'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Παραδόθηκαν">'+icParadoth+' '+paradoth+' <span class="stat-label">Παραδόθηκαν</span></span>':'');
 }
 // ---- GLOBAL SEARCH ----
 function toggleGlobalSearch(){
