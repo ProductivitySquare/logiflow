@@ -80,7 +80,7 @@ thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size
 .tippy-box{font-size:10px}
 /* Κατάσταση: πάντα μόνο icon + tooltip (ό,τι ίσχυε μόνο σε μικρές οθόνες) */
 .katast-full { display:none !important; }
-.katast-icon { display:flex !important; align-items:center; justify-content:center; cursor:pointer; }
+.katast-icon { display:flex !important; align-items:center; justify-content:center; cursor:pointer; width:100%; }
 tbody tr{border-bottom:1px solid rgba(26,58,42,.08)}
 tbody tr:hover{filter:brightness(.97)}
 
@@ -1401,10 +1401,8 @@ function updateField(idx,field,val){
 }
 
 function showNotif(nm,field){
-  var labels={katast:'Κατάσταση',afx:'Άφιξη',par:'Παράδοση',thesi:'Θέση',notes:'Παρατηρήσεις',pAfx:'Πρβλ. Άφιξη',pPar:'Πρβλ. Παράδοση',xora:'Χώρα',a:'Χρήστης',sysk:'Συσκ.'};
-  var n=document.getElementById('notif');
-  document.getElementById('notif-text').textContent=(role==='office'?'Γραφείο':role==='warehouse'?'Αποθήκη':'Admin')+' → '+(nm||'—')+': '+(labels[field]||field)+' ενημερώθηκε';
-  n.style.display='flex';clearTimeout(window._nt);window._nt=setTimeout(function(){n.style.display='none';},3500);
+  // Toast απενεργοποιημένο κατόπιν αιτήματος — δεν εμφανίζεται πλέον τίποτα
+  return;
 }
 
 // ---- MERIDA ----
@@ -1726,6 +1724,7 @@ function makeKatastCell(ri,val,ed){
     +'</div>';
 
   var icon='<div class="katast-icon" style="display:none;cursor:pointer" '
+  +'title="'+esc(val)+'" '
   +'data-ri="'+ri+'" '
   +'data-val="'+esc(val)+'">'
   +ic(iconName,16)
@@ -2071,13 +2070,13 @@ function render(){
   document.querySelectorAll('.katast-icon').forEach(function(el){
     var ri = parseInt(el.getAttribute('data-ri'));
     var val = el.getAttribute('data-val');
-    var opts = ['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΣΕ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
-    
+    var opts = ['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΠΡΟΣ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+
     var STATUS_COLORS = {
       'ΑΝΑΜΟΝΗ':      {bg:'#f5f4f0', color:'#6b7280', icon:'⏳'},
       'ΣΤΗΝ ΑΠΟΘΗΚΗ': {bg:'#e8f5e9', color:'#2e7d32', icon:'📦'},
       'ΑΜΕΣΗ':        {bg:'#fce8e6', color:'#c62828', icon:'⚡'},
-      'ΣΕ ΜΕΤΑΦΟΡΑ':  {bg:'#e3f2fd', color:'#1565c0', icon:'🚛'},
+      'ΠΡΟΣ ΜΕΤΑΦΟΡΑ':{bg:'#e3f2fd', color:'#1565c0', icon:'🚛'},
       'ΠΑΡΑΔΟΘΗΚΕ':   {bg:'#fff8e1', color:'#f57f17', icon:'✓'}
     };
 
@@ -2123,7 +2122,7 @@ function render(){
       div.appendChild(item);
     });
 
-    // Click tippy για επιλογή
+    // Click tippy για επιλογή (το hover tooltip καλύπτεται πλέον από το native title="" στο icon)
 tippy(el, {
   content: div,
   trigger: 'click',
@@ -2132,17 +2131,6 @@ tippy(el, {
   arrow: true,
   appendTo: document.body,
   theme: 'light-border'
-});
-
-// Hover tippy για tooltip με την τρέχουσα κατάσταση
-tippy(el, {
-  content: val,
-  trigger: 'mouseenter',
-  placement: 'top',
-  arrow: true,
-  appendTo: document.body,
-  theme: 'light-border',
-  hideOnClick: true
 });
   });
 }
