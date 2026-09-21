@@ -78,6 +78,19 @@ tbody tr.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
 table{width:100%;border-collapse:collapse;min-width:1050px}
 thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size:10px;font-weight:700;color:var(--brand);border-bottom:2px solid var(--brand);white-space:nowrap;position:sticky;top:0px;z-index:5;text-transform:uppercase;letter-spacing:.04em}
 .tippy-box{font-size:10px}
+/* Το tippy.js ζητάει theme:'light-border' αλλά δεν φορτώνουμε το CSS του theme από CDN — το ορίζουμε εδώ, αυτόνομα, ώστε όλα τα tooltips (Κατάσταση, Πελάτης, Παρατηρήσεις, Άφιξη/Παράδοση) να είναι λευκά αντί για το μαύρο default του tippy */
+.tippy-box[data-theme~='light-border']{
+  background-color:#fff;
+  color:#1a3a2a;
+  border:1px solid #e2e1d9;
+  box-shadow:0 4px 14px rgba(26,58,42,.15);
+}
+.tippy-box[data-theme~='light-border'] > .tippy-arrow{ color:#fff; }
+.tippy-box[data-theme~='light-border'] > .tippy-arrow:before{ border-top-color:transparent; border-bottom-color:transparent; border-left-color:transparent; border-right-color:transparent; }
+.tippy-box[data-theme~='light-border'][data-placement^='top'] > .tippy-arrow:before{ border-top-color:#fff; }
+.tippy-box[data-theme~='light-border'][data-placement^='bottom'] > .tippy-arrow:before{ border-bottom-color:#fff; }
+.tippy-box[data-theme~='light-border'][data-placement^='left'] > .tippy-arrow:before{ border-left-color:#fff; }
+.tippy-box[data-theme~='light-border'][data-placement^='right'] > .tippy-arrow:before{ border-right-color:#fff; }
 /* Κατάσταση: πάντα μόνο icon + tooltip (ό,τι ίσχυε μόνο σε μικρές οθόνες) */
 .katast-full { display:none !important; }
 .katast-icon { display:flex !important; align-items:center; justify-content:center; cursor:pointer; width:100%; }
@@ -2133,9 +2146,10 @@ function render(){
       theme: 'light-border'
     });
 
-    // Hover tippy για tooltip με την τρέχουσα κατάσταση (ίδιο στυλ με τα υπόλοιπα tooltips της εφαρμογής)
+    // Hover tippy για tooltip με την τρέχουσα κατάσταση — αυτόνομο span με δικό του στυλ, δεν βασίζεται στο theme
     tippy(el, {
-      content: val,
+      content: '<span style="display:inline-block;background:#fff;color:#1a3a2a;font-size:10px;font-weight:600;padding:2px 2px">'+val+'</span>',
+      allowHTML: true,
       trigger: 'mouseenter',
       placement: 'top',
       arrow: true,
