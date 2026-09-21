@@ -81,6 +81,23 @@ thead th{background:var(--brand-light);padding:9px 8px;text-align:left;font-size
 /* Κατάσταση: πάντα μόνο icon + tooltip (ό,τι ίσχυε μόνο σε μικρές οθόνες) */
 .katast-full { display:none !important; }
 .katast-icon { display:flex !important; align-items:center; justify-content:center; cursor:pointer; width:100%; }
+tbody td:nth-child(12){ text-align:center; }
+/* Tooltip στο hover του εικονιδίου Κατάστασης (χωρίς tippy, γιατί το tippy σβήνει το native title) */
+.katast-icon:hover::after{
+  content: attr(data-label);
+  position:absolute;
+  top:calc(100% + 6px);
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--brand);
+  color:white;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:10px;
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:999;
+}
 tbody tr{border-bottom:1px solid rgba(26,58,42,.08)}
 tbody tr:hover{filter:brightness(.97)}
 
@@ -1723,8 +1740,8 @@ function makeKatastCell(ri,val,ed){
     }).join('')
     +'</div>';
 
-  var icon='<div class="katast-icon" style="display:none;cursor:pointer" '
-  +'title="'+esc(val)+'" '
+  var icon='<div class="katast-icon" style="display:none;cursor:pointer;width:100%;justify-content:center;position:relative" '
+  +'data-label="'+esc(val)+'" '
   +'data-ri="'+ri+'" '
   +'data-val="'+esc(val)+'">'
   +ic(iconName,16)
