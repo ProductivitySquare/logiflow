@@ -374,14 +374,12 @@ tbody td:nth-child(7) input {
   thead th:nth-child(11) { width: 11% }  /* Πελάτης */
   thead th:nth-child(12) { width: 8% }   /* Κατάσταση */
   thead th:nth-child(13) { width: 29% }  /* Παρατηρήσεις — μεγάλο! */
-  thead th:nth-child(14) { width: 0; display: none }  /* Σήμα — κρυφό */
-  thead th:nth-child(15) { width: 0; display: none }  /* Delete — κρυφό */
+  thead th:nth-child(14) { width: 0; display: none }  /* Delete — κρυφό */
 
-  /* ── Hide Σήμα + Delete columns in rows too ── */
+  /* ── Hide Delete columns in rows too ── */
   tbody td:nth-child(14),
-  tbody td:nth-child(15),
-  tbody td:nth-child(16) { display: none !important; }
-  thead th:nth-child(16) { display: none !important; }
+  tbody td:nth-child(15) { display: none !important; }
+  thead th:nth-child(15) { display: none !important; }
 
   /* ── User cell: hide the overlay select, show only the initial span ── */
   tbody td:nth-child(3) select { display: none !important; }
@@ -579,8 +577,6 @@ tbody td:nth-child(7) .print-par {
 
   @media screen and (max-width:1360px){
 
-    tbody td:nth-child(14) .seen-tag { font-size:9px !important; padding:3px 5px !important; }
-tbody td:nth-child(14) .ack-btn { font-size:9px !important; padding:3px 5px !important; }
     
       tbody td{
     position:relative;
@@ -629,13 +625,12 @@ thead th:nth-child(7){width:80px !important}
 thead th:nth-child(8){width:30px !important}
 thead th:nth-child(9){width:34px !important}
 thead th:nth-child(10){width:45px !important}
-thead th:nth-child(11){width:140px !important}
+thead th:nth-child(11){width:198px !important}
 thead th:nth-child(12){width:46px !important}
 thead th:nth-child(13){width:190px !important}
-thead th:nth-child(14){width:58px !important}
+thead th:nth-child(14){width:30px !important}
 thead th:nth-child(15){width:30px !important}
 thead th:nth-child(16){width:30px !important}
-thead th:nth-child(17){width:30px !important}
 
 
     
@@ -761,10 +756,9 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
       <th style="width:38px">Κολά</th>
       <th style="width:56px">Συσκ.</th>
       <th style="width:54px">Κιλά</th>
-      <th style="width:148px">Πελάτης</th>
+      <th style="width:226px">Πελάτης</th>
       <th style="width:120px">Κατάσταση</th>
       <th style="width:240px;max-width:240px">Παρατηρήσεις</th>
-      <th style="width:78px">Σήμα</th>
       <th style="width:34px"></th>
       <th style="width:34px"></th>  
       <th style="width:38px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></th>
@@ -1249,11 +1243,11 @@ function updateWeekStats(){
   var paradoth = rows.filter(function(r){return r.katast==='ΠΑΡΑΔΟΘΗΚΕ';}).length;
   var svg = function(path,col){return '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="'+(col||'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';};
   var icTotal   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>');
-  var icAnamoni = svg('<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>','#fef08a');
-  var icAmesi   = svg('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>','#fca5a5');
-  var icTransit = svg('<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>','#93c5fd');
-  var icApoth   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>','#86efac');
-  var icParadoth= svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>','#86efac');
+  var icAnamoni = svg('<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>','#fff');
+  var icAmesi   = svg('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>','#fff');
+  var icTransit = svg('<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>','#fff');
+  var icApoth   = svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>','#fff');
+  var icParadoth= svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>','#fff');
   el.innerHTML = '<span style="opacity:.5;margin-right:2px">|</span>'
     +'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Παραλαβές">'+icTotal+' '+total+' <span class="stat-label">Παραλαβές</span></span>'
 +(anamoni?'<span style="display:flex;align-items:center;gap:3px;color:#fff" data-label="Αναμονή">'+icAnamoni+' '+anamoni+' <span class="stat-label">Αναμονή</span></span>':'')
@@ -1329,7 +1323,7 @@ function _runGlobalSearch(q, data){
 function renderGlobalResults(results, q){
   var tb = document.getElementById('tbody');
   if(!results.length){
-    tb.innerHTML = '<tr><td colspan="17" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
+    tb.innerHTML = '<tr><td colspan="16" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
     return;
   }
   var html = '';
@@ -2061,7 +2055,6 @@ function render(){
     html+=makePelatisCell(ri,row.pelatis,canEdit('pelatis'));
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
-    html+=makeSignalCell(ri,row);
     html+=makeAttachCell(ri,row);
     html+=makeCopyCell(ri);
     html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
