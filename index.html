@@ -1950,7 +1950,7 @@ function makeInternalCell(ri,row){
   var key=row.internalKey||'';
   var inr=key&&internalsList[key];
   var checked=(row._fbKey&&selectedRows[row._fbKey])?' checked':'';
-  var style=inr?('color:'+(inr.color||'#f57c00')+';opacity:1'):'color:#374151;opacity:.35';
+  var style=inr?'color:#000;opacity:1':'color:#374151;opacity:.35';
   return '<td style="text-align:center;white-space:nowrap">'
     +'<input type="checkbox" class="row-select-cb" data-rid="'+esc(row._fbKey||'')+'" onchange="toggleRowSelect(\''+esc(row._fbKey||'')+'\',this.checked)"'+checked+'>'
     +'<span class="internal-icon" data-ri="'+ri+'" title="'+(inr?esc(inr.name):'Ανάθεση εσωτερικού')+'" style="'+style+'">'
@@ -2383,9 +2383,24 @@ function addRow(){
   // Don't push to local rows[] — the Firebase onValue listener will add it automatically
 }
 
+function showDeleteToast(msg){
+  var t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:24px;right:24px;background:#1a3a2a;color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:99999;opacity:0;transition:opacity .25s';
+  document.body.appendChild(t);
+  requestAnimationFrame(function(){t.style.opacity='1';});
+  setTimeout(function(){
+    t.style.opacity='0';
+    setTimeout(function(){t.remove();},300);
+  },2200);
+}
 function delRow(ri){
   if(!confirm('Διαγραφή γραμμής;'))return;
-  deleteRowFB(rows[ri]);
+  var row=rows[ri];
+  var label=(row&&(row.pelatis||row.id))||'Η γραμμή';
+  deleteRowFB(row);
+  showDeleteToast('Διαγράφηκε: '+label);
+  // Don't splice rows[] locally — the Firebase onValue listener will remove it
   // Don't splice rows[] locally — the Firebase onValue listener will remove it
   // automatically once the deletion is confirmed (same pattern as addRow()).
   // Splicing here too was the bug: Firebase's local echo can rebuild rows[]
