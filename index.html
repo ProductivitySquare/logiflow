@@ -1954,7 +1954,7 @@ function makeInternalCell(ri,row){
   return '<td style="text-align:center;white-space:nowrap">'
     +'<input type="checkbox" class="row-select-cb" data-rid="'+esc(row._fbKey||'')+'" onchange="toggleRowSelect(\''+esc(row._fbKey||'')+'\',this.checked)"'+checked+'>'
     +'<span class="internal-icon" data-ri="'+ri+'" title="'+(inr?esc(inr.name):'Ανάθεση εσωτερικού')+'" style="'+style+'">'
-    +ic('truck',15)
+    +ic('truck')
     +'</span></td>';
 }
 
