@@ -148,6 +148,9 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .attach-btn{padding:6px 10px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:10px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .15s;white-space:nowrap}
 .attach-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
 .attach-btn.has-files{background:var(--brand);color:white;border-color:var(--brand)}
+.actions-btn{padding:4px 8px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:12px;line-height:1;cursor:pointer;font-family:inherit;font-weight:700;transition:all .15s;position:relative}
+.actions-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
+.actions-badge{position:absolute;top:-5px;right:-5px;background:var(--brand);color:#fff;font-size:8px;font-weight:700;border-radius:50%;min-width:13px;height:13px;line-height:13px;text-align:center;padding:0 2px}
 .attach-modal-bg{display:none;position:fixed;inset:0;background:rgba(26,58,42,.5);z-index:1100;align-items:center;justify-content:center}
 .attach-modal-bg.open{display:flex}
 .attach-modal{background:#fff;border-radius:12px;width:min(520px,96vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(26,58,42,.3);font-family:inherit}
@@ -393,12 +396,10 @@ tbody td:nth-child(7) input {
   thead th:nth-child(11) { width: 11% }  /* Πελάτης */
   thead th:nth-child(12) { width: 8% }   /* Κατάσταση */
   thead th:nth-child(13) { width: 29% }  /* Παρατηρήσεις — μεγάλο! */
-  thead th:nth-child(14) { width: 0; display: none }  /* Delete — κρυφό */
+  thead th:nth-child(14) { width: 0; display: none }  /* Ενέργειες (...) — κρυφό */
 
-  /* ── Hide Delete columns in rows too ── */
-  tbody td:nth-child(14),
-  tbody td:nth-child(15) { display: none !important; }
-  thead th:nth-child(15) { display: none !important; }
+  /* ── Hide actions column in rows too ── */
+  tbody td:nth-child(14) { display: none !important; }
 
   /* ── User cell: hide the overlay select, show only the initial span ── */
   tbody td:nth-child(3) select { display: none !important; }
@@ -647,9 +648,7 @@ thead th:nth-child(10){width:45px !important}
 thead th:nth-child(11){width:198px !important}
 thead th:nth-child(12){width:46px !important}
 thead th:nth-child(13){width:190px !important}
-thead th:nth-child(14){width:30px !important}
-thead th:nth-child(15){width:30px !important}
-thead th:nth-child(16){width:30px !important}
+thead th:nth-child(14){width:36px !important}
 
 
     
@@ -757,6 +756,7 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
   </select>
   <button class="add-btn" onclick="addRow()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Νέα γραμμή</button>
   <button class="add-btn" onclick="openClientsModal()" style="background:#4285F4">+ Πελάτης</button>
+  <button class="add-btn" onclick="openInternalsModal()" style="background:#f57c00"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V11l2-5h10l4 5v6M5 11h14"/></svg> + Εσωτερικός</button>
 
   <div style="flex:1"></div>
  <button id="storageTabBtn" onclick="switchTab('storage')" style="padding:6px 14px;border:none;border-radius:7px;background:#4285F4;color:white;font-size:10px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s">Αποθηκεύσεις →</button>
@@ -778,9 +778,7 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
       <th style="width:226px">Πελάτης</th>
       <th style="width:120px">Κατάσταση</th>
       <th style="width:240px;max-width:240px">Παρατηρήσεις</th>
-      <th style="width:34px"></th>
-      <th style="width:34px"></th>  
-      <th style="width:38px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></th>
+      <th style="width:36px"></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
@@ -1342,7 +1340,7 @@ function _runGlobalSearch(q, data){
 function renderGlobalResults(results, q){
   var tb = document.getElementById('tbody');
   if(!results.length){
-    tb.innerHTML = '<tr><td colspan="16" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
+    tb.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
     return;
   }
   var html = '';
@@ -1919,6 +1917,17 @@ function makeAttachCell(ri,row){
   return '<td style="white-space:nowrap"><button class="'+cls+'" onclick="openAttachModal('+ri+')">'+label+'</button>'+shareBtn+'</td>';
 }
 
+// ---- ACTIONS (συγκεντρωτικό μενού "..." — αντικαθιστά Συνημμένα/Αντιγραφή/Διαγραφή) ----
+function makeActionsCell(ri,row){
+  var count=(row.attachments&&row.attachments.length)||0;
+  var base=baseOf(row.id);
+  var gc=window._groupCount||{};
+  var isGroupFirst=base&&gc[base]>1&&(filtered.indexOf(row)===0||baseOf((filtered[filtered.indexOf(row)-1]||{}).id)!==base);
+  var shareBtn=isGroupFirst?'<button class="attach-btn" onclick="openGroupShareModal('+ri+')" title="Μοίρασε σε group" style="margin-left:3px;padding:2px 5px;font-size:9px">⇄</button>':'';
+  var badge=count>0?'<span class="actions-badge">'+count+'</span>':'';
+  return '<td style="white-space:nowrap;text-align:center"><button class="actions-btn" data-ri="'+ri+'">⋯'+badge+'</button>'+shareBtn+'</td>';
+}
+
 function openAttachModal(ri){
   attachRowIdx=ri;
   renderAttachList();
@@ -2072,9 +2081,7 @@ function render(){
     html+=makePelatisCell(ri,row.pelatis,canEdit('pelatis'));
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
-    html+=makeAttachCell(ri,row);
-    html+=makeCopyCell(ri);
-    html+='<td><button class="del-btn" onclick="delRow('+ri+')">✕</button></td>';
+    html+=makeActionsCell(ri,row);
     html+='</tr>';
     prevBase=base;
   });
@@ -2152,6 +2159,46 @@ function render(){
       allowHTML: true,
       trigger: 'mouseenter',
       placement: 'top',
+      arrow: true,
+      appendTo: document.body,
+      theme: 'katast-white'
+    });
+  });
+
+  // ---- ACTIONS (...) menu: Συνημμένα / Αντιγραφή / Διαγραφή ----
+  document.querySelectorAll('.actions-btn').forEach(function(btn){
+    var ri = parseInt(btn.getAttribute('data-ri'));
+    var row = rows[ri];
+    var count = (row&&row.attachments&&row.attachments.length)||0;
+
+    var menu = document.createElement('div');
+    menu.style.cssText = 'font-family:inherit;padding:4px;display:flex;flex-direction:column;gap:2px;min-width:130px';
+
+    function menuItem(label, iconSvg, onClick, danger){
+      var item = document.createElement('div');
+      item.style.cssText = 'padding:5px 9px;cursor:pointer;font-size:10px;white-space:nowrap;border-radius:6px;display:flex;align-items:center;gap:6px;background:#fff;color:'+(danger?'#c0392b':'#374151')+';font-weight:500;transition:background .12s;';
+      item.innerHTML = iconSvg+'<span>'+label+'</span>';
+      item.addEventListener('mouseover', function(){ this.style.background = danger?'#fce8e6':'#f5f4f0'; });
+      item.addEventListener('mouseout', function(){ this.style.background = '#fff'; });
+      item.addEventListener('mousedown', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        actionsTip.hide();
+        onClick();
+      });
+      return item;
+    }
+
+    var attachSvg='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>';
+    menu.appendChild(menuItem('Συνημμένα'+(count>0?' ('+count+')':''), attachSvg, function(){ openAttachModal(ri); }));
+    menu.appendChild(menuItem('Αντιγραφή', COPY_ICON, function(){ copyRowData(ri); }));
+    menu.appendChild(menuItem('Διαγραφή', '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>', function(){ delRow(ri); }, true));
+
+    var actionsTip = tippy(btn, {
+      content: menu,
+      trigger: 'click',
+      placement: 'left-start',
+      interactive: true,
       arrow: true,
       appendTo: document.body,
       theme: 'katast-white'
@@ -2669,6 +2716,12 @@ function openClientsModal(){
 function closeClientsModal(){
   document.getElementById('clientsModalBg').classList.remove('open');
 }
+function openInternalsModal(){
+  document.getElementById('internalsModalBg').classList.add('open');
+}
+function closeInternalsModal(){
+  document.getElementById('internalsModalBg').classList.remove('open');
+}
 
 function renderClientsList(){
   var body = document.getElementById('clientsModalBody');
@@ -2933,6 +2986,21 @@ function applyGroupShare(){
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeClientsModal()">Κλείσιμο</button>
       <button class="btn-save" onclick="openNewClientForm()">+ Νέος Πελάτης</button>
+    </div>
+  </div>
+</div>
+
+  <div class="modal-bg" id="internalsModalBg" onclick="if(event.target===this)closeInternalsModal()">
+  <div class="modal" style="width:min(620px,96vw)">
+    <div class="modal-header">
+      <div><h2>Εσωτερικοί Μεταφορείς</h2><div class="sub">Διαχείριση εσωτερικών μεταφορέων</div></div>
+      <button class="modal-close" onclick="closeInternalsModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px;text-align:center;color:var(--text-muted);font-size:12px">
+      Εδώ θα ορίζονται οι εσωτερικοί μεταφορείς — πες μου τα πεδία που θες (όνομα, τηλέφωνο, όχημα κλπ.) και το φτιάχνουμε.
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeInternalsModal()">Κλείσιμο</button>
     </div>
   </div>
 </div>
