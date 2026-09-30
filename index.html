@@ -103,6 +103,7 @@ tbody tr.row-apoth{background:#b8d4ff}   /* Αποθήκη = μπλε */
 tbody tr.row-amesi{background:#ffe8a0}   /* Άμεση = κίτρινο */
 tbody tr.row-transit{background:#ffc5c0} /* Μεταφορά = κόκκινο */
 tbody tr.row-deliv{background:#b7f5c8}   /* Παραδόθηκε = πράσινο */
+tbody tr.row-paral{background:#dccdf5}   /* Παραλαβή = μωβ */
 tbody tr.row-wait{background:#ffffff}
 
 tbody td{padding:3px 5px;vertical-align:middle;height:32px}
@@ -151,8 +152,8 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .actions-btn{padding:4px 8px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:12px;line-height:1;cursor:pointer;font-family:inherit;font-weight:700;transition:all .15s;position:relative}
 .actions-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
 .actions-badge{position:absolute;top:-5px;right:-5px;background:var(--brand);color:#fff;font-size:8px;font-weight:700;border-radius:50%;min-width:13px;height:13px;line-height:13px;text-align:center;padding:0 2px}
-.internal-btn{width:20px;height:20px;border-radius:50%;border:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;font-weight:700;vertical-align:middle;padding:0;transition:all .15s}
-.internal-btn:hover{filter:brightness(.92)}
+.internal-icon{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;vertical-align:middle;transition:opacity .15s}
+.internal-icon:hover{opacity:.75}
 .row-select-cb{width:13px;height:13px;vertical-align:middle;margin-right:4px;cursor:pointer}
 .bulk-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--brand);color:#fff;padding:10px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;z-index:9999;font-size:12px}
 .bulk-bar select{padding:5px 8px;border-radius:6px;border:none;font-size:12px;font-family:inherit}
@@ -765,6 +766,7 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
     <option value="ΠΑΡΑΔΟΘΗΚΕ">Παραδόθηκε</option>
     <option value="ΠΡΟΣ ΜΕΤΑΦΟΡΑ">Προς μεταφορά</option>
     <option value="ΑΝΑΜΟΝΗ">Αναμονή</option>
+    <option value="ΠΑΡΑΛΑΒΗ">Παραλαβή</option>
   </select>
   <select id="internalFilterSelect" onchange="filterInternal(this.value)">
     <option value="">Όλοι οι Εσωτερικοί</option>
@@ -780,7 +782,7 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
 <div id="bulkBar" class="bulk-bar" style="display:none">
   <span id="bulkCount"></span>
   <select id="bulkInternalSelect"><option value="">— Επιλογή εσωτερικού —</option></select>
-  <button class="btn-save" onclick="bulkAssignInternal()">🚗 Ανάθεση</button>
+  <button class="btn-save" onclick="bulkAssignInternal()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V11l2-5h10l4 5v6M5 11h14"/></svg>Ανάθεση</button>
   <button class="btn-cancel" onclick="bulkClearInternal()">Αφαίρεση ανάθεσης</button>
   <button class="btn-cancel" onclick="clearSelection()">Άκυρο</button>
 </div>
@@ -1049,13 +1051,15 @@ var ICONS={
   alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
   truck:'<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
   checkCircle:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
-  pause:'<circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/>'
+  pause:'<circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/>',
+  inbox:'<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  car:'<path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V11l2-5h10l4 5v6M5 11h14"/>'
 };
 function ic(name,size){
   size=size||14;
   return '<svg class="ic" width="'+size+'" height="'+size+'" viewBox="0 0 24 24">'+ICONS[name]+'</svg>';
 }
-var STATUS_ICONS={'ΑΝΑΜΟΝΗ':'hourglass','ΣΤΗΝ ΑΠΟΘΗΚΗ':'package','ΑΜΕΣΗ':'alert','ΠΡΟΣ ΜΕΤΑΦΟΡΑ':'truck','ΠΑΡΑΔΟΘΗΚΕ':'checkCircle'};
+var STATUS_ICONS={'ΑΝΑΜΟΝΗ':'hourglass','ΣΤΗΝ ΑΠΟΘΗΚΗ':'package','ΑΜΕΣΗ':'alert','ΠΡΟΣ ΜΕΤΑΦΟΡΑ':'truck','ΠΑΡΑΔΟΘΗΚΕ':'checkCircle','ΠΑΡΑΛΑΒΗ':'inbox'};
 var currentMonday=getThisMonday();
 var rows=[];
 var filtered=[];
@@ -1417,7 +1421,7 @@ function goToWeek(wk){
   
 // ---- FIELD LOGIC ----
 function canEdit(f){if(role==='admin')return true;if(role==='office')return officeFields.indexOf(f)>=0;if(role==='warehouse')return warehouseFields.indexOf(f)>=0;return false;}
-function rowClass(k){if(k==='ΣΤΗΝ ΑΠΟΘΗΚΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΠΡΟΣ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';return 'row-wait';}
+function rowClass(k){if(k==='ΣΤΗΝ ΑΠΟΘΗΚΗ')return 'row-apoth';if(k==='ΑΜΕΣΗ')return 'row-amesi';if(k==='ΠΡΟΣ ΜΕΤΑΦΟΡΑ')return 'row-transit';if(k==='ΠΑΡΑΔΟΘΗΚΕ')return 'row-deliv';if(k==='ΠΑΡΑΛΑΒΗ')return 'row-paral';return 'row-wait';}
 function fmtDT(v,dateOnly){if(!v)return'';try{var d=new Date(v);if(isNaN(d))return v;var dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');if(dateOnly||hh==='00'&&mi==='00')return dd+'/'+mm;return dd+'/'+mm+' '+hh+':'+mi;}catch(e){return v;}}
 function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 function nTxt(n){if(!n)return'';var p=[];if(n.address)p.push(n.address);if(n.hours||n.phone)p.push([n.hours,n.phone].filter(Boolean).join(' · '));if(n.contact)p.push(n.contact);if(n.dims)p.push(n.dims);if(n.euro)p.push(n.euro);if(n.volumeNote)p.push(n.volumeNote);return p.join(' // ');}
@@ -1743,7 +1747,7 @@ function makeTxtCell(ri,field,val,ed){
 // ---- KATAST ----
 function makeKatastCell(ri,val,ed){
   var cls=ed?'ec':'rc';
-  var opts=['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΠΡΟΣ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+  var opts=['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΠΡΟΣ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ','ΠΑΡΑΛΑΒΗ'];
   var iconName=STATUS_ICONS[val]||'hourglass';
 
   // Μεγάλες οθόνες — κανονικό select
@@ -1946,15 +1950,13 @@ function makeAttachCell(ri,row){
 function makeInternalCell(ri,row){
   var key=row.internalKey||'';
   var inr=key&&internalsList[key];
-  var color=inr?(inr.color||'#f57c00'):'#e3e1d8';
-  var initial=inr?(inr.name||'?').trim().charAt(0).toUpperCase():'';
   var checked=(row._fbKey&&selectedRows[row._fbKey])?' checked':'';
-  var carSvg='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V11l2-5h10l4 5v6M5 11h14"/></svg>';
+  var style=inr?('color:'+(inr.color||'#f57c00')+';opacity:1'):'color:#374151;opacity:.35';
   return '<td style="text-align:center;white-space:nowrap">'
     +'<input type="checkbox" class="row-select-cb" data-rid="'+esc(row._fbKey||'')+'" onchange="toggleRowSelect(\''+esc(row._fbKey||'')+'\',this.checked)"'+checked+'>'
-    +'<button class="internal-btn" data-ri="'+ri+'" title="'+(inr?esc(inr.name):'Ανάθεση εσωτερικού')+'" style="background:'+color+';color:'+(inr?'#fff':'#8a8778')+'">'
-    +(inr?esc(initial):carSvg)
-    +'</button></td>';
+    +'<span class="internal-icon" data-ri="'+ri+'" title="'+(inr?esc(inr.name):'Ανάθεση εσωτερικού')+'" style="'+style+'">'
+    +ic('car',15)
+    +'</span></td>';
 }
 
 function makeActionsCell(ri,row){
@@ -2131,14 +2133,15 @@ function render(){
   document.querySelectorAll('.katast-icon').forEach(function(el){
     var ri = parseInt(el.getAttribute('data-ri'));
     var val = el.getAttribute('data-val');
-    var opts = ['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΠΡΟΣ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ'];
+    var opts = ['ΑΝΑΜΟΝΗ','ΣΤΗΝ ΑΠΟΘΗΚΗ','ΑΜΕΣΗ','ΠΡΟΣ ΜΕΤΑΦΟΡΑ','ΠΑΡΑΔΟΘΗΚΕ','ΠΑΡΑΛΑΒΗ'];
 
     var STATUS_COLORS = {
-      'ΑΝΑΜΟΝΗ':      {bg:'#f5f4f0', color:'#6b7280', icon:'⏳'},
-      'ΣΤΗΝ ΑΠΟΘΗΚΗ': {bg:'#e8f5e9', color:'#2e7d32', icon:'📦'},
-      'ΑΜΕΣΗ':        {bg:'#fce8e6', color:'#c62828', icon:'⚡'},
-      'ΠΡΟΣ ΜΕΤΑΦΟΡΑ':{bg:'#e3f2fd', color:'#1565c0', icon:'🚛'},
-      'ΠΑΡΑΔΟΘΗΚΕ':   {bg:'#fff8e1', color:'#f57f17', icon:'✓'}
+      'ΑΝΑΜΟΝΗ':      {bg:'#f5f4f0', color:'#6b7280', icon:'hourglass'},
+      'ΣΤΗΝ ΑΠΟΘΗΚΗ': {bg:'#e8f5e9', color:'#2e7d32', icon:'package'},
+      'ΑΜΕΣΗ':        {bg:'#fce8e6', color:'#c62828', icon:'alert'},
+      'ΠΡΟΣ ΜΕΤΑΦΟΡΑ':{bg:'#e3f2fd', color:'#1565c0', icon:'truck'},
+      'ΠΑΡΑΔΟΘΗΚΕ':   {bg:'#fff8e1', color:'#f57f17', icon:'checkCircle'},
+      'ΠΑΡΑΛΑΒΗ':     {bg:'#f2ecfb', color:'#6a1b9a', icon:'inbox'}
     };
 
     var div = document.createElement('div');
@@ -2162,8 +2165,8 @@ function render(){
 
       if(isActive){
         var check = document.createElement('span');
-        check.textContent = '✓';
-        check.style.cssText = 'margin-left:auto;font-size:9px;color:'+sc.color;
+        check.innerHTML = ic('check',9);
+        check.style.cssText = 'margin-left:auto;display:inline-flex;color:'+sc.color;
         item.appendChild(check);
       }
 
@@ -2206,7 +2209,7 @@ function render(){
   });
 
   // ---- ΕΣΩΤΕΡΙΚΟΣ ΜΕΤΑΦΟΡΕΑΣ: ανάθεση ανά γραμμή ----
-  document.querySelectorAll('.internal-btn').forEach(function(btn){
+  document.querySelectorAll('.internal-icon').forEach(function(btn){
     var ri = parseInt(btn.getAttribute('data-ri'));
     var row = rows[ri];
     if(!row) return;
@@ -2931,21 +2934,41 @@ function saveInternal(){
   var nameEl = document.getElementById('ifName');
   var name = nameEl.value.trim();
   if(!name){ alert('Συμπλήρωσε όνομα!'); return; }
-  var phone = document.getElementById('ifPhone').value.trim();
+  var phoneEl = document.getElementById('ifPhone');
+  var phone = phoneEl.value.trim();
   var usedColors = Object.values(internalsList).map(function(i){return i.color;});
   var color = INTERNAL_COLORS.find(function(c){return usedColors.indexOf(c)<0;}) || INTERNAL_COLORS[Object.keys(internalsList).length % INTERNAL_COLORS.length];
+  if(!window._fb || !window._fb.db){ alert('Δεν υπάρχει σύνδεση με τη βάση ακόμα — δοκίμασε ξανά σε λίγο.'); return; }
   var {db,ref,set,push} = window._fb;
   var newRef = push(ref(db,'internals'));
-  set(newRef, {name:name, phone:phone, color:color});
+  var entry = {name:name, phone:phone, color:color};
+  // Αισιόδοξη τοπική ενημέρωση — δείχνει τον νέο εσωτερικό αμέσως,
+  // χωρίς να περιμένουμε το round-trip του Firebase listener.
+  internalsList[newRef.key] = entry;
   nameEl.value='';
-  document.getElementById('ifPhone').value='';
-  setTimeout(renderInternalsList, 400);
+  phoneEl.value='';
+  renderInternalsList();
+  populateInternalFilter();
+  set(newRef, entry).catch(function(err){
+    delete internalsList[newRef.key];
+    renderInternalsList();
+    populateInternalFilter();
+    alert('Σφάλμα αποθήκευσης εσωτερικού μεταφορέα: '+(err&&err.message?err.message:err));
+  });
 }
 function deleteInternal(key){
   if(!confirm('Διαγραφή εσωτερικού μεταφορέα;')) return;
   var {db,ref,remove} = window._fb;
-  remove(ref(db,'internals/'+key));
-  setTimeout(renderInternalsList, 300);
+  var backup = internalsList[key];
+  delete internalsList[key];
+  renderInternalsList();
+  populateInternalFilter();
+  remove(ref(db,'internals/'+key)).catch(function(err){
+    internalsList[key] = backup;
+    renderInternalsList();
+    populateInternalFilter();
+    alert('Σφάλμα διαγραφής εσωτερικού μεταφορέα: '+(err&&err.message?err.message:err));
+  });
 }
 
 function renderClientsList(){
