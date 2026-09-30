@@ -151,6 +151,15 @@ input[type="datetime-local"]{width:130px !important;min-width:130px;max-width:13
 .actions-btn{padding:4px 8px;border-radius:5px;border:1px solid var(--green-border);background:var(--brand-light);color:var(--brand);font-size:12px;line-height:1;cursor:pointer;font-family:inherit;font-weight:700;transition:all .15s;position:relative}
 .actions-btn:hover{background:var(--brand);color:white;border-color:var(--brand)}
 .actions-badge{position:absolute;top:-5px;right:-5px;background:var(--brand);color:#fff;font-size:8px;font-weight:700;border-radius:50%;min-width:13px;height:13px;line-height:13px;text-align:center;padding:0 2px}
+.internal-btn{width:20px;height:20px;border-radius:50%;border:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;font-weight:700;vertical-align:middle;padding:0;transition:all .15s}
+.internal-btn:hover{filter:brightness(.92)}
+.row-select-cb{width:13px;height:13px;vertical-align:middle;margin-right:4px;cursor:pointer}
+.bulk-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--brand);color:#fff;padding:10px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;z-index:9999;font-size:12px}
+.bulk-bar select{padding:5px 8px;border-radius:6px;border:none;font-size:12px;font-family:inherit}
+.bulk-bar button{font-size:11px;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;font-weight:700}
+.bulk-bar .btn-save{background:#fff;color:var(--brand)}
+.bulk-bar .btn-cancel{background:rgba(255,255,255,.15);color:#fff}
+.bulk-bar .btn-cancel:hover{background:rgba(255,255,255,.28)}
 .attach-modal-bg{display:none;position:fixed;inset:0;background:rgba(26,58,42,.5);z-index:1100;align-items:center;justify-content:center}
 .attach-modal-bg.open{display:flex}
 .attach-modal{background:#fff;border-radius:12px;width:min(520px,96vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(26,58,42,.3);font-family:inherit}
@@ -396,10 +405,12 @@ tbody td:nth-child(7) input {
   thead th:nth-child(11) { width: 11% }  /* Πελάτης */
   thead th:nth-child(12) { width: 8% }   /* Κατάσταση */
   thead th:nth-child(13) { width: 29% }  /* Παρατηρήσεις — μεγάλο! */
-  thead th:nth-child(14) { width: 0; display: none }  /* Ενέργειες (...) — κρυφό */
+  thead th:nth-child(14) { width: 0; display: none }  /* Εσωτερικός — κρυφό */
+  thead th:nth-child(15) { width: 0; display: none }  /* Ενέργειες (...) — κρυφό */
 
-  /* ── Hide actions column in rows too ── */
+  /* ── Hide internal + actions columns in rows too ── */
   tbody td:nth-child(14) { display: none !important; }
+  tbody td:nth-child(15) { display: none !important; }
 
   /* ── User cell: hide the overlay select, show only the initial span ── */
   tbody td:nth-child(3) select { display: none !important; }
@@ -648,7 +659,8 @@ thead th:nth-child(10){width:45px !important}
 thead th:nth-child(11){width:198px !important}
 thead th:nth-child(12){width:46px !important}
 thead th:nth-child(13){width:190px !important}
-thead th:nth-child(14){width:36px !important}
+thead th:nth-child(14){width:54px !important}
+thead th:nth-child(15){width:36px !important}
 
 
     
@@ -754,12 +766,23 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
     <option value="ΠΡΟΣ ΜΕΤΑΦΟΡΑ">Προς μεταφορά</option>
     <option value="ΑΝΑΜΟΝΗ">Αναμονή</option>
   </select>
+  <select id="internalFilterSelect" onchange="filterInternal(this.value)">
+    <option value="">Όλοι οι Εσωτερικοί</option>
+  </select>
   <button class="add-btn" onclick="addRow()"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Νέα γραμμή</button>
   <button class="add-btn" onclick="openClientsModal()" style="background:#4285F4">+ Πελάτης</button>
   <button class="add-btn" onclick="openInternalsModal()" style="background:#f57c00"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V11l2-5h10l4 5v6M5 11h14"/></svg> + Εσωτερικός</button>
 
   <div style="flex:1"></div>
  <button id="storageTabBtn" onclick="switchTab('storage')" style="padding:6px 14px;border:none;border-radius:7px;background:#4285F4;color:white;font-size:10px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s">Αποθηκεύσεις →</button>
+</div>
+
+<div id="bulkBar" class="bulk-bar" style="display:none">
+  <span id="bulkCount"></span>
+  <select id="bulkInternalSelect"><option value="">— Επιλογή εσωτερικού —</option></select>
+  <button class="btn-save" onclick="bulkAssignInternal()">🚗 Ανάθεση</button>
+  <button class="btn-cancel" onclick="bulkClearInternal()">Αφαίρεση ανάθεσης</button>
+  <button class="btn-cancel" onclick="clearSelection()">Άκυρο</button>
 </div>
 
 <div class="wrap">
@@ -778,6 +801,7 @@ thead th{padding:6px 5px;font-size:9px;position:sticky;top:5px;z-index:5;}  /* W
       <th style="width:226px">Πελάτης</th>
       <th style="width:120px">Κατάσταση</th>
       <th style="width:240px;max-width:240px">Παρατηρήσεις</th>
+      <th style="width:64px;text-align:center"><input type="checkbox" id="selectAllCb" onchange="toggleSelectAll(this.checked)" title="Επιλογή όλων" style="cursor:pointer;vertical-align:middle"></th>
       <th style="width:36px"></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
@@ -971,7 +995,8 @@ window.dispatchEvent(new Event('fbready'));
 </script>
 
 <script>
-var role='office', searchQ='', statusF='', modalRowIdx=-1;
+var role='office', searchQ='', statusF='', internalF='', modalRowIdx=-1;
+var selectedRows = {}; // επιλεγμένες γραμμές για mass action (κλειδί: row._fbKey)
 
   // ── LOGIN ──
 (function(){
@@ -1340,7 +1365,7 @@ function _runGlobalSearch(q, data){
 function renderGlobalResults(results, q){
   var tb = document.getElementById('tbody');
   if(!results.length){
-    tb.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
+    tb.innerHTML = '<tr><td colspan="15" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Δεν βρέθηκαν αποτελέσματα για «'+esc(q)+'»</td></tr>';
     return;
   }
   var html = '';
@@ -1410,7 +1435,7 @@ function updateField(idx,field,val){
     showNotif(rows[idx].pelatis||rows[idx].id||'Γραμμή '+(idx+1),field);
     saveRow(rows[idx]);
   }
-  if(field==='katast')render();
+  if(field==='katast'||field==='internalKey')render();
 }
 
 function showNotif(nm,field){
@@ -1918,6 +1943,20 @@ function makeAttachCell(ri,row){
 }
 
 // ---- ACTIONS (συγκεντρωτικό μενού "..." — αντικαθιστά Συνημμένα/Αντιγραφή/Διαγραφή) ----
+function makeInternalCell(ri,row){
+  var key=row.internalKey||'';
+  var inr=key&&internalsList[key];
+  var color=inr?(inr.color||'#f57c00'):'#e3e1d8';
+  var initial=inr?(inr.name||'?').trim().charAt(0).toUpperCase():'';
+  var checked=(row._fbKey&&selectedRows[row._fbKey])?' checked':'';
+  var carSvg='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V11l2-5h10l4 5v6M5 11h14"/></svg>';
+  return '<td style="text-align:center;white-space:nowrap">'
+    +'<input type="checkbox" class="row-select-cb" data-rid="'+esc(row._fbKey||'')+'" onchange="toggleRowSelect(\''+esc(row._fbKey||'')+'\',this.checked)"'+checked+'>'
+    +'<button class="internal-btn" data-ri="'+ri+'" title="'+(inr?esc(inr.name):'Ανάθεση εσωτερικού')+'" style="background:'+color+';color:'+(inr?'#fff':'#8a8778')+'">'
+    +(inr?esc(initial):carSvg)
+    +'</button></td>';
+}
+
 function makeActionsCell(ri,row){
   var count=(row.attachments&&row.attachments.length)||0;
   var base=baseOf(row.id);
@@ -2081,6 +2120,7 @@ function render(){
     html+=makePelatisCell(ri,row.pelatis,canEdit('pelatis'));
     html+=makeKatastCell(ri,row.katast,canEdit('katast'));
     html+=makeNotesCell(ri,row.notes,canEdit('notes'));
+    html+=makeInternalCell(ri,row);
     html+=makeActionsCell(ri,row);
     html+='</tr>';
     prevBase=base;
@@ -2165,6 +2205,57 @@ function render(){
     });
   });
 
+  // ---- ΕΣΩΤΕΡΙΚΟΣ ΜΕΤΑΦΟΡΕΑΣ: ανάθεση ανά γραμμή ----
+  document.querySelectorAll('.internal-btn').forEach(function(btn){
+    var ri = parseInt(btn.getAttribute('data-ri'));
+    var row = rows[ri];
+    if(!row) return;
+    var menu = document.createElement('div');
+    menu.style.cssText = 'font-family:inherit;padding:4px;display:flex;flex-direction:column;gap:2px;min-width:150px;max-height:220px;overflow:auto';
+
+    function menuItem(label, dotColor, onClick, isActive){
+      var item = document.createElement('div');
+      item.style.cssText = 'padding:5px 9px;cursor:pointer;font-size:10px;white-space:nowrap;border-radius:6px;display:flex;align-items:center;gap:6px;background:#fff;color:#374151;font-weight:'+(isActive?'700':'500')+';border:1px solid '+(isActive?dotColor+'50':'transparent')+';transition:background .12s;';
+      var dot = document.createElement('span');
+      dot.style.cssText = 'width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+dotColor;
+      item.appendChild(dot);
+      var txt = document.createElement('span');
+      txt.textContent = label;
+      item.appendChild(txt);
+      item.addEventListener('mouseover', function(){ this.style.background = '#f5f4f0'; });
+      item.addEventListener('mouseout', function(){ this.style.background = '#fff'; });
+      item.addEventListener('mousedown', function(e){
+        e.preventDefault(); e.stopPropagation();
+        internalTip.hide();
+        onClick();
+      });
+      return item;
+    }
+
+    menu.appendChild(menuItem('Χωρίς ανάθεση', '#c9c6ba', function(){ updateField(ri,'internalKey',''); }, !row.internalKey));
+    var keys = Object.keys(internalsList);
+    if(!keys.length){
+      var empty = document.createElement('div');
+      empty.style.cssText = 'padding:6px 9px;font-size:10px;color:#9ca3af;max-width:160px;white-space:normal';
+      empty.textContent = 'Πρόσθεσε εσωτερικό από το «+ Εσωτερικός»';
+      menu.appendChild(empty);
+    }
+    keys.forEach(function(k){
+      var inr = internalsList[k];
+      menu.appendChild(menuItem(inr.name||'—', inr.color||'#f57c00', function(){ updateField(ri,'internalKey',k); }, row.internalKey===k));
+    });
+
+    var internalTip = tippy(btn, {
+      content: menu,
+      trigger: 'click',
+      placement: 'left-start',
+      interactive: true,
+      arrow: true,
+      appendTo: document.body,
+      theme: 'katast-white'
+    });
+  });
+
   // ---- ACTIONS (...) menu: Συνημμένα / Αντιγραφή / Διαγραφή ----
   document.querySelectorAll('.actions-btn').forEach(function(btn){
     var ri = parseInt(btn.getAttribute('data-ri'));
@@ -2221,8 +2312,68 @@ document.querySelectorAll('#tbody td:nth-child(5), #tbody td:nth-child(7)').forE
   if(inp.scrollWidth > inp.clientWidth || inp.disabled) tippy(td, {content:inp.value, trigger:'mouseenter', placement:'top', theme:'light-border'});
 });
 
+updateBulkBar();
 }
 
+// ── ΕΣΩΤΕΡΙΚΟΙ ΜΕΤΑΦΟΡΕΙΣ: mass action / επιλογή γραμμών ──
+function toggleRowSelect(fbKey, checked){
+  if(!fbKey) return;
+  if(checked) selectedRows[fbKey]=true; else delete selectedRows[fbKey];
+  updateBulkBar();
+}
+function toggleSelectAll(checked){
+  filtered.forEach(function(r){
+    if(!r._fbKey) return;
+    if(checked) selectedRows[r._fbKey]=true; else delete selectedRows[r._fbKey];
+  });
+  render();
+}
+function clearSelection(){
+  selectedRows = {};
+  var cb=document.getElementById('selectAllCb');
+  if(cb) cb.checked=false;
+  render();
+}
+function updateBulkBar(){
+  var bar = document.getElementById('bulkBar');
+  if(!bar) return;
+  var keys = Object.keys(selectedRows);
+  if(!keys.length){ bar.style.display='none'; return; }
+  bar.style.display='flex';
+  var countEl = document.getElementById('bulkCount');
+  if(countEl) countEl.textContent = keys.length+' επιλεγμένες γραμμές';
+  var sel = document.getElementById('bulkInternalSelect');
+  if(sel){
+    var cur = sel.value;
+    var opts = '<option value="">— Επιλογή εσωτερικού —</option>';
+    Object.keys(internalsList).forEach(function(k){
+      opts += '<option value="'+k+'">'+esc(internalsList[k].name||'')+'</option>';
+    });
+    sel.innerHTML = opts;
+    sel.value = cur;
+  }
+}
+function bulkAssignInternal(){
+  var sel = document.getElementById('bulkInternalSelect');
+  var key = sel ? sel.value : '';
+  if(!key){ alert('Επίλεξε εσωτερικό από τη λίστα!'); return; }
+  Object.keys(selectedRows).forEach(function(fbKey){
+    var r = rows.find(function(x){ return x._fbKey===fbKey; });
+    if(!r) return;
+    r.internalKey = key;
+    try{ saveRow(r); }catch(e){}
+  });
+  clearSelection();
+}
+function bulkClearInternal(){
+  Object.keys(selectedRows).forEach(function(fbKey){
+    var r = rows.find(function(x){ return x._fbKey===fbKey; });
+    if(!r) return;
+    r.internalKey = '';
+    try{ saveRow(r); }catch(e){}
+  });
+  clearSelection();
+}
 
 function addRow(){
   var r=newRow();
@@ -2258,11 +2409,28 @@ function filterStatus(s){
   if(btn){btn.style.background='var(--bg)';btn.style.color='var(--text)';btn.style.borderColor='var(--border)';}
   applyFilters();
 }
+function filterInternal(v){
+  internalF=v;
+  applyFilters();
+}
+function populateInternalFilter(){
+  var sel=document.getElementById('internalFilterSelect');
+  if(!sel)return;
+  var cur=sel.value;
+  var opts='<option value="">Όλοι οι Εσωτερικοί</option>';
+  Object.keys(internalsList).forEach(function(k){
+    opts+='<option value="'+k+'">'+esc(internalsList[k].name||'')+'</option>';
+  });
+  opts+='<option value="__none__">Χωρίς ανάθεση</option>';
+  sel.innerHTML=opts;
+  sel.value=cur;
+}
 function applyFilters(){
   var matched=rows.filter(function(r){
     var mQ=!searchQ||((r.id||'')+(r.pelatis||'')+(r.xora||'')+(r.katast||'')+(r.kola||'')).toLowerCase().indexOf(searchQ)>=0;
     var mS=!statusF||r.katast===statusF;
-    return mQ&&mS;
+    var mI=!internalF||(internalF==='__none__'?!r.internalKey:r.internalKey===internalF);
+    return mQ&&mS&&mI;
   });
   var baseCount={}, baseFirstIdx={};
   matched.forEach(function(r,i){
@@ -2307,6 +2475,7 @@ function init(){
   updateWeekLabel();
   loadWeek();
     loadClients();
+    loadInternals();
 
 }
 
@@ -2716,11 +2885,67 @@ function openClientsModal(){
 function closeClientsModal(){
   document.getElementById('clientsModalBg').classList.remove('open');
 }
+// ── ΕΣΩΤΕΡΙΚΟΙ ΜΕΤΑΦΟΡΕΙΣ ──
+var internalsList = {};
+var INTERNAL_COLORS = ['#f57c00','#1565c0','#2e7d32','#c62828','#6a1b9a','#00838f','#ad1457','#4e342e'];
+
+function loadInternals(){
+  var {db,ref,onValue:fbOn} = window._fb;
+  fbOn(ref(db,'internals'), function(snap){
+    internalsList = snap.val() || {};
+    populateInternalFilter();
+    if(document.getElementById('internalsModalBg').classList.contains('open')) renderInternalsList();
+    render();
+  });
+}
 function openInternalsModal(){
+  renderInternalsList();
   document.getElementById('internalsModalBg').classList.add('open');
 }
 function closeInternalsModal(){
   document.getElementById('internalsModalBg').classList.remove('open');
+}
+function renderInternalsList(){
+  var body = document.getElementById('internalsModalBody');
+  if(!body) return;
+  var keys = Object.keys(internalsList);
+  if(!keys.length){
+    body.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Δεν υπάρχουν εσωτερικοί μεταφορείς ακόμα.</p>';
+    return;
+  }
+  var html = '';
+  keys.forEach(function(k){
+    var it = internalsList[k];
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;background:#fff">'
+      +'<span style="width:22px;height:22px;border-radius:50%;background:'+(it.color||'#f57c00')+';color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+esc((it.name||'?').trim().charAt(0).toUpperCase())+'</span>'
+      +'<div style="flex:1">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--brand)">'+esc(it.name||'')+'</div>'
+      +(it.phone?'<div style="font-size:11px;color:var(--text-muted)">'+esc(it.phone)+'</div>':'')
+      +'</div>'
+      +'<button onclick="deleteInternal(\''+k+'\')" style="padding:5px 10px;border:1px solid #fca5a5;border-radius:6px;background:var(--red-light);color:var(--red);font-size:12px;cursor:pointer;font-family:inherit">✕</button>'
+      +'</div>';
+  });
+  body.innerHTML = html;
+}
+function saveInternal(){
+  var nameEl = document.getElementById('ifName');
+  var name = nameEl.value.trim();
+  if(!name){ alert('Συμπλήρωσε όνομα!'); return; }
+  var phone = document.getElementById('ifPhone').value.trim();
+  var usedColors = Object.values(internalsList).map(function(i){return i.color;});
+  var color = INTERNAL_COLORS.find(function(c){return usedColors.indexOf(c)<0;}) || INTERNAL_COLORS[Object.keys(internalsList).length % INTERNAL_COLORS.length];
+  var {db,ref,set,push} = window._fb;
+  var newRef = push(ref(db,'internals'));
+  set(newRef, {name:name, phone:phone, color:color});
+  nameEl.value='';
+  document.getElementById('ifPhone').value='';
+  setTimeout(renderInternalsList, 400);
+}
+function deleteInternal(key){
+  if(!confirm('Διαγραφή εσωτερικού μεταφορέα;')) return;
+  var {db,ref,remove} = window._fb;
+  remove(ref(db,'internals/'+key));
+  setTimeout(renderInternalsList, 300);
 }
 
 function renderClientsList(){
@@ -2996,8 +3221,13 @@ function applyGroupShare(){
       <div><h2>Εσωτερικοί Μεταφορείς</h2><div class="sub">Διαχείριση εσωτερικών μεταφορέων</div></div>
       <button class="modal-close" onclick="closeInternalsModal()">✕</button>
     </div>
-    <div class="modal-body" style="padding:24px;text-align:center;color:var(--text-muted);font-size:12px">
-      Εδώ θα ορίζονται οι εσωτερικοί μεταφορείς — πες μου τα πεδία που θες (όνομα, τηλέφωνο, όχημα κλπ.) και το φτιάχνουμε.
+    <div class="modal-body" style="padding:16px 24px">
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+        <input type="text" id="ifName" placeholder="Όνομα εσωτερικού..." style="flex:1;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;outline:none">
+        <input type="text" id="ifPhone" placeholder="Τηλέφωνο..." style="width:130px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;outline:none">
+        <button class="btn-save" onclick="saveInternal()" style="white-space:nowrap">+ Προσθήκη</button>
+      </div>
+      <div id="internalsModalBody"></div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeInternalsModal()">Κλείσιμο</button>
