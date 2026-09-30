@@ -1053,7 +1053,6 @@ var ICONS={
   checkCircle:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
   pause:'<circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/>',
   inbox:'<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
-  car:'<path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>'
 };
 function ic(name,size){
   size=size||14;
@@ -1955,7 +1954,7 @@ function makeInternalCell(ri,row){
   return '<td style="text-align:center;white-space:nowrap">'
     +'<input type="checkbox" class="row-select-cb" data-rid="'+esc(row._fbKey||'')+'" onchange="toggleRowSelect(\''+esc(row._fbKey||'')+'\',this.checked)"'+checked+'>'
     +'<span class="internal-icon" data-ri="'+ri+'" title="'+(inr?esc(inr.name):'Ανάθεση εσωτερικού')+'" style="'+style+'">'
-    +ic('car',15)
+    +ic('truck',15)
     +'</span></td>';
 }
 
