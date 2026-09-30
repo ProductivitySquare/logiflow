@@ -2208,10 +2208,11 @@ function render(){
   });
 
   // ---- ΕΣΩΤΕΡΙΚΟΣ ΜΕΤΑΦΟΡΕΑΣ: ανάθεση ανά γραμμή ----
-  document.querySelectorAll('.internal-icon').forEach(function(btn){
+document.querySelectorAll('.internal-icon').forEach(function(btn){
     var ri = parseInt(btn.getAttribute('data-ri'));
     var row = rows[ri];
     if(!row) return;
+    var inr = row.internalKey && internalsList[row.internalKey];
     var menu = document.createElement('div');
     menu.style.cssText = 'font-family:inherit;padding:4px;display:flex;flex-direction:column;gap:2px;min-width:150px;max-height:220px;overflow:auto';
 
@@ -2243,8 +2244,8 @@ function render(){
       menu.appendChild(empty);
     }
     keys.forEach(function(k){
-      var inr = internalsList[k];
-      menu.appendChild(menuItem(inr.name||'—', inr.color||'#f57c00', function(){ updateField(ri,'internalKey',k); }, row.internalKey===k));
+      var opt = internalsList[k];
+      menu.appendChild(menuItem(opt.name||'—', opt.color||'#f57c00', function(){ updateField(ri,'internalKey',k); }, row.internalKey===k));
     });
 
     var internalTip = tippy(btn, {
@@ -2256,8 +2257,20 @@ function render(){
       appendTo: document.body,
       theme: 'katast-white'
     });
-  });
 
+    // Hover tippy με το όνομα του ανατεθειμένου εσωτερικού — μόνο όταν υπάρχει ανάθεση
+    if(inr){
+      tippy(btn, {
+        content: '<span style="display:inline-block;background:#fff;color:#1a3a2a;font-size:10px;font-weight:600;padding:2px 2px">'+esc(inr.name)+'</span>',
+        allowHTML: true,
+        trigger: 'mouseenter',
+        placement: 'top',
+        arrow: true,
+        appendTo: document.body,
+        theme: 'katast-white'
+      });
+    }
+  });
   // ---- ACTIONS (...) menu: Συνημμένα / Αντιγραφή / Διαγραφή ----
   document.querySelectorAll('.actions-btn').forEach(function(btn){
     var ri = parseInt(btn.getAttribute('data-ri'));
